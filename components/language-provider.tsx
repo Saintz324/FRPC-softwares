@@ -162,6 +162,13 @@ const translations: Record<Language, Translation> = {
           year: '2026',
           description: 'Portal central para aceder a todos os produtos e serviços FRPC num único lugar.',
         },
+        {
+          id: 4,
+          title: 'Bot de Chamadas com IA',
+          category: 'SaaS · IA & Automação',
+          year: '2026',
+          description: 'Bot inteligente que realiza e gere chamadas telefónicas de forma automática, com voz natural e integração com os teus sistemas.',
+        },
       ],
     },
     services: {
@@ -289,6 +296,13 @@ const translations: Record<Language, Translation> = {
           category: 'Web · Product Hub',
           year: '2026',
           description: 'Central hub to access all FRPC products and services in one place.',
+        },
+        {
+          id: 4,
+          title: 'AI Call Bot',
+          category: 'SaaS · AI & Automation',
+          year: '2026',
+          description: 'Intelligent bot that automatically makes and manages phone calls with natural voice and seamless integration with your systems.',
         },
       ],
     },
