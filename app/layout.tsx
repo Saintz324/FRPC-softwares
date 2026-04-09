@@ -19,14 +19,6 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: 'FRPC | Digital Innovation Studio',
   description: 'We craft extraordinary digital experiences that push the boundaries of creativity and technology.',
-  icons: {
-    icon: [
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
-      },
-    ],
-  },
 }
 
 export default function RootLayout({
