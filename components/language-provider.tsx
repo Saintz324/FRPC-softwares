@@ -145,7 +145,7 @@ const translations: Record<Language, Translation> = {
           category: 'SaaS · Gestão de Equipas',
           year: '2026',
           description: 'Plataforma de gestão de férias e ausências para equipas. Simples, visual e eficiente.',
-          url: 'https://frpc-calendario-de-ferias-production.up.railway.app/login.html',
+          url: '/produtos/calendario-de-ferias',
         },
         {
           id: 2,
@@ -153,7 +153,7 @@ const translations: Record<Language, Translation> = {
           category: 'SaaS · Gestão de Projetos',
           year: '2026',
           description: 'Ferramenta completa para gerir projetos, tarefas e equipas numa interface moderna e intuitiva.',
-          url: 'https://frpc-project-production.up.railway.app/login.html',
+          url: '/produtos/project-manager',
         },
         {
           id: 3,
@@ -273,7 +273,7 @@ const translations: Record<Language, Translation> = {
           category: 'SaaS · Team Management',
           year: '2026',
           description: 'Vacation and absence management platform for teams. Simple, visual, and efficient.',
-          url: 'https://frpc-calendario-de-ferias-production.up.railway.app/login.html',
+          url: '/produtos/calendario-de-ferias',
         },
         {
           id: 2,
@@ -281,7 +281,7 @@ const translations: Record<Language, Translation> = {
           category: 'SaaS · Project Management',
           year: '2026',
           description: 'Complete tool to manage projects, tasks, and teams with a modern and intuitive interface.',
-          url: 'https://frpc-project-production.up.railway.app/login.html',
+          url: '/produtos/project-manager',
         },
         {
           id: 3,
