@@ -1,7 +1,7 @@
 "use client"
 
 import { memo, useEffect, useState } from 'react'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, MessageCircle } from 'lucide-react'
 import { TextSplit } from '../text-split'
 import { RotatingText } from '../rotating-text'
 import { useLanguage } from '../language-provider'
@@ -12,7 +12,7 @@ const MemoizedRotatingText = memo(RotatingText)
 
 export function HeroSection() {
   const [isVisible, setIsVisible] = useState(false)
-  const { t } = useLanguage()
+  const { t, lang } = useLanguage()
 
   useEffect(() => {
     const raf = requestAnimationFrame(() => {
@@ -20,6 +20,10 @@ export function HeroSection() {
     })
     return () => cancelAnimationFrame(raf)
   }, [])
+
+  function openChat() {
+    window.dispatchEvent(new CustomEvent('open-chat'))
+  }
 
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center px-6 md:px-12 overflow-hidden">
@@ -132,6 +136,13 @@ export function HeroSection() {
           >
             <ScrambleText text={t.hero.talk} />
           </a>
+          <button
+            onClick={openChat}
+            className="flex items-center gap-2 px-8 py-4 border border-white/30 text-white text-sm font-medium rounded-full hover:bg-white/10 transition-colors duration-200"
+          >
+            <MessageCircle className="w-4 h-4" />
+            {lang === 'pt' ? 'Chat IA' : 'AI Chat'}
+          </button>
         </div>
       </div>
 

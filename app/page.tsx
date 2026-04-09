@@ -5,6 +5,7 @@ import { SplineBackground } from '@/components/spline-background'
 import { CursorFollower } from '@/components/cursor-follower'
 import { Navigation } from '@/components/navigation'
 import { HeroSection } from '@/components/sections/hero'
+import { ChatWidget } from '@/components/chat-widget'
 
 // Lazy load sections that are below the fold
 const AboutSection = dynamic(() => import('@/components/sections/about').then(mod => ({ default: mod.AboutSection })), {
@@ -61,6 +62,9 @@ export default function Home() {
         <ContactSection />
         <Footer />
       </main>
+
+      {/* Chat widget — rendered at root so fixed positioning is never clipped */}
+      <ChatWidget />
     </>
   )
 }
