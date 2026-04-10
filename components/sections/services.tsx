@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, memo, useCallback } from 'react'
+import { useState, memo } from 'react'
 import { Reveal } from '../reveal-animation'
 import { RotatingText } from '../rotating-text'
 import { useLanguage } from '../language-provider'
@@ -58,7 +58,7 @@ const ServiceCard = memo(function ServiceCard({ service, index, isActive, onHove
       <div
         className={`
           group relative p-8 md:p-12 rounded-3xl cursor-pointer
-          transition-all duration-500
+          transition-[background-color,color] duration-500
           ${isActive 
             ? 'bg-white text-black' 
             : 'bg-white/5 text-white border border-white/10 hover:bg-white/10'
@@ -133,10 +133,6 @@ export function ServicesSection() {
   const [activeService, setActiveService] = useState(1)
   const { t } = useLanguage()
 
-  const handleServiceHover = useCallback((id: number) => {
-    setActiveService(id)
-  }, [])
-
   const services = t.services.items
 
   const RotatingBadge = memo(function RotatingBadge() {
@@ -158,8 +154,8 @@ export function ServicesSection() {
 
   return (
     <section id="services" className="relative py-32 md:py-48 overflow-hidden">
-      {/* Background decorations */}
-      <div className="absolute top-1/2 left-0 w-96 h-96 bg-gradient-to-r from-blue-500/5 to-transparent rounded-full blur-3xl -translate-y-1/2" />
+      <div className="absolute top-1/2 left-0 w-[500px] h-[500px] bg-gradient-to-r from-indigo-500/8 to-transparent rounded-full blur-[80px] -translate-y-1/2 pointer-events-none" />
+      <div className="absolute top-1/4 right-0 w-[400px] h-[400px] bg-gradient-to-l from-purple-500/5 to-transparent rounded-full blur-[80px] pointer-events-none" />
       
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         {/* Section header */}

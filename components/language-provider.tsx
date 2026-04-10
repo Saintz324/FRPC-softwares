@@ -370,19 +370,26 @@ const translations: Record<Language, Translation> = {
   },
 }
 
-interface LanguageContextType {
+// ─── Two separate contexts so isSwitching changes don't re-render
+// components that only care about lang/t/toggleLanguage ──────────────────
+
+interface LangContextType {
   lang: Language
   t: Translation
   toggleLanguage: () => void
+}
+
+interface SwitchContextType {
   isSwitching: boolean
 }
 
-const LanguageContext = createContext<LanguageContextType | undefined>({
+const LangContext = createContext<LangContextType>({
   lang: 'pt',
   t: translations.pt,
   toggleLanguage: () => {},
-  isSwitching: false
 })
+
+const SwitchContext = createContext<SwitchContextType>({ isSwitching: false })
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [lang, setLang] = useState<Language>('pt')
@@ -398,35 +405,38 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   const toggleLanguage = () => {
     if (isSwitching) return
-
     setIsSwitching(true)
     const nextLang = lang === 'pt' ? 'en' : 'pt'
-
-    const textTimeout = window.setTimeout(() => {
-      setLang(nextLang)
-    }, 400)
-
+    const textTimeout = window.setTimeout(() => { setLang(nextLang) }, 400)
     const finishTimeout = window.setTimeout(() => {
       setIsSwitching(false)
       switchTimeoutsRef.current = []
     }, 800)
-
     switchTimeoutsRef.current = [textTimeout, finishTimeout]
   }
 
   return (
-    <LanguageContext.Provider value={{ lang, t: translations[lang], toggleLanguage, isSwitching }}>
-      {children}
-    </LanguageContext.Provider>
+    <LangContext.Provider value={{ lang, t: translations[lang], toggleLanguage }}>
+      <SwitchContext.Provider value={{ isSwitching }}>
+        {children}
+      </SwitchContext.Provider>
+    </LangContext.Provider>
   )
 }
 
+// useLanguage — reads translation + switching state (ScrambleText, TextSplit)
 export function useLanguage() {
-  const context = useContext(LanguageContext)
-  return context || {
-    lang: 'pt' as Language,
-    t: translations.pt,
-    toggleLanguage: () => {},
-    isSwitching: false
-  }
+  const { lang, t, toggleLanguage } = useContext(LangContext)
+  const { isSwitching } = useContext(SwitchContext)
+  return { lang, t, toggleLanguage, isSwitching }
+}
+
+// useLang — reads only lang/t/toggle; never re-renders on isSwitching changes
+export function useLang() {
+  return useContext(LangContext)
+}
+
+// useSwitch — reads only isSwitching (for language toggle button UI)
+export function useSwitch() {
+  return useContext(SwitchContext)
 }

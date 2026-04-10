@@ -26,12 +26,17 @@ export function HeroSection() {
   }
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center px-6 md:px-12 overflow-hidden">
+    <section className="relative min-h-screen flex flex-col items-center justify-center px-6 md:px-12 pb-36 overflow-hidden">
+      {/* Radial glow behind title */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="w-[600px] h-[600px] rounded-full bg-white/[0.03] blur-[120px]" />
+      </div>
+
       <div className="max-w-7xl w-full mx-auto text-center relative z-10">
         <ScrambleText
           as="p"
           text={t.hero.intro}
-          className={`text-white/50 text-xs md:text-sm tracking-[0.3em] uppercase mb-8 md:mb-12 transition-all duration-700 ease-out ${
+          className={`text-white/40 text-xs md:text-sm tracking-[0.3em] uppercase mb-6 md:mb-8 transition-all duration-700 ease-out ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`}
           style={{ willChange: 'opacity, transform' }}
@@ -121,27 +126,27 @@ export function HeroSection() {
         />
 
         <div
-          className={`mt-10 md:mt-12 flex flex-col sm:flex-row items-center justify-center gap-4 transition-all duration-700 delay-[900ms] ease-out ${
+          className={`mt-10 md:mt-12 flex flex-col sm:flex-row items-center justify-center gap-3 transition-all duration-700 delay-[900ms] ease-out ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`}
           style={{ willChange: 'opacity, transform' }}
         >
           <a
             href="#projects"
-            className="group px-8 py-4 bg-white text-black text-sm font-medium rounded-full flex items-center gap-3 hover:bg-white/90 transition-colors duration-200"
+            className="group relative overflow-hidden px-8 py-4 bg-white text-black text-sm font-semibold rounded-full flex items-center gap-3 hover:bg-white/90 transition-all duration-300 shadow-[0_0_30px_rgba(255,255,255,0.15)]"
           >
             <ScrambleText text={t.hero.work} />
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
           </a>
           <a
             href="#contact"
-            className="px-8 py-4 border border-white/30 text-white text-sm font-medium rounded-full hover:bg-white/10 transition-colors duration-200"
+            className="group px-8 py-4 border border-white/20 text-white/80 hover:text-white text-sm font-medium rounded-full hover:bg-white/8 hover:border-white/40 transition-all duration-300"
           >
             <ScrambleText text={t.hero.talk} />
           </a>
           <button
             onClick={openChat}
-            className="flex items-center gap-2 px-8 py-4 border border-white/30 text-white text-sm font-medium rounded-full hover:bg-white/10 transition-colors duration-200"
+            className="group flex items-center gap-2 px-8 py-4 border border-white/20 text-white/80 hover:text-white text-sm font-medium rounded-full hover:bg-white/8 hover:border-white/40 transition-all duration-300"
           >
             <MessageCircle className="w-4 h-4" />
             {lang === 'pt' ? 'Chat IA' : 'AI Chat'}

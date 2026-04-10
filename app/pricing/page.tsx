@@ -49,7 +49,7 @@ const TRANSLATIONS = {
       },
       {
         name: 'Pro',
-        price: { monthly: 29, yearly: 290 },
+        price: { monthly: 19, yearly: 200 },
         description: 'Para equipas em crescimento que precisam de mais.',
         color: 'border-white/30',
         features: [
@@ -67,7 +67,7 @@ const TRANSLATIONS = {
       },
       {
         name: 'Business',
-        price: { monthly: 79, yearly: 790 },
+        price: { monthly: 49, yearly: 399 },
         description: 'Para empresas que precisam de controlo total.',
         color: 'border-white/10',
         features: [
@@ -163,7 +163,7 @@ const TRANSLATIONS = {
       },
       {
         name: 'Pro',
-        price: { monthly: 29, yearly: 290 },
+        price: { monthly: 19, yearly: 200 },
         description: 'For growing teams that need more.',
         color: 'border-white/30',
         features: [
@@ -317,73 +317,126 @@ export default function PricingPage() {
           </div>
         </section>
 
+        {/* ─── SOCIAL PROOF BAR ────────────────────────────────────── */}
+        <div className={`px-6 md:px-12 pb-10 transition-all duration-700 delay-700 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+          <div className="max-w-7xl mx-auto flex items-center justify-center gap-3 text-white/35 text-sm">
+            <div className="flex -space-x-2">
+              {['A','B','C','D','E'].map((l, i) => (
+                <div key={l} className="w-7 h-7 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white/50 text-[10px] font-medium" style={{ zIndex: 5 - i }}>{l}</div>
+              ))}
+            </div>
+            <span>{lang === 'pt' ? 'Junte-se a mais de 50 equipas já a usar FRPC' : 'Join 50+ teams already using FRPC'}</span>
+            <span className="flex gap-0.5">{['★','★','★','★','★'].map((s, i) => <span key={i} className="text-yellow-400/70 text-xs">{s}</span>)}</span>
+          </div>
+        </div>
+
         {/* ─── PRICING CARDS ───────────────────────────────────────── */}
         <section className="relative px-6 md:px-12 pb-32">
-          <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="max-w-5xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-start">
               {t.plans.map((plan, i) => {
                 const isPro = plan.name === 'Pro'
                 const price = yearly ? plan.price.yearly : plan.price.monthly
                 const isFree = price === 0
                 return (
-                  <Reveal key={plan.name} delay={i * 100}>
-                    <div className={`relative flex flex-col h-full p-8 md:p-10 rounded-3xl border transition-all duration-500 ${
+                  <Reveal key={plan.name} delay={i * 120}>
+                    <div className={`relative flex flex-col rounded-3xl border transition-all duration-500 overflow-visible ${
                       isPro
-                        ? 'border-white/40 bg-white/10 backdrop-blur-sm'
-                        : 'border-white/10 bg-white/5 hover:bg-white/[0.08]'
+                        ? 'border-white/30 bg-white/[0.08] shadow-[0_0_60px_rgba(255,255,255,0.06)]'
+                        : 'border-white/10 bg-white/[0.03] hover:bg-white/[0.06] hover:border-white/20'
                     }`}>
+                      {/* Pro glow ring */}
                       {isPro && (
-                        <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                          <span className="px-4 py-1.5 rounded-full bg-white text-black text-xs font-semibold tracking-wide">{t.popular}</span>
+                        <div className="absolute -inset-px rounded-3xl pointer-events-none" style={{
+                          background: 'linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.03) 50%, rgba(255,255,255,0.1) 100%)',
+                          WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                          WebkitMaskComposite: 'xor',
+                          maskComposite: 'exclude',
+                          padding: '1px',
+                        }} />
+                      )}
+
+                      {/* Popular badge */}
+                      {isPro && (
+                        <div className="absolute -top-4 left-0 right-0 flex justify-center">
+                          <span className="relative overflow-hidden px-4 py-1.5 rounded-full bg-white text-black text-xs font-semibold tracking-wide badge-shine">
+                            {t.popular}
+                          </span>
                         </div>
                       )}
 
-                      <div className="mb-8">
-                        <h2 className="text-xl font-serif font-bold text-white mb-2" style={{ fontFamily: 'var(--font-serif)' }}>{plan.name}</h2>
-                        <p className="text-white/40 text-sm leading-relaxed">{plan.description}</p>
-                      </div>
+                      <div className={`p-8 md:p-9 ${isPro ? 'pt-10' : ''}`}>
+                        {/* Header */}
+                        <div className="mb-6">
+                          <div className="flex items-center justify-between mb-2">
+                            <h2 className="text-lg font-serif font-bold text-white" style={{ fontFamily: 'var(--font-serif)' }}>{plan.name}</h2>
+                            {isPro && <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-[10px] font-medium tracking-wide uppercase">Popular</span>}
+                          </div>
+                          <p className="text-white/40 text-sm leading-relaxed">{plan.description}</p>
+                        </div>
 
-                      <div className="mb-8">
-                        <div className="flex items-end gap-1">
-                          <span className="font-serif font-bold text-white" style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(2.5rem, 6vw, 4rem)' }}>
-                            {isFree ? 'Free' : `€${price}`}
-                          </span>
-                          {!isFree && (
-                            <span className="text-white/40 text-sm mb-3">{yearly ? t.perYear : t.perMonth}</span>
+                        {/* Price */}
+                        <div className="mb-8 pb-8 border-b border-white/[0.08]">
+                          <div className="flex items-end gap-1.5">
+                            <span className="font-serif font-bold text-white leading-none" style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(2.2rem, 5vw, 3.5rem)' }}>
+                              {isFree ? 'Free' : `€${price}`}
+                            </span>
+                            {!isFree && (
+                              <span className="text-white/35 text-sm mb-1">{yearly ? t.perYear : t.perMonth}</span>
+                            )}
+                          </div>
+                          {yearly && !isFree && (
+                            <p className="text-emerald-400/70 text-xs mt-1.5">{lang === 'pt' ? 'Faturado anualmente' : 'Billed annually'}</p>
                           )}
                         </div>
-                      </div>
 
-                      <div className="flex-1 space-y-3 mb-8">
-                        {plan.features.map(f => (
-                          <div key={f} className="flex items-start gap-3">
-                            <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                            <span className="text-white/70 text-sm">{f}</span>
-                          </div>
-                        ))}
-                        {plan.notIncluded.map(f => (
-                          <div key={f} className="flex items-start gap-3">
-                            <X className="w-4 h-4 text-white/20 shrink-0 mt-0.5" />
-                            <span className="text-white/25 text-sm line-through">{f}</span>
-                          </div>
-                        ))}
-                      </div>
+                        {/* Features */}
+                        <div className="space-y-3 mb-8">
+                          {plan.features.map(f => (
+                            <div key={f} className="flex items-start gap-3">
+                              <div className={`w-4 h-4 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${isPro ? 'bg-emerald-500/20' : 'bg-white/5'}`}>
+                                <Check className={`w-2.5 h-2.5 ${isPro ? 'text-emerald-400' : 'text-white/50'}`} />
+                              </div>
+                              <span className={`text-sm ${isPro ? 'text-white/80' : 'text-white/60'}`}>{f}</span>
+                            </div>
+                          ))}
+                          {plan.notIncluded.map(f => (
+                            <div key={f} className="flex items-start gap-3 opacity-40">
+                              <X className="w-4 h-4 text-white/30 shrink-0 mt-0.5" />
+                              <span className="text-white/30 text-sm line-through">{f}</span>
+                            </div>
+                          ))}
+                        </div>
 
-                      <a href={plan.name === 'Business' ? '#contact' : '/produtos/calendario-de-ferias'}>
-                        <MagneticButton className={`w-full py-4 rounded-2xl text-sm font-medium transition-all duration-300 flex items-center justify-center gap-2 group ${
-                          isPro
-                            ? 'bg-white text-black hover:bg-white/90'
-                            : 'border border-white/20 text-white hover:bg-white/10'
-                        }`}>
-                          {plan.name === 'Business' ? t.ctaEnterprise : isFree ? t.ctaFree : t.ctaPaid}
-                          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
-                        </MagneticButton>
-                      </a>
+                        {/* CTA */}
+                        <a href={plan.name === 'Business' ? '/#contact' : '/produtos/calendario-de-ferias'}>
+                          <MagneticButton className={`w-full py-3.5 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center justify-center gap-2 group ${
+                            isPro
+                              ? 'bg-white text-black hover:bg-white/90 shadow-[0_4px_24px_rgba(255,255,255,0.15)]'
+                              : 'border border-white/15 text-white/70 hover:text-white hover:border-white/30 hover:bg-white/5'
+                          }`}>
+                            {plan.name === 'Business' ? t.ctaEnterprise : isFree ? t.ctaFree : t.ctaPaid}
+                            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform duration-200" />
+                          </MagneticButton>
+                        </a>
+                      </div>
                     </div>
                   </Reveal>
                 )
               })}
             </div>
+
+            {/* Guarantee strip */}
+            <Reveal delay={400}>
+              <div className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-white/30 text-xs">
+                {[
+                  lang === 'pt' ? '✓ Sem cartão de crédito' : '✓ No credit card required',
+                  lang === 'pt' ? '✓ 14 dias grátis' : '✓ 14-day free trial',
+                  lang === 'pt' ? '✓ Cancele quando quiser' : '✓ Cancel anytime',
+                  lang === 'pt' ? '✓ Suporte incluído' : '✓ Support included',
+                ].map(item => <span key={item}>{item}</span>)}
+              </div>
+            </Reveal>
           </div>
         </section>
 
@@ -411,44 +464,57 @@ export default function PricingPage() {
 
         {/* ─── COMPARISON TABLE ────────────────────────────────────── */}
         <section className="relative py-32 border-t border-white/10">
-          <div className="max-w-7xl mx-auto px-6 md:px-12">
+          <div className="max-w-5xl mx-auto px-6 md:px-12">
             <Reveal>
               <h2 className="text-3xl md:text-5xl font-serif font-bold text-white mb-16" style={{ fontFamily: 'var(--font-serif)' }}>
                 {t.compareTitle}
               </h2>
             </Reveal>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-white/10">
-                    <th className="text-left py-4 pr-8 text-white/40 text-xs uppercase tracking-widest font-normal w-1/2" />
-                    {t.plans.map(plan => (
-                      <th key={plan.name} className="py-4 px-4 text-center">
-                        <span className={`text-sm font-semibold ${plan.name === 'Pro' ? 'text-white' : 'text-white/60'}`}>{plan.name}</span>
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {t.compareFeatures.map((row, i) => (
-                    <tr key={row.label} className={`border-b border-white/[0.06] ${i % 2 === 0 ? '' : 'bg-white/[0.02]'}`}>
-                      <td className="py-4 pr-8 text-white/50 text-sm">{row.label}</td>
-                      {row.values.map((val, vi) => (
-                        <td key={vi} className="py-4 px-4 text-center">
-                          {typeof val === 'boolean' ? (
-                            val
-                              ? <Check className="w-4 h-4 text-emerald-400 mx-auto" />
-                              : <X className="w-4 h-4 text-white/15 mx-auto" />
-                          ) : (
-                            <span className={`text-sm ${vi === 1 ? 'text-white font-medium' : 'text-white/60'}`}>{val}</span>
-                          )}
-                        </td>
-                      ))}
+            <Reveal delay={100}>
+              <div className="overflow-x-auto rounded-3xl border border-white/10 bg-white/[0.03]">
+                <table className="w-full min-w-[560px]">
+                  <thead>
+                    <tr className="border-b border-white/10">
+                      <th className="text-left py-6 pl-8 pr-4 text-white/30 text-xs uppercase tracking-widest font-normal w-[44%]" />
+                      {t.plans.map((plan, pi) => {
+                        const isPro = plan.name === 'Pro'
+                        const price = plan.price.monthly
+                        return (
+                          <th key={plan.name} className={`py-6 px-4 text-center ${isPro ? 'bg-white/[0.07]' : ''}`}>
+                            <div className={`text-sm font-bold mb-1 ${isPro ? 'text-white' : 'text-white/50'}`}>{plan.name}</div>
+                            <div className={`text-xs ${isPro ? 'text-white/50' : 'text-white/25'}`}>
+                              {price === 0 ? 'Free' : `€${price}${lang === 'pt' ? '/mês' : '/mo'}`}
+                            </div>
+                            {isPro && <div className="mt-2 mx-auto w-1.5 h-1.5 rounded-full bg-emerald-400" />}
+                          </th>
+                        )
+                      })}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {t.compareFeatures.map((row, i) => (
+                      <tr key={row.label} className={`border-b border-white/[0.06] last:border-0 ${i % 2 === 0 ? 'bg-transparent' : 'bg-white/[0.02]'}`}>
+                        <td className="py-4 pl-8 pr-4 text-white/60 text-sm">{row.label}</td>
+                        {row.values.map((val, vi) => {
+                          const isPro = vi === 1
+                          return (
+                            <td key={vi} className={`py-4 px-4 text-center ${isPro ? 'bg-white/[0.04]' : ''}`}>
+                              {typeof val === 'boolean' ? (
+                                val
+                                  ? <Check className={`w-4 h-4 mx-auto ${isPro ? 'text-emerald-400' : 'text-emerald-400/60'}`} />
+                                  : <X className="w-4 h-4 text-white/15 mx-auto" />
+                              ) : (
+                                <span className={`text-sm font-medium ${isPro ? 'text-white' : 'text-white/50'}`}>{val}</span>
+                              )}
+                            </td>
+                          )
+                        })}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </Reveal>
           </div>
         </section>
 

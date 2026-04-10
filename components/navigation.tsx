@@ -3,13 +3,14 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { MagneticButton } from './magnetic-button'
-import { useLanguage } from './language-provider'
+import { useLang, useSwitch } from './language-provider'
 import { ScrambleText } from './scramble-text'
 
 export function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const { t, toggleLanguage, isSwitching } = useLanguage()
+  const { t, toggleLanguage } = useLang()
+  const { isSwitching } = useSwitch()
 
   useEffect(() => {
     let rafId: number | null = null
@@ -39,7 +40,7 @@ export function Navigation() {
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 px-6 md:px-12 py-6 transition-all duration-500 ${
+        className={`fixed top-0 left-0 right-0 z-50 px-6 md:px-12 py-6 transition-[backdrop-filter,background-color] duration-500 ${
           isScrolled ? 'backdrop-blur-md bg-black/20' : ''
         }`}
       >
@@ -73,7 +74,7 @@ export function Navigation() {
                 isSwitching ? 'opacity-70 cursor-wait' : ''
               }`}
             >
-              <span className={`inline-block transition-all duration-300 ease-out ${
+              <span className={`inline-block transition-[opacity,transform] duration-300 ease-out ${
                 isSwitching ? 'opacity-0 scale-95' : 'opacity-100 scale-100'
               }`}>
                 {t.nav.language}
@@ -103,7 +104,7 @@ export function Navigation() {
       </nav>
 
       <div
-        className={`fixed inset-0 z-40 flex flex-col items-center justify-center bg-black/95 text-white transition-all duration-500 ${
+        className={`fixed inset-0 z-40 flex flex-col items-center justify-center bg-black/95 text-white transition-opacity duration-500 ${
           isMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }`}
       >

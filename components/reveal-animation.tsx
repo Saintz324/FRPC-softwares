@@ -2,6 +2,33 @@
 
 import { useEffect, useRef, ReactNode, useState, memo, useMemo } from 'react'
 
+// ─── Shared singleton observer ────────────────────────────────────────────
+// One IntersectionObserver for ALL Reveal instances on the page instead of N observers.
+let _observer: IntersectionObserver | null = null
+const _callbacks = new Map<Element, () => void>()
+
+function getObserver(): IntersectionObserver | null {
+  if (typeof IntersectionObserver === 'undefined') return null
+  if (!_observer) {
+    _observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return
+          const cb = _callbacks.get(entry.target)
+          if (cb) {
+            cb()
+            _callbacks.delete(entry.target)
+            _observer?.unobserve(entry.target)
+          }
+        })
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+    )
+  }
+  return _observer
+}
+
+// ─── Component ────────────────────────────────────────────────────────────
 interface RevealProps {
   children: ReactNode
   delay?: number
@@ -14,38 +41,37 @@ function RevealComponent({ children, delay = 0, direction = 'up', className = ''
   const [isRevealed, setIsRevealed] = useState(false)
 
   useEffect(() => {
-    const element = ref.current
-    if (!element) return
+    const el = ref.current
+    if (!el) return
+    const observer = getObserver()
+    if (!observer) { setIsRevealed(true); return }
 
-    let timeoutId: ReturnType<typeof setTimeout>
+    let tid: ReturnType<typeof setTimeout>
+    _callbacks.set(el, () => {
+      if (delay > 0) {
+        tid = setTimeout(() => requestAnimationFrame(() => setIsRevealed(true)), delay)
+      } else {
+        requestAnimationFrame(() => setIsRevealed(true))
+      }
+    })
+    observer.observe(el)
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          observer.disconnect()
-          timeoutId = setTimeout(() => {
-            requestAnimationFrame(() => setIsRevealed(true))
-          }, delay)
-        }
-      },
-      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
-    )
-
-    observer.observe(element)
     return () => {
-      observer.disconnect()
-      clearTimeout(timeoutId)
+      _callbacks.delete(el)
+      observer.unobserve(el)
+      clearTimeout(tid)
     }
-  }, [delay]) // removed isRevealed — observer is set up once and disconnects itself
+  }, [delay])
 
-  const styles = useMemo(() => {
+  const style = useMemo((): React.CSSProperties => {
     const base: React.CSSProperties = {
       opacity: isRevealed ? 1 : 0,
-      transition: 'opacity 0.7s ease-out, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1)',
-      transform: 'none',
+      transition: isRevealed
+        ? 'opacity 0.7s ease-out, transform 0.7s cubic-bezier(0.16,1,0.3,1)'
+        : 'none',
+      // Only set will-change when not yet revealed
       willChange: isRevealed ? 'auto' : 'opacity, transform',
     }
-
     if (!isRevealed) {
       switch (direction) {
         case 'up':    base.transform = 'translateY(30px)'; break
@@ -55,12 +81,11 @@ function RevealComponent({ children, delay = 0, direction = 'up', className = ''
         case 'scale': base.transform = 'scale(0.95)'; break
       }
     }
-
     return base
   }, [isRevealed, direction])
 
   return (
-    <div ref={ref} className={className} style={styles}>
+    <div ref={ref} className={className} style={style}>
       {children}
     </div>
   )

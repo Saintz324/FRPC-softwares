@@ -1,13 +1,10 @@
 'use client'
 
-import { useState, useEffect, useRef, ElementType } from 'react'
+import { useEffect, useRef, ElementType, useCallback } from 'react'
 import { useLanguage } from './language-provider'
 
-const SCRAMBLE_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&'
-
-function randomChar() {
-  return SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)]
-}
+const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&'
+const rand = () => CHARS[Math.floor(Math.random() * CHARS.length)]
 
 interface ScrambleTextProps {
   text: string
@@ -16,87 +13,69 @@ interface ScrambleTextProps {
   style?: React.CSSProperties
 }
 
+// Direct DOM manipulation — zero React re-renders during scramble
 export function ScrambleText({ text, className, as: Tag = 'span', style }: ScrambleTextProps) {
   const { isSwitching } = useLanguage()
-  const [display, setDisplay] = useState(text)
+  const elRef = useRef<HTMLElement | null>(null)
   const rafRef = useRef<number | null>(null)
   const phaseRef = useRef<'idle' | 'scrambling' | 'resolving'>('idle')
+  const textRef = useRef(text)
+  textRef.current = text
 
-  function cancelRaf() {
-    if (rafRef.current !== null) {
-      cancelAnimationFrame(rafRef.current)
-      rafRef.current = null
-    }
+  const setRef = useCallback((el: HTMLElement | null) => { elRef.current = el }, [])
+
+  function setText(value: string) {
+    if (elRef.current) elRef.current.textContent = value
   }
 
-  // Phase 1: scramble when switching starts
+  function cancel() {
+    if (rafRef.current !== null) { cancelAnimationFrame(rafRef.current); rafRef.current = null }
+  }
+
+  // Phase 1: scramble on switch start
   useEffect(() => {
     if (isSwitching) {
       phaseRef.current = 'scrambling'
+      const prev = elRef.current?.textContent ?? text
       let frame = 0
-      const scramble = () => {
+      const go = () => {
         if (phaseRef.current !== 'scrambling') return
-        // throttle: update display every 3 frames (~20fps) — imperceptible difference
-        if (++frame % 3 === 0) {
-          setDisplay(prev =>
-            prev.split('').map(c => (c === ' ' ? ' ' : randomChar())).join('')
-          )
-        }
-        rafRef.current = requestAnimationFrame(scramble)
+        if (++frame % 3 === 0) setText(prev.split('').map(c => c === ' ' ? ' ' : rand()).join(''))
+        rafRef.current = requestAnimationFrame(go)
       }
-      cancelRaf()
-      rafRef.current = requestAnimationFrame(scramble)
+      cancel()
+      rafRef.current = requestAnimationFrame(go)
     } else {
-      cancelRaf()
+      cancel()
       phaseRef.current = 'idle'
-      setDisplay(text)
+      setText(textRef.current)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSwitching])
 
-  // Phase 2: resolve char by char when text prop changes
+  // Phase 2: resolve char-by-char when text prop changes
   useEffect(() => {
-    if (!isSwitching) {
-      setDisplay(text)
-      return
-    }
-    cancelRaf()
+    textRef.current = text
+    if (!isSwitching) { setText(text); return }
+    cancel()
     phaseRef.current = 'resolving'
-
-    let iteration = 0
-    let frame = 0
+    let it = 0, frame = 0
     const chars = text.split('')
-    const resolve = () => {
+    const go = () => {
       if (phaseRef.current !== 'resolving') return
-      iteration += 0.5
-      const resolved = Math.floor(iteration)
-
-      // throttle: update display every 2 frames
+      it += 0.5
+      const resolved = Math.floor(it)
       if (++frame % 2 === 0) {
-        setDisplay(
-          chars.map((char, i) => {
-            if (char === ' ') return ' '
-            if (i < resolved) return char
-            return randomChar()
-          }).join('')
-        )
+        setText(chars.map((c, i) => (c === ' ' ? ' ' : i < resolved ? c : rand())).join(''))
       }
-
-      if (resolved < chars.length) {
-        rafRef.current = requestAnimationFrame(resolve)
-      } else {
-        setDisplay(text)
-        phaseRef.current = 'idle'
-      }
+      if (resolved < chars.length) rafRef.current = requestAnimationFrame(go)
+      else { setText(text); phaseRef.current = 'idle' }
     }
-    rafRef.current = requestAnimationFrame(resolve)
-    return cancelRaf
+    rafRef.current = requestAnimationFrame(go)
+    return cancel
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [text])
 
-  return (
-    <Tag className={className} style={style}>
-      {display}
-    </Tag>
-  )
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return <Tag ref={setRef as any} className={className} style={style}>{text}</Tag>
 }
