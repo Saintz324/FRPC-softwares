@@ -37,33 +37,40 @@ function TextSplitComponent({ text, className = '', style, delay = 0, stagger = 
     const element = ref.current
     if (!element) return
 
+    let timeoutId: ReturnType<typeof setTimeout>
+
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
-          const timeoutId = setTimeout(() => {
+          observer.disconnect()
+          timeoutId = setTimeout(() => {
             requestAnimationFrame(() => setIsRevealed(true))
           }, delay)
-
-          observer.disconnect()
-          return () => clearTimeout(timeoutId)
         }
       },
       { threshold: 0.3, rootMargin: '0px 0px -10% 0px' }
     )
 
     observer.observe(element)
-    return () => observer.disconnect()
-  }, [delay])
+    return () => {
+      observer.disconnect()
+      clearTimeout(timeoutId)
+    }
+  }, [delay]) // removed isRevealed — observer disconnects itself on first intersection
 
   // Phase 1: scramble when switching starts
   useEffect(() => {
     if (isSwitching) {
       phaseRef.current = 'scrambling'
+      let frame = 0
       const scramble = () => {
         if (phaseRef.current !== 'scrambling') return
-        setDisplayChars(prev =>
-          prev.map(c => (c === ' ' || c === '\u00A0' ? c : randomChar()))
-        )
+        // throttle: update every 3 frames (~20fps)
+        if (++frame % 3 === 0) {
+          setDisplayChars(prev =>
+            prev.map(c => (c === ' ' || c === '\u00A0' ? c : randomChar()))
+          )
+        }
         rafRef.current = requestAnimationFrame(scramble)
       }
       cancelRaf()
@@ -86,18 +93,24 @@ function TextSplitComponent({ text, className = '', style, delay = 0, stagger = 
     phaseRef.current = 'resolving'
 
     let iteration = 0
+    let frame = 0
     const chars = text.split('')
     const resolve = () => {
       if (phaseRef.current !== 'resolving') return
-      const resolved = Math.floor(iteration)
-      setDisplayChars(
-        chars.map((char, i) => {
-          if (char === ' ') return ' '
-          if (i < resolved) return char
-          return randomChar()
-        })
-      )
       iteration += 0.5
+      const resolved = Math.floor(iteration)
+
+      // throttle: update every 2 frames
+      if (++frame % 2 === 0) {
+        setDisplayChars(
+          chars.map((char, i) => {
+            if (char === ' ') return ' '
+            if (i < resolved) return char
+            return randomChar()
+          })
+        )
+      }
+
       if (resolved < chars.length) {
         rafRef.current = requestAnimationFrame(resolve)
       } else {
@@ -114,16 +127,12 @@ function TextSplitComponent({ text, className = '', style, delay = 0, stagger = 
     return text.split('').map((char, index) => ({
       char: char === ' ' ? '\u00A0' : char,
       key: `char-${index}`,
-      index
+      index,
     }))
   }, [text])
 
   return (
-    <div
-      ref={ref}
-      className={`inline-flex flex-wrap ${className}`}
-      style={style}
-    >
+    <div ref={ref} className={`inline-flex flex-wrap ${className}`} style={style}>
       {characters.map(({ key, index }) => {
         const dc = displayChars[index]
         const shown = dc === ' ' ? '\u00A0' : (dc ?? '\u00A0')
@@ -134,7 +143,7 @@ function TextSplitComponent({ text, className = '', style, delay = 0, stagger = 
             style={{
               transform: isRevealed ? 'translateY(0)' : 'translateY(100%)',
               opacity: isRevealed ? 1 : 0,
-              transition: `transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease-out`,
+              transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease-out',
               transitionDelay: isRevealed ? `${index * stagger}s` : '0s',
             }}
           >
@@ -146,5 +155,4 @@ function TextSplitComponent({ text, className = '', style, delay = 0, stagger = 
   )
 }
 
-// Memoize the entire component to prevent unnecessary re-renders
 export const TextSplit = memo(TextSplitComponent)

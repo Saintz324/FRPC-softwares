@@ -29,18 +29,19 @@ export function ScrambleText({ text, className, as: Tag = 'span', style }: Scram
     }
   }
 
-  // Phase 1: when switching starts, scramble currently displayed text
+  // Phase 1: scramble when switching starts
   useEffect(() => {
     if (isSwitching) {
       phaseRef.current = 'scrambling'
+      let frame = 0
       const scramble = () => {
         if (phaseRef.current !== 'scrambling') return
-        setDisplay(prev =>
-          prev
-            .split('')
-            .map(c => (c === ' ' ? ' ' : randomChar()))
-            .join('')
-        )
+        // throttle: update display every 3 frames (~20fps) — imperceptible difference
+        if (++frame % 3 === 0) {
+          setDisplay(prev =>
+            prev.split('').map(c => (c === ' ' ? ' ' : randomChar())).join('')
+          )
+        }
         rafRef.current = requestAnimationFrame(scramble)
       }
       cancelRaf()
@@ -53,7 +54,7 @@ export function ScrambleText({ text, className, as: Tag = 'span', style }: Scram
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSwitching])
 
-  // Phase 2: when text prop changes (language actually switches), resolve char by char
+  // Phase 2: resolve char by char when text prop changes
   useEffect(() => {
     if (!isSwitching) {
       setDisplay(text)
@@ -63,20 +64,24 @@ export function ScrambleText({ text, className, as: Tag = 'span', style }: Scram
     phaseRef.current = 'resolving'
 
     let iteration = 0
+    let frame = 0
     const chars = text.split('')
     const resolve = () => {
       if (phaseRef.current !== 'resolving') return
+      iteration += 0.5
       const resolved = Math.floor(iteration)
-      setDisplay(
-        chars
-          .map((char, i) => {
+
+      // throttle: update display every 2 frames
+      if (++frame % 2 === 0) {
+        setDisplay(
+          chars.map((char, i) => {
             if (char === ' ') return ' '
             if (i < resolved) return char
             return randomChar()
-          })
-          .join('')
-      )
-      iteration += 0.5
+          }).join('')
+        )
+      }
+
       if (resolved < chars.length) {
         rafRef.current = requestAnimationFrame(resolve)
       } else {

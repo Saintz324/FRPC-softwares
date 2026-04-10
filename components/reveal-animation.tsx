@@ -17,50 +17,42 @@ function RevealComponent({ children, delay = 0, direction = 'up', className = ''
     const element = ref.current
     if (!element) return
 
+    let timeoutId: ReturnType<typeof setTimeout>
+
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !isRevealed) {
-            const timeoutId = setTimeout(() => {
-              requestAnimationFrame(() => setIsRevealed(true))
-            }, delay)
-            observer.unobserve(entry.target)
-            return () => clearTimeout(timeoutId)
-          }
-        })
+        if (entries[0].isIntersecting) {
+          observer.disconnect()
+          timeoutId = setTimeout(() => {
+            requestAnimationFrame(() => setIsRevealed(true))
+          }, delay)
+        }
       },
       { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
     )
 
     observer.observe(element)
-    return () => observer.disconnect()
-  }, [delay, isRevealed])
+    return () => {
+      observer.disconnect()
+      clearTimeout(timeoutId)
+    }
+  }, [delay]) // removed isRevealed — observer is set up once and disconnects itself
 
   const styles = useMemo(() => {
     const base: React.CSSProperties = {
       opacity: isRevealed ? 1 : 0,
       transition: 'opacity 0.7s ease-out, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1)',
       transform: 'none',
-      willChange: isRevealed ? 'auto' : 'opacity, transform'
+      willChange: isRevealed ? 'auto' : 'opacity, transform',
     }
 
     if (!isRevealed) {
       switch (direction) {
-        case 'up':
-          base.transform = 'translateY(30px)'
-          break
-        case 'down':
-          base.transform = 'translateY(-30px)'
-          break
-        case 'left':
-          base.transform = 'translateX(30px)'
-          break
-        case 'right':
-          base.transform = 'translateX(-30px)'
-          break
-        case 'scale':
-          base.transform = 'scale(0.95)'
-          break
+        case 'up':    base.transform = 'translateY(30px)'; break
+        case 'down':  base.transform = 'translateY(-30px)'; break
+        case 'left':  base.transform = 'translateX(30px)'; break
+        case 'right': base.transform = 'translateX(-30px)'; break
+        case 'scale': base.transform = 'scale(0.95)'; break
       }
     }
 
