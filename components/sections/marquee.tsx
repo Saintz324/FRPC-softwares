@@ -1,55 +1,72 @@
 "use client"
 
+import { memo } from 'react'
 import { useLanguage } from '../language-provider'
 
-export function MarqueeSection() {
-  const { t } = useLanguage()  
-  return (
-    <section className="py-16 md:py-24 overflow-hidden border-y border-white/10">
-      <div className="flex">
-        {/* First marquee - moving left */}
-        <div className="flex animate-marquee whitespace-nowrap">
-          {[...t.marquee.words, ...t.marquee.words].map((word, index) => (
-            <span 
-              key={index}
-              className="mx-8 text-4xl md:text-6xl lg:text-8xl font-serif font-bold text-white/10 hover:text-white/30 transition-colors duration-300"
-              style={{ fontFamily: 'var(--font-serif)' }}
-            >
-              {word}
-              <span className="mx-8 text-white/20">✦</span>
-            </span>
-          ))}
-        </div>
-        <div className="flex animate-marquee whitespace-nowrap" aria-hidden>
-          {[...t.marquee.words, ...t.marquee.words].map((word, index) => (
-            <span 
-              key={index}
-              className="mx-8 text-4xl md:text-6xl lg:text-8xl font-serif font-bold text-white/10 hover:text-white/30 transition-colors duration-300"
-              style={{ fontFamily: 'var(--font-serif)' }}
-            >
-              {word}
-              <span className="mx-8 text-white/20">✦</span>
-            </span>
-          ))}
-        </div>
-      </div>
+const SEPARATOR = <span className="mx-6 text-white/20">✦</span>
 
-      <style jsx>{`
-        @keyframes marquee {
-          0% {
-            transform: translateX(0%);
-          }
-          100% {
-            transform: translateX(-100%);
-          }
-        }
-        .animate-marquee {
-          animation: marquee 30s linear infinite;
-          will-change: transform;
-          backface-visibility: hidden;
-          perspective: 1000px;
-        }
-      `}</style>
+const MarqueeRow = memo(function MarqueeRow({
+  words,
+  direction,
+  outlined,
+  speed,
+}: {
+  words: string[]
+  direction: 'left' | 'right'
+  outlined: boolean
+  speed: number
+}) {
+  // 4 copies to ensure seamless loop at -50%
+  const items = [...words, ...words, ...words, ...words]
+
+  return (
+    <div className="overflow-hidden marquee-edge-fade">
+      <div
+        className="flex whitespace-nowrap"
+        style={{
+          animation: `${direction === 'left' ? 'marqueeLeft' : 'marqueeRight'} ${speed}s linear infinite`,
+          willChange: 'transform',
+        }}
+      >
+        {items.map((word, i) => (
+          <span
+            key={i}
+            className="inline-flex items-center text-5xl md:text-7xl lg:text-8xl font-serif font-bold"
+            style={{
+              fontFamily: 'var(--font-serif)',
+              ...(outlined
+                ? {
+                    WebkitTextStroke: '1px rgba(255,255,255,0.15)',
+                    WebkitTextFillColor: 'transparent',
+                    color: 'transparent',
+                  }
+                : { color: 'rgba(255,255,255,0.07)' }),
+            }}
+          >
+            <span className="mx-8">{word}</span>
+            {SEPARATOR}
+          </span>
+        ))}
+      </div>
+    </div>
+  )
+})
+
+export function MarqueeSection() {
+  const { t } = useLanguage()
+  const words = t.marquee.words
+
+  return (
+    <section
+      className="py-10 md:py-16 overflow-hidden border-y select-none"
+      style={{ borderColor: 'rgba(255,255,255,0.07)' }}
+    >
+      <div className="space-y-2 marquee-container">
+        {/* Row 1 — left, outlined */}
+        <MarqueeRow words={words} direction="left" outlined speed={38} />
+        {/* Row 2 — right, filled */}
+        <MarqueeRow words={words} direction="right" outlined={false} speed={28} />
+      </div>
     </section>
   )
 }

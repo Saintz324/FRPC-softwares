@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from 'react'
+import { subscribeScroll } from '@/lib/scroll-bus'
 import Link from 'next/link'
 import { MagneticButton } from './magnetic-button'
 import { useLang, useSwitch } from './language-provider'
@@ -13,20 +14,7 @@ export function Navigation() {
   const { isSwitching } = useSwitch()
 
   useEffect(() => {
-    let rafId: number | null = null
-
-    const handleScroll = () => {
-      if (rafId !== null) cancelAnimationFrame(rafId)
-      rafId = requestAnimationFrame(() => {
-        setIsScrolled(window.scrollY > 50)
-      })
-    }
-
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => {
-      window.removeEventListener('scroll', handleScroll)
-      if (rafId !== null) cancelAnimationFrame(rafId)
-    }
+    return subscribeScroll((y) => setIsScrolled(y > 50))
   }, [])
 
   const navItems = [

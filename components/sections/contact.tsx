@@ -29,15 +29,17 @@ export const ContactSection = memo(function ContactSection() {
               >
                 <TextSplit text={t.contact.title1} delay={200} />
               </h2>
-              <h2 
+              <h2
                 className="text-4xl md:text-5xl lg:text-7xl font-serif font-bold leading-tight"
-                style={{ 
+                style={{
                   fontFamily: 'var(--font-serif)',
                   WebkitTextStroke: '1px rgba(255,255,255,0.6)',
-                  color: 'transparent'
+                  color: 'transparent',
+                  wordBreak: 'keep-all',
+                  overflowWrap: 'normal',
                 }}
               >
-                <TextSplit text={t.contact.title2} delay={400} />
+                <ScrambleText text={t.contact.title2} />
               </h2>
               <h2 
                 className="text-4xl md:text-5xl lg:text-7xl font-serif font-bold text-white leading-tight"

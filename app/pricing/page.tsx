@@ -2,255 +2,275 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, Check, X, ArrowRight, Zap, Shield, Users, Headphones } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Check, X, Clock, ChevronDown } from 'lucide-react'
 import { SplineBackground } from '@/components/spline-background'
 import { CursorFollower } from '@/components/cursor-follower'
 import { Reveal } from '@/components/reveal-animation'
 import { MagneticButton } from '@/components/magnetic-button'
-import { useLanguage } from '@/components/language-provider'
+import { useLang, useSwitch } from '@/components/language-provider'
 
-const TRANSLATIONS = {
+// ─── Translations ────────────────────────────────────────────────────────────
+const T = {
   pt: {
     back: 'Voltar',
     label: 'Preços',
-    title: 'Simples e',
-    titleAccent: 'transparente.',
-    subtitle: 'Escolha o plano certo para a sua equipa. Sem surpresas, sem letras pequenas.',
+    title: 'Preços por',
+    titleAccent: 'produto.',
+    subtitle: 'Paga apenas o que usas. Cada produto FRPC tem o seu próprio plano — começa grátis, cresce quando precisas.',
     monthly: 'Mensal',
     yearly: 'Anual',
-    yearlyDiscount: '2 meses grátis',
-    popular: 'Mais popular',
-    ctaFree: 'Começar grátis',
-    ctaPaid: 'Começar agora',
-    ctaEnterprise: 'Falar com equipa',
+    save: 'Poupa 2 meses',
     perMonth: '/mês',
     perYear: '/ano',
-    everythingIn: 'Tudo do',
-    plus: 'mais:',
-    plans: [
-      {
-        name: 'Starter',
-        price: { monthly: 0, yearly: 0 },
-        description: 'Para equipas pequenas que querem começar.',
-        color: 'border-white/10',
-        features: [
-          '1 produto FRPC',
-          'Até 5 utilizadores',
-          '5 GB de armazenamento',
-          'Suporte por email',
-          'Atualizações automáticas',
-        ],
-        notIncluded: [
-          'Integrações avançadas',
-          'Relatórios personalizados',
-          'Suporte prioritário',
-          'API access',
-        ],
-      },
-      {
-        name: 'Pro',
-        price: { monthly: 19, yearly: 200 },
-        description: 'Para equipas em crescimento que precisam de mais.',
-        color: 'border-white/30',
-        features: [
-          'Todos os produtos FRPC',
-          'Até 25 utilizadores',
-          '50 GB de armazenamento',
-          'Integrações avançadas',
-          'Relatórios personalizados',
-          'Suporte prioritário',
-          'Atualizações automáticas',
-        ],
-        notIncluded: [
-          'API access',
-        ],
-      },
-      {
-        name: 'Business',
-        price: { monthly: 49, yearly: 399 },
-        description: 'Para empresas que precisam de controlo total.',
-        color: 'border-white/10',
-        features: [
-          'Todos os produtos FRPC',
-          'Utilizadores ilimitados',
-          'Armazenamento ilimitado',
-          'Integrações avançadas',
-          'Relatórios personalizados',
-          'API access completo',
-          'Suporte dedicado 24/7',
-          'SLA garantido',
-          'Onboarding personalizado',
-        ],
-        notIncluded: [],
-      },
-    ],
-    compareTitle: 'Comparação completa',
-    compareFeatures: [
-      { label: 'Utilizadores', values: ['5', '25', 'Ilimitado'] },
-      { label: 'Produtos FRPC', values: ['1', 'Todos', 'Todos'] },
-      { label: 'Armazenamento', values: ['5 GB', '50 GB', 'Ilimitado'] },
-      { label: 'Suporte por email', values: [true, true, true] },
-      { label: 'Suporte prioritário', values: [false, true, true] },
-      { label: 'Suporte dedicado 24/7', values: [false, false, true] },
-      { label: 'Integrações avançadas', values: [false, true, true] },
-      { label: 'Relatórios personalizados', values: [false, true, true] },
-      { label: 'API access', values: [false, false, true] },
-      { label: 'SLA garantido', values: [false, false, true] },
-      { label: 'Onboarding personalizado', values: [false, false, true] },
-    ],
+    free: 'Grátis',
+    ctaFree: 'Começar grátis',
+    ctaPro: 'Começar agora',
+    ctaBusiness: 'Falar com a equipa',
+    trialNote: '14 dias grátis · Sem cartão de crédito',
+    popular: 'Mais popular',
+    flagship: 'Produto principal',
+    comingSoon: 'Em breve',
+    otherProducts: 'Outros produtos',
+    otherDesc: 'Mais ferramentas a caminho. Subscreve para ser o primeiro a saber.',
     faqTitle: 'Perguntas frequentes',
     faqs: [
-      {
-        q: 'Posso mudar de plano a qualquer momento?',
-        a: 'Sim. Pode fazer upgrade ou downgrade do seu plano a qualquer altura. As alterações entram em vigor imediatamente.',
-      },
-      {
-        q: 'Existe um período de teste?',
-        a: 'Sim, todos os planos pagos incluem 14 dias de teste gratuito. Não é necessário cartão de crédito.',
-      },
-      {
-        q: 'Como funciona a faturação anual?',
-        a: 'Com a faturação anual poupa 2 meses (equivale a ~17% de desconto). É cobrado uma vez por ano.',
-      },
-      {
-        q: 'O que acontece quando excedo o limite de utilizadores?',
-        a: 'Receberá um aviso e pode fazer upgrade do plano ou adquirir utilizadores adicionais.',
-      },
+      { q: 'Posso experimentar antes de pagar?', a: 'Sim. Todos os planos pagos têm 14 dias de teste gratuito. Não precisas de cartão de crédito para começar.' },
+      { q: 'Posso mudar de plano a qualquer momento?', a: 'Sim, podes fazer upgrade ou downgrade quando quiseres. As alterações entram em vigor imediatamente.' },
+      { q: 'Como funciona a faturação anual?', a: 'Com faturação anual poupas o equivalente a 2 meses (~17% de desconto). Faturado uma vez por ano.' },
+      { q: 'O que acontece quando excedo o limite de utilizadores?', a: 'Recebes um aviso e podes fazer upgrade ou adicionar utilizadores extra.' },
     ],
-    bottomTitle: 'Precisa de algo',
-    bottomAccent: 'personalizado?',
-    bottomDesc: 'Para requisitos específicos, volumes elevados ou integrações à medida — fale connosco.',
+    bottomTitle: 'Precisas de algo',
+    bottomAccent: 'à medida?',
+    bottomDesc: 'Volumes elevados, integrações específicas ou requisitos enterprise — fala connosco.',
     bottomCta: 'Falar com a equipa',
     footerRights: 'Todos os direitos reservados.',
-    backToTop: 'Voltar ao topo ↑',
+    products: {
+      calendar: {
+        badge: 'Calendário de Férias',
+        tagline: 'Gestão de férias e ausências para equipas',
+        description: 'A forma mais simples de gerir férias, folgas e ausências da tua equipa. Visual, intuitivo e pronto a usar em minutos.',
+        url: '/produtos/calendario-de-ferias',
+        plans: [
+          {
+            name: 'Free',
+            price: { monthly: 0, yearly: 0 },
+            description: 'Para equipas pequenas que querem começar.',
+            features: ['Até 5 utilizadores', '1 calendário', 'Aprovações simples', 'Vista mensal', 'Exportar PDF'],
+            notIncluded: ['Múltiplos calendários', 'Integrações', 'Relatórios', 'Suporte prioritário'],
+          },
+          {
+            name: 'Pro',
+            price: { monthly: 9, yearly: 90 },
+            description: 'Para equipas em crescimento.',
+            popular: true,
+            features: ['Até 25 utilizadores', 'Múltiplos calendários', 'Aprovações avançadas', 'Relatórios de ausências', 'Integração Google Calendar', 'Notificações por email', 'Suporte prioritário'],
+            notIncluded: ['Utilizadores ilimitados', 'API access'],
+          },
+          {
+            name: 'Business',
+            price: { monthly: 19, yearly: 190 },
+            description: 'Para empresas que precisam de controlo total.',
+            features: ['Utilizadores ilimitados', 'Múltiplos calendários', 'API access completo', 'SSO / SAML', 'Relatórios avançados', 'SLA garantido', 'Suporte dedicado 24/7', 'Onboarding personalizado'],
+            notIncluded: [],
+          },
+        ],
+      },
+      manager: {
+        badge: 'Project Manager',
+        tagline: 'Gestão de projetos e tarefas',
+        description: 'Kanban, timelines e gestão de equipas numa interface moderna.',
+        comingSoon: true,
+        plans: [
+          { name: 'Free', price: { monthly: 0, yearly: 0 }, features: ['3 projetos', '5 utilizadores'], notIncluded: [] },
+          { name: 'Pro', price: { monthly: 12, yearly: 120 }, popular: true, features: ['Projetos ilimitados', '25 utilizadores', 'Relatórios'], notIncluded: [] },
+          { name: 'Business', price: { monthly: 25, yearly: 250 }, features: ['Tudo ilimitado', 'API', 'SSO'], notIncluded: [] },
+        ],
+      },
+    },
   },
   en: {
     back: 'Back',
     label: 'Pricing',
-    title: 'Simple and',
-    titleAccent: 'transparent.',
-    subtitle: 'Choose the right plan for your team. No surprises, no fine print.',
+    title: 'Pricing per',
+    titleAccent: 'product.',
+    subtitle: 'Pay only for what you use. Each FRPC product has its own plan — start free, scale when you need to.',
     monthly: 'Monthly',
     yearly: 'Yearly',
-    yearlyDiscount: '2 months free',
-    popular: 'Most popular',
-    ctaFree: 'Start for free',
-    ctaPaid: 'Get started',
-    ctaEnterprise: 'Talk to us',
+    save: 'Save 2 months',
     perMonth: '/mo',
     perYear: '/yr',
-    everythingIn: 'Everything in',
-    plus: 'plus:',
-    plans: [
-      {
-        name: 'Starter',
-        price: { monthly: 0, yearly: 0 },
-        description: 'For small teams that want to get started.',
-        color: 'border-white/10',
-        features: [
-          '1 FRPC product',
-          'Up to 5 users',
-          '5 GB storage',
-          'Email support',
-          'Automatic updates',
-        ],
-        notIncluded: [
-          'Advanced integrations',
-          'Custom reports',
-          'Priority support',
-          'API access',
-        ],
-      },
-      {
-        name: 'Pro',
-        price: { monthly: 19, yearly: 200 },
-        description: 'For growing teams that need more.',
-        color: 'border-white/30',
-        features: [
-          'All FRPC products',
-          'Up to 25 users',
-          '50 GB storage',
-          'Advanced integrations',
-          'Custom reports',
-          'Priority support',
-          'Automatic updates',
-        ],
-        notIncluded: [
-          'API access',
-        ],
-      },
-      {
-        name: 'Business',
-        price: { monthly: 79, yearly: 790 },
-        description: 'For companies that need full control.',
-        color: 'border-white/10',
-        features: [
-          'All FRPC products',
-          'Unlimited users',
-          'Unlimited storage',
-          'Advanced integrations',
-          'Custom reports',
-          'Full API access',
-          'Dedicated 24/7 support',
-          'Guaranteed SLA',
-          'Custom onboarding',
-        ],
-        notIncluded: [],
-      },
-    ],
-    compareTitle: 'Full comparison',
-    compareFeatures: [
-      { label: 'Users', values: ['5', '25', 'Unlimited'] },
-      { label: 'FRPC Products', values: ['1', 'All', 'All'] },
-      { label: 'Storage', values: ['5 GB', '50 GB', 'Unlimited'] },
-      { label: 'Email support', values: [true, true, true] },
-      { label: 'Priority support', values: [false, true, true] },
-      { label: 'Dedicated 24/7 support', values: [false, false, true] },
-      { label: 'Advanced integrations', values: [false, true, true] },
-      { label: 'Custom reports', values: [false, true, true] },
-      { label: 'API access', values: [false, false, true] },
-      { label: 'Guaranteed SLA', values: [false, false, true] },
-      { label: 'Custom onboarding', values: [false, false, true] },
-    ],
+    free: 'Free',
+    ctaFree: 'Start for free',
+    ctaPro: 'Get started',
+    ctaBusiness: 'Talk to us',
+    trialNote: '14-day free trial · No credit card required',
+    popular: 'Most popular',
+    flagship: 'Main product',
+    comingSoon: 'Coming soon',
+    otherProducts: 'More products',
+    otherDesc: 'More tools on the way. Subscribe to be the first to know.',
     faqTitle: 'Frequently asked questions',
     faqs: [
-      {
-        q: 'Can I change my plan at any time?',
-        a: 'Yes. You can upgrade or downgrade your plan at any time. Changes take effect immediately.',
-      },
-      {
-        q: 'Is there a trial period?',
-        a: 'Yes, all paid plans include a 14-day free trial. No credit card required.',
-      },
-      {
-        q: 'How does annual billing work?',
-        a: 'With annual billing you save 2 months (equivalent to ~17% discount). Billed once per year.',
-      },
-      {
-        q: 'What happens when I exceed the user limit?',
-        a: "You'll receive a warning and can upgrade your plan or purchase additional users.",
-      },
+      { q: 'Can I try before paying?', a: 'Yes. All paid plans have a 14-day free trial. No credit card needed to start.' },
+      { q: 'Can I change my plan at any time?', a: 'Yes, you can upgrade or downgrade whenever you want. Changes take effect immediately.' },
+      { q: 'How does annual billing work?', a: 'With annual billing you save the equivalent of 2 months (~17% discount). Billed once per year.' },
+      { q: 'What happens when I exceed the user limit?', a: "You'll receive a warning and can upgrade or add extra users." },
     ],
     bottomTitle: 'Need something',
     bottomAccent: 'custom?',
-    bottomDesc: 'For specific requirements, high volumes or custom integrations — get in touch.',
+    bottomDesc: 'High volumes, specific integrations or enterprise requirements — get in touch.',
     bottomCta: 'Talk to the team',
     footerRights: 'All rights reserved.',
-    backToTop: 'Back to top ↑',
+    products: {
+      calendar: {
+        badge: 'Vacation Schedule',
+        tagline: 'Vacation & absence management for teams',
+        description: 'The simplest way to manage your team\'s vacations, days off and absences. Visual, intuitive and ready to use in minutes.',
+        url: '/produtos/calendario-de-ferias',
+        plans: [
+          {
+            name: 'Free',
+            price: { monthly: 0, yearly: 0 },
+            description: 'For small teams getting started.',
+            features: ['Up to 5 users', '1 calendar', 'Simple approvals', 'Monthly view', 'PDF export'],
+            notIncluded: ['Multiple calendars', 'Integrations', 'Reports', 'Priority support'],
+          },
+          {
+            name: 'Pro',
+            price: { monthly: 9, yearly: 90 },
+            description: 'For growing teams.',
+            popular: true,
+            features: ['Up to 25 users', 'Multiple calendars', 'Advanced approvals', 'Absence reports', 'Google Calendar sync', 'Email notifications', 'Priority support'],
+            notIncluded: ['Unlimited users', 'API access'],
+          },
+          {
+            name: 'Business',
+            price: { monthly: 19, yearly: 190 },
+            description: 'For companies needing full control.',
+            features: ['Unlimited users', 'Multiple calendars', 'Full API access', 'SSO / SAML', 'Advanced reports', 'Guaranteed SLA', 'Dedicated 24/7 support', 'Custom onboarding'],
+            notIncluded: [],
+          },
+        ],
+      },
+      manager: {
+        badge: 'Project Manager',
+        tagline: 'Project & task management',
+        description: 'Kanban, timelines and team management in a modern interface.',
+        comingSoon: true,
+        plans: [
+          { name: 'Free', price: { monthly: 0, yearly: 0 }, features: ['3 projects', '5 users'], notIncluded: [] },
+          { name: 'Pro', price: { monthly: 12, yearly: 120 }, popular: true, features: ['Unlimited projects', '25 users', 'Reports'], notIncluded: [] },
+          { name: 'Business', price: { monthly: 25, yearly: 250 }, features: ['Everything unlimited', 'API', 'SSO'], notIncluded: [] },
+        ],
+      },
+    },
   },
 }
 
+type Lang = 'pt' | 'en'
+type Plan = { name: string; price: { monthly: number; yearly: number }; description?: string; popular?: boolean; features: string[]; notIncluded: string[] }
+
+// ─── Plan card ───────────────────────────────────────────────────────────────
+function PlanCard({ plan, yearly, lang, productUrl }: { plan: Plan; yearly: boolean; lang: Lang; productUrl?: string }) {
+  const t = T[lang]
+  const isPro = !!plan.popular
+  const isBusiness = plan.name === 'Business'
+  const price = yearly ? plan.price.yearly : plan.price.monthly
+  const isFree = price === 0
+
+  const ctaLabel = isBusiness ? t.ctaBusiness : isFree ? t.ctaFree : t.ctaPro
+  const ctaHref = isBusiness ? '/#contact' : (productUrl ?? '/')
+
+  return (
+    <div className={`relative flex flex-col rounded-2xl border ${
+      isPro
+        ? 'border-white/25 bg-white/[0.07] shadow-[0_0_40px_rgba(255,255,255,0.05)]'
+        : 'border-white/[0.08] bg-white/[0.03]'
+    }`}>
+      {/* Pro gradient top line */}
+      {isPro && (
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent rounded-t-2xl" />
+      )}
+
+      {/* Popular badge — sits above the card, needs overflow-visible on parent */}
+      {isPro && (
+        <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10 px-3 py-1 rounded-full bg-white text-black text-[10px] font-bold tracking-wide uppercase whitespace-nowrap">
+          {t.popular}
+        </div>
+      )}
+
+      <div className={`p-7 flex flex-col gap-6 ${isPro ? 'pt-9' : ''}`}>
+        {/* Header */}
+        <div>
+          <p className="text-white/40 text-xs font-semibold tracking-widest uppercase mb-2">{plan.name}</p>
+          {plan.description && <p className="text-white/35 text-sm leading-relaxed">{plan.description}</p>}
+        </div>
+
+        {/* Price */}
+        <div className="flex items-end gap-1.5">
+          <span
+            className="font-serif font-bold text-white leading-none"
+            style={{ fontFamily: 'var(--font-serif)', fontSize: isFree ? '2.5rem' : 'clamp(2rem,5vw,3rem)' }}
+          >
+            {isFree ? t.free : `€${price}`}
+          </span>
+          {!isFree && (
+            <span className="text-white/35 text-sm mb-1">{yearly ? t.perYear : t.perMonth}</span>
+          )}
+        </div>
+
+        {/* Features */}
+        <ul className="space-y-2.5">
+          {plan.features.map(f => (
+            <li key={f} className="flex items-start gap-2.5">
+              <div className={`mt-0.5 w-4 h-4 rounded-full flex items-center justify-center shrink-0 ${isPro ? 'bg-emerald-500/20' : 'bg-white/[0.06]'}`}>
+                <Check className={`w-2.5 h-2.5 ${isPro ? 'text-emerald-400' : 'text-white/45'}`} />
+              </div>
+              <span className={`text-sm ${isPro ? 'text-white/75' : 'text-white/50'}`}>{f}</span>
+            </li>
+          ))}
+          {plan.notIncluded.map(f => (
+            <li key={f} className="flex items-start gap-2.5 opacity-30">
+              <X className="w-4 h-4 text-white/30 shrink-0 mt-0.5" />
+              <span className="text-sm text-white/30 line-through">{f}</span>
+            </li>
+          ))}
+        </ul>
+
+        {/* CTA */}
+        <Link href={ctaHref} className="mt-auto block">
+          <MagneticButton className={`w-full py-3 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 group transition-colors duration-200 ${
+            isPro
+              ? 'bg-white text-black hover:bg-white/90'
+              : 'border border-white/15 text-white/60 hover:text-white hover:border-white/30 hover:bg-white/[0.05]'
+          }`}>
+            {ctaLabel}
+            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform duration-200" />
+          </MagneticButton>
+        </Link>
+      </div>
+    </div>
+  )
+}
+
+// ─── Page ────────────────────────────────────────────────────────────────────
 export default function PricingPage() {
   const [isVisible, setIsVisible] = useState(false)
   const [yearly, setYearly] = useState(false)
   const [openFaq, setOpenFaq] = useState<number | null>(null)
-  const { lang, toggleLanguage, isSwitching, t: navT } = useLanguage()
-  const t = TRANSLATIONS[lang]
+  const { lang, toggleLanguage, t: navT } = useLang()
+  const { isSwitching } = useSwitch()
+  const t = T[lang as Lang]
 
   useEffect(() => {
     const raf = requestAnimationFrame(() => setIsVisible(true))
     return () => cancelAnimationFrame(raf)
   }, [])
+
+  const vis = (delay = '') => ({
+    style: delay ? { transitionDelay: delay } : undefined,
+    className: `transition-[opacity,transform] duration-700 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`,
+  })
 
   return (
     <>
@@ -261,19 +281,19 @@ export default function PricingPage() {
       <nav className="fixed top-0 left-0 right-0 z-50 px-6 md:px-12 py-6">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/" className="flex items-center gap-2 text-white/50 hover:text-white text-sm transition-colors group">
-              <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-200" />
+            <Link href="/" className="flex items-center gap-2 text-white/45 hover:text-white text-sm transition-[color] duration-200 group">
+              <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform duration-200" />
               <span className="hidden sm:block tracking-[0.2em] uppercase text-xs">{t.back}</span>
             </Link>
-            <div className="w-px h-4 bg-white/20" />
-            <Link href="/" className="text-2xl md:text-3xl font-serif font-bold text-white hover:opacity-80 transition-opacity" style={{ fontFamily: 'var(--font-serif)' }}>
+            <div className="w-px h-4 bg-white/15" />
+            <Link href="/" className="text-2xl md:text-3xl font-serif font-bold text-white hover:opacity-80 transition-opacity duration-200" style={{ fontFamily: 'var(--font-serif)' }}>
               FRPC
             </Link>
           </div>
           <MagneticButton
             onClick={toggleLanguage}
             disabled={isSwitching}
-            className="px-4 py-2 border border-white/30 text-white text-sm font-medium rounded-full hover:bg-white/10 transition-all duration-300"
+            className="px-4 py-2 border border-white/25 text-white text-sm font-medium rounded-full hover:bg-white/10 transition-[background-color] duration-200"
           >
             {navT.nav.language}
           </MagneticButton>
@@ -282,265 +302,177 @@ export default function PricingPage() {
 
       <main className="relative z-10">
 
-        {/* ─── HERO ────────────────────────────────────────────────── */}
-        <section className="relative min-h-[55vh] flex items-center px-6 md:px-12 pt-32 pb-16">
+        {/*  HERO  */}
+        <section className="relative px-6 md:px-12 pt-40 pb-16">
           <div className="max-w-7xl w-full mx-auto">
-            <div className={`transition-all duration-700 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-              <span className="text-white/40 text-xs tracking-[0.3em] uppercase">{t.label}</span>
+            <div {...vis('0ms')}>
+              <span className="text-white/35 text-xs tracking-[0.3em] uppercase">{t.label}</span>
             </div>
-            <div className={`mt-4 transition-all duration-700 delay-100 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-              <h1 className="font-serif font-bold text-white leading-none" style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(3rem, 10vw, 9rem)' }}>
+            <div {...vis('100ms')} className={`mt-4 transition-[opacity,transform] duration-700 delay-100 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}>
+              <h1 className="font-serif font-bold text-white leading-none" style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(2.8rem, 9vw, 8rem)' }}>
                 {t.title}<br />
-                <span style={{ WebkitTextStroke: '1.5px rgba(255,255,255,0.4)', WebkitTextFillColor: 'transparent' }}>
+                <span style={{ WebkitTextStroke: '1.5px rgba(255,255,255,0.35)', WebkitTextFillColor: 'transparent' }}>
                   {t.titleAccent}
                 </span>
               </h1>
             </div>
-            <p className={`text-white/50 text-lg md:text-xl max-w-xl mt-6 leading-relaxed transition-all duration-700 delay-300 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+            <p className={`text-white/45 text-lg md:text-xl max-w-xl mt-6 leading-relaxed transition-[opacity,transform] duration-700 delay-200 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}>
               {t.subtitle}
             </p>
 
             {/* Billing toggle */}
-            <div className={`mt-10 flex items-center gap-4 transition-all duration-700 delay-500 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-              <span className={`text-sm transition-colors ${!yearly ? 'text-white' : 'text-white/40'}`}>{t.monthly}</span>
+            <div className={`mt-10 flex items-center gap-4 transition-[opacity,transform] duration-700 delay-300 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}>
+              <span className={`text-sm transition-[color] duration-200 ${!yearly ? 'text-white' : 'text-white/35'}`}>{t.monthly}</span>
               <button
                 onClick={() => setYearly(v => !v)}
-                className={`relative w-12 h-6 rounded-full transition-colors duration-300 ${yearly ? 'bg-white' : 'bg-white/20'}`}
+                className={`relative w-11 h-6 rounded-full transition-[background-color] duration-300 ${yearly ? 'bg-white' : 'bg-white/20'}`}
+                aria-label="Toggle billing period"
               >
-                <div className={`absolute top-1 w-4 h-4 rounded-full transition-all duration-300 ${yearly ? 'left-7 bg-black' : 'left-1 bg-white'}`} />
+                <div className={`absolute top-1 w-4 h-4 rounded-full transition-[left] duration-300 ${yearly ? 'left-6 bg-black' : 'left-1 bg-white'}`} />
               </button>
-              <span className={`text-sm transition-colors ${yearly ? 'text-white' : 'text-white/40'}`}>{t.yearly}</span>
-              {yearly && (
-                <span className="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-medium">{t.yearlyDiscount}</span>
-              )}
+              <span className={`text-sm transition-[color] duration-200 ${yearly ? 'text-white' : 'text-white/35'}`}>{t.yearly}</span>
+              <span className={`px-2.5 py-1 rounded-full text-xs font-medium transition-[opacity,transform] duration-300 ${yearly ? 'opacity-100 scale-100 bg-emerald-500/15 text-emerald-400' : 'opacity-0 scale-90'}`}>
+                {t.save}
+              </span>
             </div>
           </div>
         </section>
 
-        {/* ─── SOCIAL PROOF BAR ────────────────────────────────────── */}
-        <div className={`px-6 md:px-12 pb-10 transition-all duration-700 delay-700 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-          <div className="max-w-7xl mx-auto flex items-center justify-center gap-3 text-white/35 text-sm">
-            <div className="flex -space-x-2">
-              {['A','B','C','D','E'].map((l, i) => (
-                <div key={l} className="w-7 h-7 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white/50 text-[10px] font-medium" style={{ zIndex: 5 - i }}>{l}</div>
-              ))}
-            </div>
-            <span>{lang === 'pt' ? 'Junte-se a mais de 50 equipas já a usar FRPC' : 'Join 50+ teams already using FRPC'}</span>
-            <span className="flex gap-0.5">{['★','★','★','★','★'].map((s, i) => <span key={i} className="text-yellow-400/70 text-xs">{s}</span>)}</span>
-          </div>
-        </div>
-
-        {/* ─── PRICING CARDS ───────────────────────────────────────── */}
-        <section className="relative px-6 md:px-12 pb-32">
-          <div className="max-w-5xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-start">
-              {t.plans.map((plan, i) => {
-                const isPro = plan.name === 'Pro'
-                const price = yearly ? plan.price.yearly : plan.price.monthly
-                const isFree = price === 0
-                return (
-                  <Reveal key={plan.name} delay={i * 120}>
-                    <div className={`relative flex flex-col rounded-3xl border transition-all duration-500 overflow-visible ${
-                      isPro
-                        ? 'border-white/30 bg-white/[0.08] shadow-[0_0_60px_rgba(255,255,255,0.06)]'
-                        : 'border-white/10 bg-white/[0.03] hover:bg-white/[0.06] hover:border-white/20'
-                    }`}>
-                      {/* Pro glow ring */}
-                      {isPro && (
-                        <div className="absolute -inset-px rounded-3xl pointer-events-none" style={{
-                          background: 'linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.03) 50%, rgba(255,255,255,0.1) 100%)',
-                          WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                          WebkitMaskComposite: 'xor',
-                          maskComposite: 'exclude',
-                          padding: '1px',
-                        }} />
-                      )}
-
-                      {/* Popular badge */}
-                      {isPro && (
-                        <div className="absolute -top-4 left-0 right-0 flex justify-center">
-                          <span className="relative overflow-hidden px-4 py-1.5 rounded-full bg-white text-black text-xs font-semibold tracking-wide badge-shine">
-                            {t.popular}
-                          </span>
-                        </div>
-                      )}
-
-                      <div className={`p-8 md:p-9 ${isPro ? 'pt-10' : ''}`}>
-                        {/* Header */}
-                        <div className="mb-6">
-                          <div className="flex items-center justify-between mb-2">
-                            <h2 className="text-lg font-serif font-bold text-white" style={{ fontFamily: 'var(--font-serif)' }}>{plan.name}</h2>
-                            {isPro && <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-[10px] font-medium tracking-wide uppercase">Popular</span>}
-                          </div>
-                          <p className="text-white/40 text-sm leading-relaxed">{plan.description}</p>
-                        </div>
-
-                        {/* Price */}
-                        <div className="mb-8 pb-8 border-b border-white/[0.08]">
-                          <div className="flex items-end gap-1.5">
-                            <span className="font-serif font-bold text-white leading-none" style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(2.2rem, 5vw, 3.5rem)' }}>
-                              {isFree ? 'Free' : `€${price}`}
-                            </span>
-                            {!isFree && (
-                              <span className="text-white/35 text-sm mb-1">{yearly ? t.perYear : t.perMonth}</span>
-                            )}
-                          </div>
-                          {yearly && !isFree && (
-                            <p className="text-emerald-400/70 text-xs mt-1.5">{lang === 'pt' ? 'Faturado anualmente' : 'Billed annually'}</p>
-                          )}
-                        </div>
-
-                        {/* Features */}
-                        <div className="space-y-3 mb-8">
-                          {plan.features.map(f => (
-                            <div key={f} className="flex items-start gap-3">
-                              <div className={`w-4 h-4 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${isPro ? 'bg-emerald-500/20' : 'bg-white/5'}`}>
-                                <Check className={`w-2.5 h-2.5 ${isPro ? 'text-emerald-400' : 'text-white/50'}`} />
-                              </div>
-                              <span className={`text-sm ${isPro ? 'text-white/80' : 'text-white/60'}`}>{f}</span>
-                            </div>
-                          ))}
-                          {plan.notIncluded.map(f => (
-                            <div key={f} className="flex items-start gap-3 opacity-40">
-                              <X className="w-4 h-4 text-white/30 shrink-0 mt-0.5" />
-                              <span className="text-white/30 text-sm line-through">{f}</span>
-                            </div>
-                          ))}
-                        </div>
-
-                        {/* CTA */}
-                        <a href={plan.name === 'Business' ? '/#contact' : '/produtos/calendario-de-ferias'}>
-                          <MagneticButton className={`w-full py-3.5 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center justify-center gap-2 group ${
-                            isPro
-                              ? 'bg-white text-black hover:bg-white/90 shadow-[0_4px_24px_rgba(255,255,255,0.15)]'
-                              : 'border border-white/15 text-white/70 hover:text-white hover:border-white/30 hover:bg-white/5'
-                          }`}>
-                            {plan.name === 'Business' ? t.ctaEnterprise : isFree ? t.ctaFree : t.ctaPaid}
-                            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform duration-200" />
-                          </MagneticButton>
-                        </a>
-                      </div>
+        {/*  CALENDÁRIO DE FÉRIAS  */}
+        <section className="relative px-6 md:px-12 pb-24">
+          <div className="max-w-7xl mx-auto">
+            <Reveal>
+              <div className="rounded-3xl border border-white/10 bg-white/[0.02] overflow-hidden">
+                {/* Product header */}
+                <div className="px-8 md:px-12 py-8 border-b border-white/[0.06] flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-400/20 flex items-center justify-center shrink-0">
+                      <svg className="w-5 h-5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
                     </div>
-                  </Reveal>
-                )
-              })}
-            </div>
-
-            {/* Guarantee strip */}
-            <Reveal delay={400}>
-              <div className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-white/30 text-xs">
-                {[
-                  lang === 'pt' ? '✓ Sem cartão de crédito' : '✓ No credit card required',
-                  lang === 'pt' ? '✓ 14 dias grátis' : '✓ 14-day free trial',
-                  lang === 'pt' ? '✓ Cancele quando quiser' : '✓ Cancel anytime',
-                  lang === 'pt' ? '✓ Suporte incluído' : '✓ Support included',
-                ].map(item => <span key={item}>{item}</span>)}
-              </div>
-            </Reveal>
-          </div>
-        </section>
-
-        {/* ─── FEATURE HIGHLIGHTS ──────────────────────────────────── */}
-        <section className="relative py-24 border-t border-white/10">
-          <div className="max-w-7xl mx-auto px-6 md:px-12">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              {[
-                { icon: <Zap className="w-6 h-6" />, title: lang === 'pt' ? 'Setup em 2 min' : '2 min setup', desc: lang === 'pt' ? 'Sem configuração complexa' : 'No complex configuration' },
-                { icon: <Shield className="w-6 h-6" />, title: lang === 'pt' ? 'Sem compromisso' : 'No commitment', desc: lang === 'pt' ? 'Cancele quando quiser' : 'Cancel anytime' },
-                { icon: <Users className="w-6 h-6" />, title: lang === 'pt' ? 'Para equipas' : 'Built for teams', desc: lang === 'pt' ? 'Colaboração em tempo real' : 'Real-time collaboration' },
-                { icon: <Headphones className="w-6 h-6" />, title: lang === 'pt' ? 'Suporte humano' : 'Human support', desc: lang === 'pt' ? 'Sempre aqui para ajudar' : 'Always here to help' },
-              ].map((item, i) => (
-                <Reveal key={item.title} delay={i * 80}>
-                  <div className="text-center">
-                    <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center text-white/60 mx-auto mb-4">{item.icon}</div>
-                    <h3 className="text-white font-semibold text-sm mb-1">{item.title}</h3>
-                    <p className="text-white/40 text-xs">{item.desc}</p>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h2 className="text-white font-semibold">{t.products.calendar.badge}</h2>
+                        <span className="px-2 py-0.5 rounded bg-blue-500/15 text-blue-400 text-[10px] font-semibold tracking-wide uppercase">{t.flagship}</span>
+                      </div>
+                      <p className="text-white/35 text-sm">{t.products.calendar.tagline}</p>
+                    </div>
                   </div>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </section>
+                  <Link href={t.products.calendar.url} className="group inline-flex items-center gap-2 text-white/45 hover:text-white text-sm transition-[color] duration-200">
+                    {lang === 'pt' ? 'Ver produto' : 'View product'}
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" />
+                  </Link>
+                </div>
 
-        {/* ─── COMPARISON TABLE ────────────────────────────────────── */}
-        <section className="relative py-32 border-t border-white/10">
-          <div className="max-w-5xl mx-auto px-6 md:px-12">
-            <Reveal>
-              <h2 className="text-3xl md:text-5xl font-serif font-bold text-white mb-16" style={{ fontFamily: 'var(--font-serif)' }}>
-                {t.compareTitle}
-              </h2>
-            </Reveal>
-            <Reveal delay={100}>
-              <div className="overflow-x-auto rounded-3xl border border-white/10 bg-white/[0.03]">
-                <table className="w-full min-w-[560px]">
-                  <thead>
-                    <tr className="border-b border-white/10">
-                      <th className="text-left py-6 pl-8 pr-4 text-white/30 text-xs uppercase tracking-widest font-normal w-[44%]" />
-                      {t.plans.map((plan, pi) => {
-                        const isPro = plan.name === 'Pro'
-                        const price = plan.price.monthly
-                        return (
-                          <th key={plan.name} className={`py-6 px-4 text-center ${isPro ? 'bg-white/[0.07]' : ''}`}>
-                            <div className={`text-sm font-bold mb-1 ${isPro ? 'text-white' : 'text-white/50'}`}>{plan.name}</div>
-                            <div className={`text-xs ${isPro ? 'text-white/50' : 'text-white/25'}`}>
-                              {price === 0 ? 'Free' : `€${price}${lang === 'pt' ? '/mês' : '/mo'}`}
-                            </div>
-                            {isPro && <div className="mt-2 mx-auto w-1.5 h-1.5 rounded-full bg-emerald-400" />}
-                          </th>
-                        )
-                      })}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {t.compareFeatures.map((row, i) => (
-                      <tr key={row.label} className={`border-b border-white/[0.06] last:border-0 ${i % 2 === 0 ? 'bg-transparent' : 'bg-white/[0.02]'}`}>
-                        <td className="py-4 pl-8 pr-4 text-white/60 text-sm">{row.label}</td>
-                        {row.values.map((val, vi) => {
-                          const isPro = vi === 1
-                          return (
-                            <td key={vi} className={`py-4 px-4 text-center ${isPro ? 'bg-white/[0.04]' : ''}`}>
-                              {typeof val === 'boolean' ? (
-                                val
-                                  ? <Check className={`w-4 h-4 mx-auto ${isPro ? 'text-emerald-400' : 'text-emerald-400/60'}`} />
-                                  : <X className="w-4 h-4 text-white/15 mx-auto" />
-                              ) : (
-                                <span className={`text-sm font-medium ${isPro ? 'text-white' : 'text-white/50'}`}>{val}</span>
-                              )}
-                            </td>
-                          )
-                        })}
-                      </tr>
+                {/* Plans grid */}
+                <div className="p-6 md:p-8 pt-8 md:pt-10">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
+                    {t.products.calendar.plans.map((plan) => (
+                      <PlanCard key={plan.name} plan={plan} yearly={yearly} lang={lang as Lang} productUrl={t.products.calendar.url} />
                     ))}
-                  </tbody>
-                </table>
+                  </div>
+                  <p className="text-center text-white/25 text-xs mt-6">{t.trialNote}</p>
+                </div>
               </div>
             </Reveal>
           </div>
         </section>
 
-        {/* ─── FAQ ─────────────────────────────────────────────────── */}
-        <section className="relative py-32 border-t border-white/10">
-          <div className="max-w-3xl mx-auto px-6 md:px-12">
+        {/*  outros produtos */}
+        <section className="relative px-6 md:px-12 pb-32">
+          <div className="max-w-7xl mx-auto">
             <Reveal>
-              <h2 className="text-3xl md:text-5xl font-serif font-bold text-white mb-16" style={{ fontFamily: 'var(--font-serif)' }}>
+              <div className="mb-8">
+                <h3 className="text-white/60 text-sm font-semibold tracking-widest uppercase">{t.otherProducts}</h3>
+                <p className="text-white/25 text-sm mt-1">{t.otherDesc}</p>
+              </div>
+            </Reveal>
+
+            {/* Project Manager*/}
+            <Reveal delay={100}>
+              <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] overflow-hidden">
+                <div className="px-8 py-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-400/15 flex items-center justify-center shrink-0">
+                      <svg className="w-5 h-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                      </svg>
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h2 className="text-white/70 font-semibold">{t.products.manager.badge}</h2>
+                        <span className="flex items-center gap-1 px-2 py-0.5 rounded border border-white/10 text-white/30 text-[10px]">
+                          <Clock className="w-2.5 h-2.5" />{t.comingSoon}
+                        </span>
+                      </div>
+                      <p className="text-white/25 text-sm">{t.products.manager.tagline}</p>
+                    </div>
+                  </div>
+
+                  {/* Pricing preview */}
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {t.products.manager.plans.map((plan) => (
+                      <div key={plan.name} className="px-3 py-1.5 rounded-lg border border-white/[0.06] bg-white/[0.03]">
+                        <span className="text-white/20 text-[10px] block">{plan.name}</span>
+                        <span className="text-white/40 text-sm font-semibold">
+                          {plan.price.monthly === 0 ? (lang === 'pt' ? 'Grátis' : 'Free') : `€${plan.price.monthly}/mo`}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </Reveal>
+
+            {/* Portal FRPC — coming soon */}
+            <Reveal delay={160}>
+              <div className="mt-4 rounded-2xl border border-white/[0.06] bg-white/[0.02] overflow-hidden">
+                <div className="px-8 py-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-violet-500/15 border border-violet-400/15 flex items-center justify-center shrink-0">
+                      <svg className="w-5 h-5 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h2 className="text-white/70 font-semibold">Portal FRPC</h2>
+                        <span className="flex items-center gap-1 px-2 py-0.5 rounded border border-white/10 text-white/30 text-[10px]">
+                          <Clock className="w-2.5 h-2.5" />{t.comingSoon}
+                        </span>
+                      </div>
+                      <p className="text-white/25 text-sm">{lang === 'pt' ? 'Acesso centralizado a todos os produtos FRPC' : 'Centralized access to all FRPC products'}</p>
+                    </div>
+                  </div>
+                  <span className="text-white/20 text-sm">{lang === 'pt' ? 'Incluído em todos os planos' : 'Included in all plans'}</span>
+                </div>
+              </div>
+            </Reveal>
+          </div>
+        </section>
+
+        {/*  FAQ  */}
+        <section className="relative py-24 border-t border-white/[0.06] px-6 md:px-12">
+          <div className="max-w-3xl mx-auto">
+            <Reveal>
+              <h2 className="text-2xl md:text-4xl font-serif font-bold text-white mb-10" style={{ fontFamily: 'var(--font-serif)' }}>
                 {t.faqTitle}
               </h2>
             </Reveal>
-            <div className="space-y-3">
+            <div className="space-y-2">
               {t.faqs.map((faq, i) => (
-                <Reveal key={i} delay={i * 60}>
-                  <div className="border border-white/10 rounded-2xl overflow-hidden">
+                <Reveal key={i} delay={i * 50}>
+                  <div className="border border-white/[0.07] rounded-2xl overflow-hidden">
                     <button
                       onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                      className="w-full flex items-center justify-between px-6 py-5 text-left hover:bg-white/5 transition-colors"
+                      className="w-full flex items-center justify-between px-6 py-5 text-left hover:bg-white/[0.03] transition-[background-color] duration-200"
                     >
-                      <span className="text-white font-medium text-sm md:text-base pr-4">{faq.q}</span>
-                      <div className={`w-6 h-6 rounded-full border border-white/20 flex items-center justify-center shrink-0 transition-transform duration-300 ${openFaq === i ? 'rotate-45' : ''}`}>
-                        <ArrowRight className="w-3 h-3 text-white/60 -rotate-45" />
-                      </div>
+                      <span className="text-white/80 font-medium text-sm md:text-base pr-4">{faq.q}</span>
+                      <ChevronDown className={`w-4 h-4 text-white/30 shrink-0 transition-transform duration-300 ${openFaq === i ? 'rotate-180' : ''}`} />
                     </button>
-                    <div className={`overflow-hidden transition-all duration-300 ${openFaq === i ? 'max-h-40' : 'max-h-0'}`}>
-                      <p className="px-6 pb-5 text-white/50 text-sm leading-relaxed">{faq.a}</p>
+                    <div className={`overflow-hidden transition-[max-height] duration-300 ease-out ${openFaq === i ? 'max-h-40' : 'max-h-0'}`}>
+                      <p className="px-6 pb-5 text-white/45 text-sm leading-relaxed">{faq.a}</p>
                     </div>
                   </div>
                 </Reveal>
@@ -549,21 +481,21 @@ export default function PricingPage() {
           </div>
         </section>
 
-        {/* ─── BOTTOM CTA ──────────────────────────────────────────── */}
-        <section className="relative py-32 md:py-48 border-t border-white/10">
+        {/* ── BOTTOM CTA  */}
+        <section className="relative py-32 md:py-48 border-t border-white/[0.06]">
           <div className="max-w-7xl mx-auto px-6 md:px-12 text-center">
             <Reveal>
               <h2 className="font-serif font-bold text-white leading-none mb-4" style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(2.5rem, 8vw, 7rem)' }}>
                 {t.bottomTitle}<br />
-                <span style={{ WebkitTextStroke: '1.5px rgba(255,255,255,0.4)', WebkitTextFillColor: 'transparent' }}>{t.bottomAccent}</span>
+                <span style={{ WebkitTextStroke: '1.5px rgba(255,255,255,0.3)', WebkitTextFillColor: 'transparent' }}>{t.bottomAccent}</span>
               </h2>
             </Reveal>
-            <Reveal delay={150}>
-              <p className="text-white/40 text-lg max-w-md mx-auto mb-10">{t.bottomDesc}</p>
+            <Reveal delay={100}>
+              <p className="text-white/35 text-lg max-w-md mx-auto mb-10">{t.bottomDesc}</p>
             </Reveal>
-            <Reveal delay={300}>
+            <Reveal delay={200}>
               <Link href="/#contact">
-                <MagneticButton className="group inline-flex items-center gap-4 px-10 py-5 bg-white text-black font-medium rounded-full hover:bg-white/90 transition-all">
+                <MagneticButton className="group inline-flex items-center gap-4 px-10 py-5 bg-white text-black font-semibold rounded-full hover:bg-white/90 transition-[background-color] duration-200">
                   {t.bottomCta}
                   <div className="w-8 h-8 rounded-full bg-black flex items-center justify-center group-hover:rotate-45 transition-transform duration-300">
                     <ArrowRight className="w-4 h-4 text-white" />
@@ -575,11 +507,11 @@ export default function PricingPage() {
         </section>
 
         {/* Footer */}
-        <footer className="relative py-10 border-t border-white/10">
+        <footer className="relative py-10 border-t border-white/[0.06]">
           <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row items-center justify-between gap-4">
             <Link href="/" className="text-2xl font-serif font-bold text-white hover:opacity-70 transition-opacity" style={{ fontFamily: 'var(--font-serif)' }}>FRPC</Link>
-            <p className="text-white/30 text-sm">© {new Date().getFullYear()} FRPC. {t.footerRights}</p>
-            <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="text-white/40 hover:text-white text-sm transition-colors">{t.backToTop}</button>
+            <p className="text-white/25 text-sm">© {new Date().getFullYear()} FRPC. {t.footerRights}</p>
+            <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="text-white/30 hover:text-white text-sm transition-[color] duration-200">{lang === 'pt' ? 'Voltar ao topo ↑' : 'Back to top ↑'}</button>
           </div>
         </footer>
       </main>

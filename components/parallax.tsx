@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useRef, ReactNode, memo } from 'react'
+import { subscribeScroll } from '@/lib/scroll-bus'
 
 interface ParallaxProps {
   children: ReactNode
@@ -11,7 +12,6 @@ interface ParallaxProps {
 export const Parallax = memo(function Parallax({ children, speed = 0.5, className = '' }: ParallaxProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const innerRef = useRef<HTMLDivElement>(null)
-  const rafId = useRef<number | null>(null)
   const isInView = useRef(false)
 
   useEffect(() => {
@@ -19,43 +19,25 @@ export const Parallax = memo(function Parallax({ children, speed = 0.5, classNam
     const inner = innerRef.current
     if (!container || !inner) return
 
-    // Use IntersectionObserver to only animate when in view
-    const intersectionObserver = new IntersectionObserver(
-      (entries) => {
-        isInView.current = entries[0].isIntersecting
-      },
+    // Visibility gate — skip updates when off-screen
+    const io = new IntersectionObserver(
+      ([entry]) => { isInView.current = entry.isIntersecting },
       { threshold: 0, rootMargin: '100px' }
     )
+    io.observe(container)
 
-    intersectionObserver.observe(container)
-
-    const handleScroll = () => {
-      // Skip if not in view
+    // Use shared scroll bus instead of own listener
+    const unsub = subscribeScroll(() => {
       if (!isInView.current) return
-      
-      if (rafId.current) cancelAnimationFrame(rafId.current)
-      
-      rafId.current = requestAnimationFrame(() => {
-        if (!container || !inner) return
-        
-        const rect = container.getBoundingClientRect()
-        const windowHeight = window.innerHeight
-        
-        const scrollProgress = (windowHeight - rect.top) / (windowHeight + rect.height)
-        const parallaxOffset = (scrollProgress - 0.5) * 100 * speed
-        
-        // Direct DOM manipulation - no React state updates
-        inner.style.transform = `translate3d(0, ${parallaxOffset}px, 0)`
-      })
-    }
-
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    handleScroll()
+      const rect = container.getBoundingClientRect()
+      const windowH = window.innerHeight
+      const progress = (windowH - rect.top) / (windowH + rect.height)
+      inner.style.transform = `translate3d(0,${(progress - 0.5) * 100 * speed}px,0)`
+    })
 
     return () => {
-      intersectionObserver.disconnect()
-      window.removeEventListener('scroll', handleScroll)
-      if (rafId.current) cancelAnimationFrame(rafId.current)
+      io.disconnect()
+      unsub()
     }
   }, [speed])
 

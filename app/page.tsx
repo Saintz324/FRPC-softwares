@@ -6,6 +6,7 @@ import { CursorFollower } from '@/components/cursor-follower'
 import { Navigation } from '@/components/navigation'
 import { HeroSection } from '@/components/sections/hero'
 import { ChatWidget } from '@/components/chat-widget'
+import { Grain } from '@/components/grain'
 
 // Lazy load sections that are below the fold
 const AboutSection = dynamic(() => import('@/components/sections/about').then(mod => ({ default: mod.AboutSection })), {
@@ -45,6 +46,9 @@ export default function Home() {
       <div className="hidden md:block">
         <CursorFollower />
       </div>
+
+      {/* Film grain overlay */}
+      <Grain />
 
       {/* Spline 3D Background */}
       <SplineBackground />

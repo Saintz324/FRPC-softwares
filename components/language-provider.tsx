@@ -109,7 +109,7 @@ const translations: Record<Language, Translation> = {
       backToTop: 'Voltar ao topo',
     },
     hero: {
-      intro: 'FRPC - software & inovação',
+      intro: 'Software & inovação',
       main1: 'CRIAMOS',
       main2: 'SOFTWARE',
       main3: 'AGORA',
@@ -245,7 +245,7 @@ const translations: Record<Language, Translation> = {
       backToTop: 'Back to top',
     },
     hero: {
-      intro: 'FRPC - software & innovation',
+      intro: 'Software & innovation',
       main1: 'WE BUILD',
       main2: 'AMAZING',
       main3: 'SOFTWARE',
