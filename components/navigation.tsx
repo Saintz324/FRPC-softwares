@@ -50,7 +50,7 @@ export function Navigation() {
             FRPC
           </a>
 
-          <div className="hidden md:flex items-center gap-10">
+          <div className="hidden md:flex items-center gap-16">
             {navItems.map((item) => (
               <a
                 key={item.key}

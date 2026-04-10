@@ -51,6 +51,7 @@ export function HeroSection() {
             }}
             delay={200}
             stagger={0.04}
+            nowrap
           />
         </div>
 
@@ -87,6 +88,7 @@ export function HeroSection() {
               }}
               delay={400}
               stagger={0.04}
+              nowrap
             />
           </div>
         </div>
@@ -105,6 +107,7 @@ export function HeroSection() {
             }}
             delay={500}
             stagger={0.04}
+            nowrap
           />
         </div>
 

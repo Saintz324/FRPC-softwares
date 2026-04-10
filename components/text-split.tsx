@@ -16,9 +16,10 @@ interface TextSplitProps {
   style?: CSSProperties
   delay?: number
   stagger?: number
+  nowrap?: boolean
 }
 
-function TextSplitComponent({ text, className = '', style, delay = 0, stagger = 0.03 }: TextSplitProps) {
+function TextSplitComponent({ text, className = '', style, delay = 0, stagger = 0.03, nowrap = false }: TextSplitProps) {
   const ref = useRef<HTMLDivElement>(null)
   const [isRevealed, setIsRevealed] = useState(false)
   const { isSwitching } = useLanguage()
@@ -132,7 +133,7 @@ function TextSplitComponent({ text, className = '', style, delay = 0, stagger = 
   }, [text])
 
   return (
-    <div ref={ref} className={`inline-flex flex-wrap ${className}`} style={style}>
+    <div ref={ref} className={`inline-flex ${nowrap ? 'flex-nowrap' : 'flex-wrap'} ${className}`} style={style}>
       {characters.map(({ key, index }) => {
         const dc = displayChars[index]
         const shown = dc === ' ' ? '\u00A0' : (dc ?? '\u00A0')
