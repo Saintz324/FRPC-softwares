@@ -32,6 +32,7 @@ type Translation = {
     projects: string
     services: string
     contact: string
+    pricing: string
     language: string
     startProject: string
     viewAll: string
@@ -101,6 +102,7 @@ const translations: Record<Language, Translation> = {
       projects: 'Produtos',
       services: 'Serviços',
       contact: 'Contato',
+      pricing: 'Preços',
       language: 'EN',
       startProject: 'Iniciar Projeto',
       viewAll: 'Ver Todos',
@@ -236,6 +238,7 @@ const translations: Record<Language, Translation> = {
       projects: 'Products',
       services: 'Services',
       contact: 'Contact',
+      pricing: 'Pricing',
       language: 'PT',
       startProject: 'Start Project',
       viewAll: 'View All',

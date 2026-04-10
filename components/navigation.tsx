@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import { MagneticButton } from './magnetic-button'
 import { useLanguage } from './language-provider'
 import { ScrambleText } from './scramble-text'
@@ -28,10 +29,11 @@ export function Navigation() {
   }, [])
 
   const navItems = [
-    { key: 'about', label: t.nav.about },
-    { key: 'projects', label: t.nav.projects },
-    { key: 'services', label: t.nav.services },
-    { key: 'contact', label: t.nav.contact },
+    { key: 'about', label: t.nav.about, href: '#about' },
+    { key: 'projects', label: t.nav.projects, href: '#projects' },
+    { key: 'services', label: t.nav.services, href: '#services' },
+    { key: 'contact', label: t.nav.contact, href: '#contact' },
+    { key: 'pricing', label: t.nav.pricing, href: '/pricing' },
   ]
 
   return (
@@ -50,15 +52,15 @@ export function Navigation() {
             FRPC
           </a>
 
-          <div className="hidden md:flex items-center gap-16">
+          <div className="hidden md:flex items-center gap-20">
             {navItems.map((item) => (
-              <a
+              <Link
                 key={item.key}
-                href={`#${item.key}`}
+                href={item.href}
                 className="text-sm uppercase tracking-[0.24em] text-white/80 hover:text-white transition-colors duration-300"
               >
                 <ScrambleText text={item.label} />
-              </a>
+              </Link>
             ))}
           </div>
 
@@ -106,15 +108,15 @@ export function Navigation() {
         }`}
       >
         {navItems.map((item) => (
-          <a
+          <Link
             key={item.key}
-            href={`#${item.key}`}
+            href={item.href}
             onClick={() => setIsMenuOpen(false)}
             className="text-3xl font-serif uppercase tracking-[0.2em] text-white/90 hover:text-white transition-colors duration-300"
             style={{ fontFamily: 'var(--font-serif)' }}
           >
             <ScrambleText text={item.label} />
-          </a>
+          </Link>
         ))}
 
         <div className="mt-8 flex flex-col items-center gap-4">
