@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
       })
 
       if (response.stop_reason === 'end_turn') {
-        const textBlock = response.content.find((b) => b.type === 'text')
+        const textBlock = response.content.find((b: Anthropic.ContentBlock) => b.type === 'text')
         return NextResponse.json({ content: (textBlock as Anthropic.TextBlock)?.text ?? '' })
       }
 
@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
         }
         currentMessages.push({ role: 'user', content: toolResults })
       } else {
-        const textBlock = response.content.find((b) => b.type === 'text')
+        const textBlock = response.content.find((b: Anthropic.ContentBlock) => b.type === 'text')
         return NextResponse.json({ content: (textBlock as Anthropic.TextBlock)?.text ?? '' })
       }
     }
