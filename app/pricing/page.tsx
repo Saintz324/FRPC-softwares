@@ -8,6 +8,7 @@ import { CursorFollower } from '@/components/cursor-follower'
 import { Reveal } from '@/components/reveal-animation'
 import { MagneticButton } from '@/components/magnetic-button'
 import { useLang, useSwitch } from '@/components/language-provider'
+import { ScrambleText } from '@/components/scramble-text'
 
 // ─── Translations ────────────────────────────────────────────────────────────
 const T = {
@@ -240,8 +241,8 @@ function PlanCard({ plan, yearly, lang, productUrl }: { plan: Plan; yearly: bool
       <div className={`p-7 flex flex-col gap-6 ${isPro ? 'pt-9' : ''}`}>
         {/* Header */}
         <div>
-          <p className="text-white/40 text-xs font-semibold tracking-widest uppercase mb-2">{plan.name}</p>
-          {plan.description && <p className="text-white/35 text-sm leading-relaxed">{plan.description}</p>}
+          <ScrambleText text={plan.name} className="text-white/40 text-xs font-semibold tracking-widest uppercase mb-2 block" />
+          {plan.description && <ScrambleText text={plan.description} className="text-white/35 text-sm leading-relaxed block" />}
         </div>
 
         {/* Price */}
@@ -250,10 +251,10 @@ function PlanCard({ plan, yearly, lang, productUrl }: { plan: Plan; yearly: bool
             className="font-serif font-bold text-white leading-none"
             style={{ fontFamily: 'var(--font-serif)', fontSize: isFree ? '2.5rem' : 'clamp(2rem,5vw,3rem)' }}
           >
-            {isFree ? t.free : `€${price}`}
+            <ScrambleText text={isFree ? t.free : `€${price}`} />
           </span>
           {!isFree && (
-            <span className="text-white/35 text-sm mb-1">{yearly ? t.perYear : t.perMonth}</span>
+            <ScrambleText text={yearly ? t.perYear : t.perMonth} className="text-white/35 text-sm mb-1" />
           )}
         </div>
 
@@ -264,13 +265,13 @@ function PlanCard({ plan, yearly, lang, productUrl }: { plan: Plan; yearly: bool
               <div className={`mt-0.5 w-4 h-4 rounded-full flex items-center justify-center shrink-0 ${isPro ? 'bg-emerald-500/20' : 'bg-white/[0.06]'}`}>
                 <Check className={`w-2.5 h-2.5 ${isPro ? 'text-emerald-400' : 'text-white/45'}`} />
               </div>
-              <span className={`text-sm ${isPro ? 'text-white/75' : 'text-white/50'}`}>{f}</span>
+              <ScrambleText text={f} className={`text-sm ${isPro ? 'text-white/75' : 'text-white/50'}`} />
             </li>
           ))}
           {plan.notIncluded.map(f => (
             <li key={f} className="flex items-start gap-2.5 opacity-30">
               <X className="w-4 h-4 text-white/30 shrink-0 mt-0.5" />
-              <span className="text-sm text-white/30 line-through">{f}</span>
+              <ScrambleText text={f} className="text-sm text-white/30 line-through" />
             </li>
           ))}
         </ul>
@@ -282,7 +283,7 @@ function PlanCard({ plan, yearly, lang, productUrl }: { plan: Plan; yearly: bool
               ? 'bg-white text-black hover:bg-white/90'
               : 'border border-white/15 text-white/60 hover:text-white hover:border-white/30 hover:bg-white/[0.05]'
           }`}>
-            {ctaLabel}
+            <ScrambleText text={ctaLabel} />
             <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform duration-200" />
           </MagneticButton>
         </Link>
@@ -321,7 +322,7 @@ export default function PricingPage() {
           <div className="flex items-center gap-4">
             <Link href="/" className="flex items-center gap-2 text-white/45 hover:text-white text-sm transition-[color] duration-200 group">
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform duration-200" />
-              <span className="hidden sm:block tracking-[0.2em] uppercase text-xs">{t.back}</span>
+              <ScrambleText text={t.back} className="hidden sm:block tracking-[0.2em] uppercase text-xs" />
             </Link>
             <div className="w-px h-4 bg-white/15" />
             <Link href="/" className="text-2xl md:text-3xl font-serif font-bold text-white hover:opacity-80 transition-opacity duration-200" style={{ fontFamily: 'var(--font-serif)' }}>
@@ -344,23 +345,19 @@ export default function PricingPage() {
         <section className="relative px-6 md:px-12 pt-40 pb-16">
           <div className="max-w-7xl w-full mx-auto">
             <div {...vis('0ms')}>
-              <span className="text-white/35 text-xs tracking-[0.3em] uppercase">{t.label}</span>
+              <ScrambleText text={t.label} className="text-white/35 text-xs tracking-[0.3em] uppercase" />
             </div>
             <div {...vis('100ms')} className={`mt-4 transition-[opacity,transform] duration-700 delay-100 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}>
               <h1 className="font-serif font-bold text-white leading-none" style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(2.8rem, 9vw, 8rem)' }}>
-                {t.title}<br />
-                <span style={{ WebkitTextStroke: '1.5px rgba(255,255,255,0.35)', WebkitTextFillColor: 'transparent' }}>
-                  {t.titleAccent}
-                </span>
+                <ScrambleText text={t.title} /><br />
+                <ScrambleText text={t.titleAccent} style={{ WebkitTextStroke: '1.5px rgba(255,255,255,0.35)', WebkitTextFillColor: 'transparent' }} />
               </h1>
             </div>
-            <p className={`text-white/45 text-lg md:text-xl max-w-xl mt-6 leading-relaxed transition-[opacity,transform] duration-700 delay-200 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}>
-              {t.subtitle}
-            </p>
+            <ScrambleText as="p" text={t.subtitle} className={`text-white/45 text-lg md:text-xl max-w-xl mt-6 leading-relaxed transition-[opacity,transform] duration-700 delay-200 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`} />
 
             {/* Billing toggle */}
             <div className={`mt-10 flex items-center gap-4 transition-[opacity,transform] duration-700 delay-300 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}>
-              <span className={`text-sm transition-[color] duration-200 ${!yearly ? 'text-white' : 'text-white/35'}`}>{t.monthly}</span>
+              <ScrambleText text={t.monthly} className={`text-sm transition-[color] duration-200 ${!yearly ? 'text-white' : 'text-white/35'}`} />
               <button
                 onClick={() => setYearly(v => !v)}
                 className={`relative w-11 h-6 rounded-full transition-[background-color] duration-300 ${yearly ? 'bg-white' : 'bg-white/20'}`}
@@ -368,9 +365,9 @@ export default function PricingPage() {
               >
                 <div className={`absolute top-1 w-4 h-4 rounded-full transition-[left] duration-300 ${yearly ? 'left-6 bg-black' : 'left-1 bg-white'}`} />
               </button>
-              <span className={`text-sm transition-[color] duration-200 ${yearly ? 'text-white' : 'text-white/35'}`}>{t.yearly}</span>
+              <ScrambleText text={t.yearly} className={`text-sm transition-[color] duration-200 ${yearly ? 'text-white' : 'text-white/35'}`} />
               <span className={`px-2.5 py-1 rounded-full text-xs font-medium transition-[opacity,transform] duration-300 ${yearly ? 'opacity-100 scale-100 bg-emerald-500/15 text-emerald-400' : 'opacity-0 scale-90'}`}>
-                {t.save}
+                <ScrambleText text={t.save} />
               </span>
             </div>
           </div>
@@ -391,14 +388,14 @@ export default function PricingPage() {
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <h2 className="text-white font-semibold">{t.products.calendar.badge}</h2>
-                        <span className="px-2 py-0.5 rounded bg-blue-500/15 text-blue-400 text-[10px] font-semibold tracking-wide uppercase">{t.flagship}</span>
+                        <ScrambleText text={t.products.calendar.badge} className="text-white font-semibold" />
+                        <span className="px-2 py-0.5 rounded bg-blue-500/15 text-blue-400 text-[10px] font-semibold tracking-wide uppercase"><ScrambleText text={t.flagship} /></span>
                       </div>
-                      <p className="text-white/35 text-sm">{t.products.calendar.tagline}</p>
+                      <ScrambleText text={t.products.calendar.tagline} className="text-white/35 text-sm" />
                     </div>
                   </div>
                   <Link href={t.products.calendar.url} className="group inline-flex items-center gap-2 text-white/45 hover:text-white text-sm transition-[color] duration-200">
-                    {lang === 'pt' ? 'Ver produto' : 'View product'}
+                    <ScrambleText text={lang === 'pt' ? 'Ver produto' : 'View product'} />
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" />
                   </Link>
                 </div>
@@ -410,7 +407,7 @@ export default function PricingPage() {
                       <PlanCard key={plan.name} plan={plan} yearly={yearly} lang={lang as Lang} productUrl={t.products.calendar.url} />
                     ))}
                   </div>
-                  <p className="text-center text-white/25 text-xs mt-6">{t.trialNote}</p>
+                  <ScrambleText as="p" text={t.trialNote} className="text-center text-white/25 text-xs mt-6" />
                 </div>
               </div>
             </Reveal>
@@ -431,12 +428,12 @@ export default function PricingPage() {
                       </svg>
                     </div>
                     <div>
-                      <h2 className="text-white font-semibold">{t.products.manager.badge}</h2>
-                      <p className="text-white/35 text-sm">{t.products.manager.tagline}</p>
+                      <ScrambleText text={t.products.manager.badge} className="text-white font-semibold" />
+                      <ScrambleText text={t.products.manager.tagline} className="text-white/35 text-sm" />
                     </div>
                   </div>
                   <Link href={t.products.manager.url} className="group inline-flex items-center gap-2 text-white/45 hover:text-white text-sm transition-[color] duration-200">
-                    {lang === 'pt' ? 'Ver produto' : 'View product'}
+                    <ScrambleText text={lang === 'pt' ? 'Ver produto' : 'View product'} />
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" />
                   </Link>
                 </div>
@@ -448,7 +445,7 @@ export default function PricingPage() {
                       <PlanCard key={plan.name} plan={plan} yearly={yearly} lang={lang as Lang} productUrl={t.products.manager.url} />
                     ))}
                   </div>
-                  <p className="text-center text-white/25 text-xs mt-6">{t.trialNote}</p>
+                  <ScrambleText as="p" text={t.trialNote} className="text-center text-white/25 text-xs mt-6" />
                 </div>
               </div>
             </Reveal>
@@ -460,8 +457,8 @@ export default function PricingPage() {
           <div className="max-w-7xl mx-auto">
             <Reveal>
               <div className="mb-8">
-                <h3 className="text-white/60 text-sm font-semibold tracking-widest uppercase">{t.otherProducts}</h3>
-                <p className="text-white/25 text-sm mt-1">{t.otherDesc}</p>
+                <ScrambleText text={t.otherProducts} className="text-white/60 text-sm font-semibold tracking-widest uppercase block" />
+                <ScrambleText text={t.otherDesc} className="text-white/25 text-sm mt-1 block" />
               </div>
             </Reveal>
 
@@ -477,15 +474,15 @@ export default function PricingPage() {
                     </div>
                     <div>
                       <div className="flex items-center gap-2 flex-wrap">
-                        <h2 className="text-white/70 font-semibold">Portal FRPC</h2>
+                        <ScrambleText text="Portal FRPC" className="text-white/70 font-semibold" />
                         <span className="flex items-center gap-1 px-2 py-0.5 rounded border border-white/10 text-white/30 text-[10px]">
-                          <Clock className="w-2.5 h-2.5" />{t.comingSoon}
+                          <Clock className="w-2.5 h-2.5" /><ScrambleText text={t.comingSoon} />
                         </span>
                       </div>
-                      <p className="text-white/25 text-sm">{lang === 'pt' ? 'Acesso centralizado a todos os produtos FRPC' : 'Centralized access to all FRPC products'}</p>
+                      <ScrambleText text={lang === 'pt' ? 'Acesso centralizado a todos os produtos FRPC' : 'Centralized access to all FRPC products'} className="text-white/25 text-sm" />
                     </div>
                   </div>
-                  <span className="text-white/20 text-sm">{lang === 'pt' ? 'Incluído em todos os planos' : 'Included in all plans'}</span>
+                  <ScrambleText text={lang === 'pt' ? 'Incluído em todos os planos' : 'Included in all plans'} className="text-white/20 text-sm" />
                 </div>
               </div>
             </Reveal>
@@ -496,9 +493,7 @@ export default function PricingPage() {
         <section className="relative py-24 border-t border-white/[0.06] px-6 md:px-12">
           <div className="max-w-3xl mx-auto">
             <Reveal>
-              <h2 className="text-2xl md:text-4xl font-serif font-bold text-white mb-10" style={{ fontFamily: 'var(--font-serif)' }}>
-                {t.faqTitle}
-              </h2>
+              <ScrambleText as="h2" text={t.faqTitle} className="text-2xl md:text-4xl font-serif font-bold text-white mb-10" style={{ fontFamily: 'var(--font-serif)' }} />
             </Reveal>
             <div className="space-y-2">
               {t.faqs.map((faq, i) => (
@@ -508,11 +503,11 @@ export default function PricingPage() {
                       onClick={() => setOpenFaq(openFaq === i ? null : i)}
                       className="w-full flex items-center justify-between px-6 py-5 text-left hover:bg-white/[0.03] transition-[background-color] duration-200"
                     >
-                      <span className="text-white/80 font-medium text-sm md:text-base pr-4">{faq.q}</span>
+                      <ScrambleText text={faq.q} className="text-white/80 font-medium text-sm md:text-base pr-4" />
                       <ChevronDown className={`w-4 h-4 text-white/30 shrink-0 transition-transform duration-300 ${openFaq === i ? 'rotate-180' : ''}`} />
                     </button>
                     <div className={`overflow-hidden transition-[max-height] duration-300 ease-out ${openFaq === i ? 'max-h-40' : 'max-h-0'}`}>
-                      <p className="px-6 pb-5 text-white/45 text-sm leading-relaxed">{faq.a}</p>
+                      <ScrambleText as="p" text={faq.a} className="px-6 pb-5 text-white/45 text-sm leading-relaxed" />
                     </div>
                   </div>
                 </Reveal>
@@ -526,8 +521,8 @@ export default function PricingPage() {
           <div className="max-w-7xl mx-auto px-6 md:px-12 text-center">
             <Reveal>
               <h2 className="font-serif font-bold text-white leading-none mb-4" style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(2.5rem, 8vw, 7rem)' }}>
-                {t.bottomTitle}<br />
-                <span style={{ WebkitTextStroke: '1.5px rgba(255,255,255,0.3)', WebkitTextFillColor: 'transparent' }}>{t.bottomAccent}</span>
+                <ScrambleText text={t.bottomTitle} /><br />
+                <ScrambleText text={t.bottomAccent} style={{ WebkitTextStroke: '1.5px rgba(255,255,255,0.3)', WebkitTextFillColor: 'transparent' }} />
               </h2>
             </Reveal>
             <Reveal delay={100}>
@@ -536,7 +531,7 @@ export default function PricingPage() {
             <Reveal delay={200}>
               <Link href="/#contact">
                 <MagneticButton className="group inline-flex items-center gap-4 px-10 py-5 bg-white text-black font-semibold rounded-full hover:bg-white/90 transition-[background-color] duration-200">
-                  {t.bottomCta}
+                  <ScrambleText text={t.bottomCta} />
                   <div className="w-8 h-8 rounded-full bg-black flex items-center justify-center group-hover:rotate-45 transition-transform duration-300">
                     <ArrowRight className="w-4 h-4 text-white" />
                   </div>
