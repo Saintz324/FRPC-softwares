@@ -101,7 +101,7 @@ const translations: Record<Language, Translation> = {
       about: 'Sobre',
       projects: 'Produtos',
       services: 'Serviços',
-      contact: 'Contato',
+      contact: 'Contacto',
       pricing: 'Preços',
       language: 'EN',
       startProject: 'Iniciar Projeto',
@@ -210,7 +210,7 @@ const translations: Record<Language, Translation> = {
       ],
     },
     contact: {
-      label: '04 — Contato',
+      label: '04 — Contacto',
       title1: 'Vamos criar',
       title2: 'algo incrível',
       title3: 'juntos?',

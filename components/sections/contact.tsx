@@ -75,7 +75,7 @@ export const ContactSection = memo(function ContactSection() {
                 <div className="group">
                   <ScrambleText as="span" text={t.contact.email} className="text-white/40 text-sm tracking-wide uppercase mb-3 block" />
                   <a 
-                    href="mailto:contato@frpc.com.br"
+                    href="mailto:contacto@frpc.com.br"
                     className="text-2xl md:text-3xl font-serif text-white hover:text-white/70 transition-colors"
                     style={{ fontFamily: 'var(--font-serif)' }}
                   >
