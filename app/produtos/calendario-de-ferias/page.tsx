@@ -56,7 +56,7 @@ const TRANSLATIONS = {
       { title: 'PMEs & Startups', description: 'Substituição imediata de emails e Excel sem curva de aprendizagem.' },
     ],
     ctaTitle: 'Comece hoje.',
-    ctaDesc: 'Experimente gratuitamente. Sem cartão de crédito, sem compromissos.',
+    ctaDesc: 'Experimente agora.',
     ctaBtn: 'Experimentar Agora',
     tryLabel: 'Experimentar Agora',
     footerRights: 'Todos os direitos reservados.',

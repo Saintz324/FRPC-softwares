@@ -1,6 +1,7 @@
 "use client"
 
 import { memo } from 'react'
+import Link from 'next/link'
 import { Reveal } from '../reveal-animation'
 import { MagneticButton } from '../magnetic-button'
 import { TextSplit } from '../text-split'
@@ -54,14 +55,16 @@ export const ContactSection = memo(function ContactSection() {
             </Reveal>
 
             <Reveal delay={900}>
-              <MagneticButton className="group inline-flex items-center gap-4 px-8 py-5 bg-white text-black text-lg font-medium rounded-full hover:bg-white/90 transition-all">
-                <ScrambleText text={t.contact.button} />
-                <div className="w-10 h-10 rounded-full bg-black flex items-center justify-center group-hover:rotate-45 transition-transform duration-300">
-                  <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                  </svg>
-                </div>
-              </MagneticButton>
+              <Link href="/start">
+                <MagneticButton className="group inline-flex items-center gap-4 px-8 py-5 bg-white text-black text-lg font-medium rounded-full hover:bg-white/90 transition-all">
+                  <ScrambleText text={t.contact.button} />
+                  <div className="w-10 h-10 rounded-full bg-black flex items-center justify-center group-hover:rotate-45 transition-transform duration-300">
+                    <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                  </div>
+                </MagneticButton>
+              </Link>
             </Reveal>
           </div>
 

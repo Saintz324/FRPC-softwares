@@ -18,10 +18,10 @@ export function Navigation() {
   }, [])
 
   const navItems = [
-    { key: 'about', label: t.nav.about, href: '#about' },
-    { key: 'projects', label: t.nav.projects, href: '#projects' },
-    { key: 'services', label: t.nav.services, href: '#services' },
-    { key: 'contact', label: t.nav.contact, href: '#contact' },
+    { key: 'about', label: t.nav.about, href: '/#about' },
+    { key: 'projects', label: t.nav.projects, href: '/#projects' },
+    { key: 'services', label: t.nav.services, href: '/#services' },
+    { key: 'contact', label: t.nav.contact, href: '/#contact' },
     { key: 'pricing', label: t.nav.pricing, href: '/pricing' },
   ]
 
@@ -33,13 +33,13 @@ export function Navigation() {
         }`}
       >
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-6">
-          <a
-            href="#"
+          <Link
+            href="/"
             className="text-2xl md:text-3xl font-serif font-bold tracking-tight text-white hover:opacity-80 transition-opacity"
             style={{ fontFamily: 'var(--font-serif)' }}
           >
             FRPC
-          </a>
+          </Link>
 
           <div className="hidden md:flex items-center gap-20">
             {navItems.map((item) => (
@@ -73,9 +73,11 @@ export function Navigation() {
                 {t.nav.language}
               </span>
             </MagneticButton>
-            <MagneticButton className="px-6 py-3 bg-white text-black text-sm font-medium rounded-full hover:bg-white/90 transition-colors">
-              <ScrambleText text={t.nav.startProject} />
-            </MagneticButton>
+            <Link href="/start">
+              <MagneticButton className="px-6 py-3 bg-white text-black text-sm font-medium rounded-full hover:bg-white/90 transition-colors">
+                <ScrambleText text={t.nav.startProject} />
+              </MagneticButton>
+            </Link>
           </div>
 
           <button
@@ -131,9 +133,11 @@ export function Navigation() {
               {t.nav.language}
             </span>
           </MagneticButton>
-          <MagneticButton className="px-8 py-3 bg-white text-black text-base font-medium rounded-full hover:bg-white/90 transition-colors">
-            <ScrambleText text={t.nav.startProject} />
-          </MagneticButton>
+          <Link href="/start" onClick={() => setIsMenuOpen(false)}>
+            <MagneticButton className="px-8 py-3 bg-white text-black text-base font-medium rounded-full hover:bg-white/90 transition-colors">
+              <ScrambleText text={t.nav.startProject} />
+            </MagneticButton>
+          </Link>
         </div>
       </div>
     </>

@@ -29,7 +29,7 @@ export function HeroSection() {
   })
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center px-6 md:px-12 pb-36 overflow-hidden">
+    <section className="relative min-h-screen flex flex-col items-center justify-center px-6 md:px-12 pt-24 pb-36 overflow-hidden">
       {/* Static radial glow */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <div className="w-[700px] h-[700px] rounded-full bg-white/[0.022] blur-[130px]" />

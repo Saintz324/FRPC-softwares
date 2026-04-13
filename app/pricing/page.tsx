@@ -77,13 +77,32 @@ const T = {
       },
       manager: {
         badge: 'Project Manager',
-        tagline: 'Gestão de projetos e tarefas',
-        description: 'Kanban, timelines e gestão de equipas numa interface moderna.',
-        comingSoon: true,
+        tagline: 'Gestão de projetos e tarefas para equipas',
+        description: 'Kanban, timelines e gestão de equipas numa interface moderna e intuitiva. Entrega mais rápido, com menos stress.',
+        url: '/produtos/project-manager',
         plans: [
-          { name: 'Free', price: { monthly: 0, yearly: 0 }, features: ['3 projetos', '5 utilizadores'], notIncluded: [] },
-          { name: 'Pro', price: { monthly: 12, yearly: 120 }, popular: true, features: ['Projetos ilimitados', '25 utilizadores', 'Relatórios'], notIncluded: [] },
-          { name: 'Business', price: { monthly: 25, yearly: 250 }, features: ['Tudo ilimitado', 'API', 'SSO'], notIncluded: [] },
+          {
+            name: 'Free',
+            price: { monthly: 0, yearly: 0 },
+            description: 'Para começar a organizar os teus projetos.',
+            features: ['3 projetos', 'Até 5 utilizadores', 'Quadros Kanban', 'Vista de tarefas'],
+            notIncluded: ['Projetos ilimitados', 'Relatórios', 'Integrações', 'Suporte prioritário'],
+          },
+          {
+            name: 'Pro',
+            price: { monthly: 12, yearly: 120 },
+            description: 'Para equipas que precisam de mais.',
+            popular: true,
+            features: ['Projetos ilimitados', 'Até 25 utilizadores', 'Timelines e prazos', 'Relatórios e KPIs', 'Notificações por email', 'Suporte prioritário'],
+            notIncluded: ['Utilizadores ilimitados', 'API access'],
+          },
+          {
+            name: 'Business',
+            price: { monthly: 25, yearly: 250 },
+            description: 'Para empresas com controlo total.',
+            features: ['Utilizadores ilimitados', 'Projetos ilimitados', 'API access completo', 'SSO / SAML', 'Relatórios avançados', 'SLA garantido', 'Suporte dedicado 24/7'],
+            notIncluded: [],
+          },
         ],
       },
     },
@@ -154,13 +173,32 @@ const T = {
       },
       manager: {
         badge: 'Project Manager',
-        tagline: 'Project & task management',
-        description: 'Kanban, timelines and team management in a modern interface.',
-        comingSoon: true,
+        tagline: 'Project & task management for teams',
+        description: 'Kanban, timelines and team management in a modern, intuitive interface. Ship faster, with less stress.',
+        url: '/produtos/project-manager',
         plans: [
-          { name: 'Free', price: { monthly: 0, yearly: 0 }, features: ['3 projects', '5 users'], notIncluded: [] },
-          { name: 'Pro', price: { monthly: 12, yearly: 120 }, popular: true, features: ['Unlimited projects', '25 users', 'Reports'], notIncluded: [] },
-          { name: 'Business', price: { monthly: 25, yearly: 250 }, features: ['Everything unlimited', 'API', 'SSO'], notIncluded: [] },
+          {
+            name: 'Free',
+            price: { monthly: 0, yearly: 0 },
+            description: 'To start organizing your projects.',
+            features: ['3 projects', 'Up to 5 users', 'Kanban boards', 'Task view'],
+            notIncluded: ['Unlimited projects', 'Reports', 'Integrations', 'Priority support'],
+          },
+          {
+            name: 'Pro',
+            price: { monthly: 12, yearly: 120 },
+            description: 'For teams that need more.',
+            popular: true,
+            features: ['Unlimited projects', 'Up to 25 users', 'Timelines & deadlines', 'Reports & KPIs', 'Email notifications', 'Priority support'],
+            notIncluded: ['Unlimited users', 'API access'],
+          },
+          {
+            name: 'Business',
+            price: { monthly: 25, yearly: 250 },
+            description: 'For companies with full control.',
+            features: ['Unlimited users', 'Unlimited projects', 'Full API access', 'SSO / SAML', 'Advanced reports', 'Guaranteed SLA', 'Dedicated 24/7 support'],
+            notIncluded: [],
+          },
         ],
       },
     },
@@ -379,7 +417,45 @@ export default function PricingPage() {
           </div>
         </section>
 
-        {/*  outros produtos */}
+        {/*  PROJECT MANAGER  */}
+        <section className="relative px-6 md:px-12 pb-24">
+          <div className="max-w-7xl mx-auto">
+            <Reveal>
+              <div className="rounded-3xl border border-white/10 bg-white/[0.02] overflow-hidden">
+                {/* Product header */}
+                <div className="px-8 md:px-12 py-8 border-b border-white/[0.06] flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-400/20 flex items-center justify-center shrink-0">
+                      <svg className="w-5 h-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h2 className="text-white font-semibold">{t.products.manager.badge}</h2>
+                      <p className="text-white/35 text-sm">{t.products.manager.tagline}</p>
+                    </div>
+                  </div>
+                  <Link href={t.products.manager.url} className="group inline-flex items-center gap-2 text-white/45 hover:text-white text-sm transition-[color] duration-200">
+                    {lang === 'pt' ? 'Ver produto' : 'View product'}
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" />
+                  </Link>
+                </div>
+
+                {/* Plans grid */}
+                <div className="p-6 md:p-8 pt-8 md:pt-10">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
+                    {t.products.manager.plans.map((plan) => (
+                      <PlanCard key={plan.name} plan={plan} yearly={yearly} lang={lang as Lang} productUrl={t.products.manager.url} />
+                    ))}
+                  </div>
+                  <p className="text-center text-white/25 text-xs mt-6">{t.trialNote}</p>
+                </div>
+              </div>
+            </Reveal>
+          </div>
+        </section>
+
+        {/* outros produtos — só Portal */}
         <section className="relative px-6 md:px-12 pb-32">
           <div className="max-w-7xl mx-auto">
             <Reveal>
@@ -389,45 +465,9 @@ export default function PricingPage() {
               </div>
             </Reveal>
 
-            {/* Project Manager*/}
+            {/* Portal FRPC — coming soon */}
             <Reveal delay={100}>
               <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] overflow-hidden">
-                <div className="px-8 py-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-400/15 flex items-center justify-center shrink-0">
-                      <svg className="w-5 h-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                      </svg>
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <h2 className="text-white/70 font-semibold">{t.products.manager.badge}</h2>
-                        <span className="flex items-center gap-1 px-2 py-0.5 rounded border border-white/10 text-white/30 text-[10px]">
-                          <Clock className="w-2.5 h-2.5" />{t.comingSoon}
-                        </span>
-                      </div>
-                      <p className="text-white/25 text-sm">{t.products.manager.tagline}</p>
-                    </div>
-                  </div>
-
-                  {/* Pricing preview */}
-                  <div className="flex items-center gap-2 flex-wrap">
-                    {t.products.manager.plans.map((plan) => (
-                      <div key={plan.name} className="px-3 py-1.5 rounded-lg border border-white/[0.06] bg-white/[0.03]">
-                        <span className="text-white/20 text-[10px] block">{plan.name}</span>
-                        <span className="text-white/40 text-sm font-semibold">
-                          {plan.price.monthly === 0 ? (lang === 'pt' ? 'Grátis' : 'Free') : `€${plan.price.monthly}/mo`}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </Reveal>
-
-            {/* Portal FRPC — coming soon */}
-            <Reveal delay={160}>
-              <div className="mt-4 rounded-2xl border border-white/[0.06] bg-white/[0.02] overflow-hidden">
                 <div className="px-8 py-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                   <div className="flex items-center gap-4">
                     <div className="w-10 h-10 rounded-xl bg-violet-500/15 border border-violet-400/15 flex items-center justify-center shrink-0">

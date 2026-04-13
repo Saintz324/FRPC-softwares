@@ -55,7 +55,7 @@ const TRANSLATIONS = {
     ],
     ctaTitle1: 'Organize a',
     ctaTitle2: 'equipa.',
-    ctaDesc: 'Experimente gratuitamente. Sem cartão de crédito, sem compromissos.',
+    ctaDesc: 'Experimente agora.',
     ctaBtn: 'Experimentar Agora',
     tryLabel: 'Experimentar Agora',
     footerRights: 'Todos os direitos reservados.',
