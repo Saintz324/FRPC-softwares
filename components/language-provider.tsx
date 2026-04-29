@@ -112,7 +112,7 @@ const translations: Record<Language, Translation> = {
       intro: 'Software & inovação',
       main1: 'CRIAMOS',
       main2: 'SOFTWARE',
-      main3: 'AGORA',
+      main3: '',
       subtitle:
         'Desenvolvemos agora aplicações web modernas que transformam a forma como as equipas trabalham. Do conceito ao lançamento, construímos produtos digitais que fazem a diferença.',
       work: 'Ver Produtos',
@@ -123,14 +123,14 @@ const translations: Record<Language, Translation> = {
     about: {
       label: '01 — Sobre Nós',
       title: 'Desenvolvemos software',
-      titleAccent: ' que transforma equipas e processos',
+      titleAccent: ' à medida de qualquer necessidade',
       p1:
-        'Na FRPC, transformamos ideias em produtos digitais que as pessoas adoram usar. Combinamos design cuidado, tecnologia moderna e foco na experiência do utilizador para criar aplicações que resolvem problemas reais.',
+        'Na FRPC, transformamos ideias em produtos digitais. Combinamos design, tecnologia moderna e foco na experiência do utilizador para criar aplicações que resolvem problemas reais.',
       p2:
-        'Cada produto que lançamos nasce de uma necessidade concreta. Construímos ferramentas SaaS intuitivas, escaláveis e prontas para o dia a dia de equipas e empresas que querem trabalhar melhor.',
+        'Cada produto que lançamos nasce de uma necessidade concreta. Construímos ferramentas SaaS intuitivas, escaláveis e prontas para o dia a dia de equipas e empresas que querem melhorar o fluxo de trabalho.',
       quote: 'Software que funciona para si',
       stats: [
-        { value: '2+', label: 'Produtos Lançados' },
+        { value: '3+', label: 'Produtos Lançados' },
         { value: '2026', label: 'Ano de Fundação' },
         { value: '100%', label: 'Foco no Cliente' },
       ],
@@ -166,17 +166,17 @@ const translations: Record<Language, Translation> = {
         },
         {
           id: 4,
-          title: 'Bot de Chamadas com IA',
+          title: 'CloseAI',
           category: 'SaaS · IA & Automação',
           year: '2026',
-          description: 'Bot inteligente que realiza e gere chamadas telefónicas de forma automática, com voz natural e integração com os teus sistemas.',
+          description: 'Agente inteligente integrado no WhatsApp e Instagram que qualifica leads, responde automaticamente e fecha marcações — ideal para imobiliário, clínicas e serviços de consultas.',
         },
       ],
     },
     services: {
       label: '03 — Serviços',
-      title: 'O que fazemos',
-      subtitle: 'de melhor',
+      title: 'Áreas',
+      subtitle: 'de atuação',
       badgeText: '• REACT • NEXTJS • TYPESCRIPT • SAAS ',
       items: [
         {
@@ -220,8 +220,8 @@ const translations: Record<Language, Translation> = {
       email: 'Email',
       phone: 'Telefone',
       location: 'Localização',
-      socials: 'Redes Sociais',
-      socialNames: ['Instagram', 'LinkedIn', 'GitHub', 'Twitter'],
+      socials: '',
+      socialNames: [],
     },
     footer: {
       copyright: '© {year} FRPC. Todos os direitos reservados.',
@@ -302,10 +302,10 @@ const translations: Record<Language, Translation> = {
         },
         {
           id: 4,
-          title: 'AI Call Bot',
+          title: 'CloseAI',
           category: 'SaaS · AI & Automation',
           year: '2026',
-          description: 'Intelligent bot that automatically makes and manages phone calls with natural voice and seamless integration with your systems.',
+          description: 'Intelligent agent integrated with WhatsApp and Instagram that qualifies leads, responds automatically, and closes bookings — ideal for real estate, clinics, and consultation services.',
         },
       ],
     },
@@ -356,8 +356,8 @@ const translations: Record<Language, Translation> = {
       email: 'Email',
       phone: 'Phone',
       location: 'Location',
-      socials: 'Socials',
-      socialNames: ['Instagram', 'LinkedIn', 'GitHub', 'Twitter'],
+      socials: '',
+      socialNames: [],
     },
     footer: {
       copyright: '© {year} FRPC. All rights reserved.',

@@ -21,8 +21,8 @@ const T = {
     monthly: 'Mensal',
     yearly: 'Anual',
     save: 'Poupa 2 meses',
-    perMonth: '/mês',
-    perYear: '/ano',
+    perMonth: '/mês + IVA',
+    perYear: '/ano + IVA',
     free: 'Grátis',
     ctaFree: 'Começar grátis',
     ctaPro: 'Começar agora',
@@ -45,6 +45,10 @@ const T = {
     bottomDesc: 'Volumes elevados, integrações específicas ou requisitos enterprise — fala connosco.',
     bottomCta: 'Falar com a equipa',
     footerRights: 'Todos os direitos reservados.',
+    calendarSubtitle: 'Escolha o plano ideal para gerir as férias da sua equipa',
+    calendarSupport: 'Comece com 14 dias gratuitos e escolha depois o plano que melhor se adapta à dimensão da sua empresa',
+    calendarNote: 'Necessita de algo personalizado? Entre em contacto para uma proposta à medida.',
+    calendarNoteCta: 'Falar connosco',
     products: {
       calendar: {
         badge: 'Calendário de Férias',
@@ -53,23 +57,23 @@ const T = {
         url: '/produtos/calendario-de-ferias',
         plans: [
           {
-            name: 'Free',
-            price: { monthly: 0, yearly: 0 },
+            name: 'Essencial',
+            price: { monthly: 19, yearly: 190, lifetime: 490 },
             description: 'Para equipas pequenas que querem começar.',
             features: ['Até 5 utilizadores', '1 calendário', 'Aprovações simples', 'Vista mensal', 'Exportar PDF'],
             notIncluded: ['Múltiplos calendários', 'Integrações', 'Relatórios', 'Suporte prioritário'],
           },
           {
             name: 'Pro',
-            price: { monthly: 9, yearly: 90 },
+            price: { monthly: 39, yearly: 390, lifetime: 990 },
             description: 'Para equipas em crescimento.',
             popular: true,
             features: ['Até 25 utilizadores', 'Múltiplos calendários', 'Aprovações avançadas', 'Relatórios de ausências', 'Integração Google Calendar', 'Notificações por email', 'Suporte prioritário'],
             notIncluded: ['Utilizadores ilimitados', 'API access'],
           },
           {
-            name: 'Business',
-            price: { monthly: 19, yearly: 190 },
+            name: 'Enterprise',
+            price: { monthly: 69, yearly: 690, lifetime: 1690 },
             description: 'Para empresas que precisam de controlo total.',
             features: ['Utilizadores ilimitados', 'Múltiplos calendários', 'API access completo', 'SSO / SAML', 'Relatórios avançados', 'SLA garantido', 'Suporte dedicado 24/7', 'Onboarding personalizado'],
             notIncluded: [],
@@ -83,8 +87,8 @@ const T = {
         url: '/produtos/project-manager',
         plans: [
           {
-            name: 'Free',
-            price: { monthly: 0, yearly: 0 },
+            name: 'Essencial',
+            price: { monthly: 5, yearly: 50 },
             description: 'Para começar a organizar os teus projetos.',
             features: ['3 projetos', 'Até 5 utilizadores', 'Quadros Kanban', 'Vista de tarefas'],
             notIncluded: ['Projetos ilimitados', 'Relatórios', 'Integrações', 'Suporte prioritário'],
@@ -98,7 +102,7 @@ const T = {
             notIncluded: ['Utilizadores ilimitados', 'API access'],
           },
           {
-            name: 'Business',
+            name: 'Enterprise',
             price: { monthly: 25, yearly: 250 },
             description: 'Para empresas com controlo total.',
             features: ['Utilizadores ilimitados', 'Projetos ilimitados', 'API access completo', 'SSO / SAML', 'Relatórios avançados', 'SLA garantido', 'Suporte dedicado 24/7'],
@@ -117,8 +121,8 @@ const T = {
     monthly: 'Monthly',
     yearly: 'Yearly',
     save: 'Save 2 months',
-    perMonth: '/mo',
-    perYear: '/yr',
+    perMonth: '/mo + VAT',
+    perYear: '/yr + VAT',
     free: 'Free',
     ctaFree: 'Start for free',
     ctaPro: 'Get started',
@@ -141,6 +145,10 @@ const T = {
     bottomDesc: 'High volumes, specific integrations or enterprise requirements — get in touch.',
     bottomCta: 'Talk to the team',
     footerRights: 'All rights reserved.',
+    calendarSubtitle: 'Choose the ideal plan to manage your team\'s vacations',
+    calendarSupport: 'Start with a 14-day free trial and then choose the plan that best fits your company\'s size',
+    calendarNote: 'Need something custom? Get in touch for a tailored proposal.',
+    calendarNoteCta: 'Talk to us',
     products: {
       calendar: {
         badge: 'Vacation Schedule',
@@ -149,23 +157,23 @@ const T = {
         url: '/produtos/calendario-de-ferias',
         plans: [
           {
-            name: 'Free',
-            price: { monthly: 0, yearly: 0 },
+            name: 'Essential',
+            price: { monthly: 0, yearly: 0, lifetime: 0 },
             description: 'For small teams getting started.',
             features: ['Up to 5 users', '1 calendar', 'Simple approvals', 'Monthly view', 'PDF export'],
             notIncluded: ['Multiple calendars', 'Integrations', 'Reports', 'Priority support'],
           },
           {
             name: 'Pro',
-            price: { monthly: 9, yearly: 90 },
+            price: { monthly: 9, yearly: 90, lifetime: 249 },
             description: 'For growing teams.',
             popular: true,
             features: ['Up to 25 users', 'Multiple calendars', 'Advanced approvals', 'Absence reports', 'Google Calendar sync', 'Email notifications', 'Priority support'],
             notIncluded: ['Unlimited users', 'API access'],
           },
           {
-            name: 'Business',
-            price: { monthly: 19, yearly: 190 },
+            name: 'Enterprise',
+            price: { monthly: 19, yearly: 190, lifetime: 490 },
             description: 'For companies needing full control.',
             features: ['Unlimited users', 'Multiple calendars', 'Full API access', 'SSO / SAML', 'Advanced reports', 'Guaranteed SLA', 'Dedicated 24/7 support', 'Custom onboarding'],
             notIncluded: [],
@@ -179,8 +187,8 @@ const T = {
         url: '/produtos/project-manager',
         plans: [
           {
-            name: 'Free',
-            price: { monthly: 0, yearly: 0 },
+            name: 'Essential',
+            price: { monthly: 5, yearly: 50 },
             description: 'To start organizing your projects.',
             features: ['3 projects', 'Up to 5 users', 'Kanban boards', 'Task view'],
             notIncluded: ['Unlimited projects', 'Reports', 'Integrations', 'Priority support'],
@@ -207,7 +215,7 @@ const T = {
 }
 
 type Lang = 'pt' | 'en'
-type Plan = { name: string; price: { monthly: number; yearly: number }; description?: string; popular?: boolean; features: string[]; notIncluded: string[] }
+type Plan = { name: string; price: { monthly: number; yearly: number; lifetime?: number }; description?: string; popular?: boolean; features: string[]; notIncluded: string[] }
 
 // ─── Plan card ───────────────────────────────────────────────────────────────
 function PlanCard({ plan, yearly, lang, productUrl }: { plan: Plan; yearly: boolean; lang: Lang; productUrl?: string }) {
@@ -287,6 +295,104 @@ function PlanCard({ plan, yearly, lang, productUrl }: { plan: Plan; yearly: bool
             <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform duration-200" />
           </MagneticButton>
         </Link>
+      </div>
+    </div>
+  )
+}
+
+// ─── Calendar pricing table ───────────────────────────────────────────────────
+function CalendarTable({ plans, lang }: { plans: Plan[]; lang: Lang }) {
+  const t = T[lang]
+  const isPt = lang === 'pt'
+
+  return (
+    <div className="overflow-x-auto">
+      <div className="min-w-[480px]">
+        {/* Column headers */}
+        <div className="grid grid-cols-[1.5fr_1fr_1.1fr_1fr] gap-2 mb-4 px-4">
+          <div />
+          <div className="text-center">
+            <span className="text-[10px] tracking-widest uppercase text-white/40 font-semibold">{t.monthly}</span>
+          </div>
+          <div className="text-center">
+            <span className="text-[10px] tracking-widest uppercase text-white/40 font-semibold">{t.yearly}</span>
+            <span className="block mt-1 px-2 py-0.5 rounded-full bg-white/10 text-white/50 text-[9px] font-bold tracking-wide uppercase whitespace-nowrap">
+              {isPt ? 'Recomendado' : 'Recommended'}
+            </span>
+          </div>
+          <div className="text-center">
+            <span className="text-[10px] tracking-widest uppercase text-white/40 font-semibold">{isPt ? 'Vitalício' : 'Lifetime'}</span>
+          </div>
+        </div>
+
+        {/* Plan rows */}
+        <div className="space-y-2">
+          {plans.map((plan) => {
+            const isPro = !!plan.popular
+            return (
+              <div
+                key={plan.name}
+                className={`relative grid grid-cols-[1.5fr_1fr_1.1fr_1fr] gap-2 items-center rounded-2xl border px-4 py-5 ${
+                  isPro
+                    ? 'border-white/20 bg-white/[0.07] shadow-[0_0_30px_rgba(255,255,255,0.03)]'
+                    : 'border-white/[0.09] bg-white/[0.04]'
+                }`}
+              >
+                {isPro && (
+                  <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent rounded-t-2xl" />
+                )}
+
+                {/* Plan name */}
+                <div>
+                  <span className={`text-sm font-semibold ${isPro ? 'text-white' : 'text-white/80'}`}>{plan.name}</span>
+                  {plan.description && (
+                    <span className="block text-white/30 text-xs mt-0.5 leading-snug">{plan.description}</span>
+                  )}
+                </div>
+
+                {/* Monthly */}
+                <div className="text-center">
+                  {plan.price.monthly === 0 ? (
+                    <span className={`text-sm font-semibold ${isPro ? 'text-white/80' : 'text-white/55'}`}>{t.free}</span>
+                  ) : (
+                    <div>
+                      <span className={`font-bold text-base ${isPro ? 'text-white' : 'text-white/75'}`}>€{plan.price.monthly}</span>
+                      <span className="text-white/30 text-[10px] ml-0.5">{t.perMonth}</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Annual */}
+                <div className="text-center">
+                  {plan.price.yearly === 0 ? (
+                    <span className={`text-sm font-semibold ${isPro ? 'text-white/80' : 'text-white/55'}`}>{t.free}</span>
+                  ) : (
+                    <div>
+                      <span className={`font-bold text-base ${isPro ? 'text-white' : 'text-white/75'}`}>€{plan.price.yearly}</span>
+                      <span className="text-white/30 text-[10px] ml-0.5">{t.perYear}</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Lifetime */}
+                <div className="text-center">
+                  {plan.price.lifetime !== undefined ? (
+                    plan.price.lifetime === 0 ? (
+                      <span className={`text-sm font-semibold ${isPro ? 'text-white/80' : 'text-white/55'}`}>{t.free}</span>
+                    ) : (
+                      <div>
+                        <span className={`font-bold text-base ${isPro ? 'text-white/90' : 'text-white/70'}`}>€{plan.price.lifetime}</span>
+                        <span className="text-white/25 text-[10px] block">{isPt ? 'único + IVA' : 'once + VAT'}</span>
+                      </div>
+                    )
+                  ) : (
+                    <span className="text-white/20 text-sm">—</span>
+                  )}
+                </div>
+              </div>
+            )
+          })}
+        </div>
       </div>
     </div>
   )
@@ -377,7 +483,7 @@ export default function PricingPage() {
         <section className="relative px-6 md:px-12 pb-24">
           <div className="max-w-7xl mx-auto">
             <Reveal>
-              <div className="rounded-3xl border border-white/10 bg-white/[0.02] overflow-hidden">
+              <div className="rounded-3xl border border-white/15 bg-white/[0.07] overflow-hidden">
                 {/* Product header */}
                 <div className="px-8 md:px-12 py-8 border-b border-white/[0.06] flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                   <div className="flex items-center gap-4">
@@ -387,11 +493,7 @@ export default function PricingPage() {
                       </svg>
                     </div>
                     <div>
-                      <div className="flex items-center gap-2">
-                        <ScrambleText text={t.products.calendar.badge} className="text-white font-semibold" />
-                        <span className="px-2 py-0.5 rounded bg-blue-500/15 text-blue-400 text-[10px] font-semibold tracking-wide uppercase"><ScrambleText text={t.flagship} /></span>
-                      </div>
-                      <ScrambleText text={t.products.calendar.tagline} className="text-white/35 text-sm" />
+                      <ScrambleText text={t.products.calendar.badge} className="text-white font-bold text-xl md:text-2xl" />
                     </div>
                   </div>
                   <Link href={t.products.calendar.url} className="group inline-flex items-center gap-2 text-white/45 hover:text-white text-sm transition-[color] duration-200">
@@ -400,14 +502,24 @@ export default function PricingPage() {
                   </Link>
                 </div>
 
-                {/* Plans grid */}
+                {/* Subtitle + support text */}
+                <div className="px-8 md:px-12 py-7 border-b border-white/[0.06]">
+                  <ScrambleText as="h3" text={t.calendarSubtitle} className="text-white/85 text-base md:text-lg font-semibold leading-snug" />
+                  <ScrambleText as="p" text={t.calendarSupport} className="text-white/40 text-sm mt-2 leading-relaxed max-w-xl" />
+                </div>
+
+                {/* Plans table */}
                 <div className="p-6 md:p-8 pt-8 md:pt-10">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
-                    {t.products.calendar.plans.map((plan) => (
-                      <PlanCard key={plan.name} plan={plan} yearly={yearly} lang={lang as Lang} productUrl={t.products.calendar.url} />
-                    ))}
+                  <CalendarTable plans={t.products.calendar.plans} lang={lang as Lang} />
+
+                  {/* Bottom note */}
+                  <div className="mt-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-6 border-t border-white/[0.06]">
+                    <ScrambleText as="p" text={t.calendarNote} className="text-white/40 text-sm leading-relaxed" />
+                    <Link href="/#contact" className="group shrink-0 inline-flex items-center gap-2 text-white/60 hover:text-white text-sm font-medium transition-[color] duration-200">
+                      <ScrambleText text={t.calendarNoteCta} />
+                      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform duration-200" />
+                    </Link>
                   </div>
-                  <ScrambleText as="p" text={t.trialNote} className="text-center text-white/25 text-xs mt-6" />
                 </div>
               </div>
             </Reveal>

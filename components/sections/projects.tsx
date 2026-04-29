@@ -184,8 +184,8 @@ export function ProjectsSection() {
               <div
                 className="group relative rounded-3xl border overflow-hidden"
                 style={{
-                  borderColor: isFeaturedH ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0.08)',
-                  backgroundColor: 'rgba(255,255,255,0.03)',
+                  borderColor: isFeaturedH ? 'rgba(255,255,255,0.28)' : 'rgba(255,255,255,0.15)',
+                  backgroundColor: 'rgba(255,255,255,0.07)',
                   transition: 'border-color 500ms',
                 }}
                 onMouseEnter={() => onEnter(-1)}
@@ -209,8 +209,8 @@ export function ProjectsSection() {
                           className="w-2 h-2 rounded-full bg-blue-400"
                           style={{ transform: isFeaturedH ? 'scale(1.4)' : 'scale(1)', transition: 'transform 300ms' }}
                         />
-                        <span className="text-white/35 text-xs tracking-widest uppercase">{featured.category}</span>
-                        <span className="text-white/15 text-xs">· {featured.year}</span>
+                        <span className="text-white/65 text-xs tracking-widest uppercase">{featured.category}</span>
+                        <span className="text-white/45 text-xs">· {featured.year}</span>
                       </div>
                       <h3
                         className="font-serif font-bold leading-tight"
@@ -225,7 +225,7 @@ export function ProjectsSection() {
                       </h3>
                       <p
                         className="mt-4 text-sm md:text-base leading-relaxed max-w-sm text-white"
-                        style={{ opacity: isFeaturedH ? 0.6 : 0.35, transition: 'opacity 300ms' }}
+                        style={{ opacity: isFeaturedH ? 0.9 : 0.68, transition: 'opacity 300ms' }}
                       >
                         {featured.description}
                       </p>
@@ -289,8 +289,8 @@ export function ProjectsSection() {
               <div
                 className="relative rounded-2xl border overflow-hidden p-7 h-full cursor-pointer"
                 style={{
-                  borderColor: isH ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.07)',
-                  backgroundColor: 'rgba(255,255,255,0.02)',
+                  borderColor: isH ? 'rgba(255,255,255,0.28)' : 'rgba(255,255,255,0.14)',
+                  backgroundColor: 'rgba(255,255,255,0.06)',
                   transition: 'border-color 400ms',
                 }}
                 onMouseEnter={() => onEnter(i)}
@@ -307,10 +307,10 @@ export function ProjectsSection() {
                   <div className="flex items-center justify-between mb-10">
                     <div className="flex items-center gap-2">
                       <span className={`w-1.5 h-1.5 rounded-full ${dotColors[idx]}`} />
-                      <span className="text-white/25 text-[10px] tracking-widest uppercase">{project.category}</span>
+                      <span className="text-white/60 text-[10px] tracking-widest uppercase">{project.category}</span>
                     </div>
                     {!project.url ? (
-                      <span className="flex items-center gap-1 text-white/20 text-[10px]">
+                      <span className="flex items-center gap-1 text-white/45 text-[10px]">
                         <Clock className="w-2.5 h-2.5" />{lang === 'pt' ? 'Em breve' : 'Soon'}
                       </span>
                     ) : (
@@ -328,13 +328,13 @@ export function ProjectsSection() {
                       </div>
                     )}
                   </div>
-                  <span className="text-white/15 text-xs font-mono">{project.year}</span>
+                  <span className="text-white/40 text-xs font-mono">{project.year}</span>
                   <h3
                     className="font-serif font-bold mt-2 leading-tight"
                     style={{
                       fontFamily: 'var(--font-serif)',
                       fontSize: 'clamp(1.2rem, 2.5vw, 1.6rem)',
-                      color: isH ? 'rgba(255,255,255,1)' : 'rgba(255,255,255,0.8)',
+                      color: isH ? 'rgba(255,255,255,1)' : 'rgba(255,255,255,0.93)',
                       transform: isH ? 'translateY(-2px)' : 'translateY(0)',
                       transition: 'color 300ms, transform 300ms',
                     }}
@@ -343,7 +343,7 @@ export function ProjectsSection() {
                   </h3>
                   <p
                     className="mt-3 text-xs leading-relaxed text-white"
-                    style={{ opacity: isH ? 0.55 : 0.28, transition: 'opacity 300ms' }}
+                    style={{ opacity: isH ? 0.85 : 0.68, transition: 'opacity 300ms' }}
                   >
                     {project.description}
                   </p>
@@ -375,8 +375,8 @@ export function ProjectsSection() {
               <div
                 className="relative rounded-2xl border overflow-hidden h-full cursor-pointer"
                 style={{
-                  borderColor: isH ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.07)',
-                  backgroundColor: 'rgba(255,255,255,0.02)',
+                  borderColor: isH ? 'rgba(255,255,255,0.28)' : 'rgba(255,255,255,0.14)',
+                  backgroundColor: 'rgba(255,255,255,0.06)',
                   transition: 'border-color 400ms',
                 }}
                 onMouseEnter={() => onEnter(i)}
@@ -405,17 +405,17 @@ export function ProjectsSection() {
                     style={{
                       fontFamily: 'var(--font-serif)',
                       fontSize: 'clamp(1.1rem, 2vw, 1.4rem)',
-                      color: isH ? 'rgba(255,255,255,1)' : 'rgba(255,255,255,0.75)',
+                      color: isH ? 'rgba(255,255,255,1)' : 'rgba(255,255,255,0.93)',
                       transition: 'color 300ms',
                     }}
                   >
                     {project.title}
                   </h3>
-                  <p className="mt-2 text-xs leading-relaxed text-white" style={{ opacity: isH ? 0.5 : 0.25, transition: 'opacity 300ms' }}>
+                  <p className="mt-2 text-xs leading-relaxed text-white" style={{ opacity: isH ? 0.85 : 0.68, transition: 'opacity 300ms' }}>
                     {project.description}
                   </p>
                   <div className="mt-4 flex items-center justify-between">
-                    <span className="text-white/15 text-xs font-mono">{project.year}</span>
+                    <span className="text-white/40 text-xs font-mono">{project.year}</span>
                     <span className="flex items-center gap-1 text-white/20 text-[10px]">
                       <Clock className="w-2.5 h-2.5" />{lang === 'pt' ? 'Em breve' : 'Soon'}
                     </span>
@@ -453,8 +453,8 @@ export function ProjectsSection() {
                 <div
                   className="relative rounded-2xl border overflow-hidden cursor-pointer"
                   style={{
-                    borderColor: isH ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0.07)',
-                    backgroundColor: 'rgba(255,255,255,0.02)',
+                    borderColor: isH ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.14)',
+                    backgroundColor: 'rgba(255,255,255,0.06)',
                     transition: 'border-color 500ms',
                   }}
                   onMouseEnter={() => onEnter(i)}
@@ -470,18 +470,18 @@ export function ProjectsSection() {
                   />
                   <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-6 p-8 md:px-12 md:py-10">
                     <div className="flex items-center gap-6 md:gap-10">
-                      <span className="font-mono text-white/15 text-sm">04</span>
+                      <span className="font-mono text-white/40 text-sm">04</span>
                       <div>
                         <div className="flex items-center gap-2 mb-2">
                           <span className="w-1.5 h-1.5 rounded-full bg-violet-400" />
-                          <span className="text-white/25 text-[10px] tracking-widest uppercase">{project.category}</span>
+                          <span className="text-white/60 text-[10px] tracking-widest uppercase">{project.category}</span>
                         </div>
                         <h3
                           className="font-serif font-bold"
                           style={{
                             fontFamily: 'var(--font-serif)',
                             fontSize: 'clamp(1.4rem, 3vw, 2rem)',
-                            color: isH ? 'white' : 'rgba(255,255,255,0.8)',
+                            color: isH ? 'white' : 'rgba(255,255,255,0.93)',
                             transition: 'color 300ms',
                           }}
                         >
@@ -490,12 +490,12 @@ export function ProjectsSection() {
                       </div>
                     </div>
                     <p
-                      className="text-white/30 text-sm leading-relaxed max-w-sm md:text-right"
-                      style={{ opacity: isH ? 0.65 : 0.35, transition: 'opacity 300ms' }}
+                      className="text-white text-sm leading-relaxed max-w-sm md:text-right"
+                      style={{ opacity: isH ? 0.88 : 0.68, transition: 'opacity 300ms' }}
                     >
                       {project.description}
                     </p>
-                    <span className="shrink-0 flex items-center gap-2 text-white/20 text-xs border border-white/10 rounded-full px-4 py-2">
+                    <span className="shrink-0 flex items-center gap-2 text-white/50 text-xs border border-white/25 rounded-full px-4 py-2">
                       <Clock className="w-3.5 h-3.5" />
                       {lang === 'pt' ? 'Em breve' : 'Coming soon'}
                     </span>

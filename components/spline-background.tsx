@@ -87,7 +87,7 @@ export const SplineBackground = memo(function SplineBackground() {
       ref={containerRef}
       className="fixed inset-0 w-full h-full -z-10"
       style={{
-        background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
+        background: 'linear-gradient(135deg, #080e1c 0%, #0e1a2e 40%, #122536 75%, #162e3f 100%)',
         contain: 'strict'
       }}
     >
@@ -97,7 +97,7 @@ export const SplineBackground = memo(function SplineBackground() {
         style={{
           width: '80px',
           height: '80px',
-          background: 'radial-gradient(circle at bottom right, rgba(10,10,20,1) 0%, rgba(10,10,20,0.9) 40%, transparent 70%)',
+          background: 'radial-gradient(circle at bottom right, rgba(8,12,18,1) 0%, rgba(8,12,18,0.9) 40%, transparent 70%)',
         }}
       />
 
@@ -106,7 +106,7 @@ export const SplineBackground = memo(function SplineBackground() {
         className="absolute bottom-0 left-0 right-0 z-40 pointer-events-none"
         style={{
           height: '100px',
-          background: 'linear-gradient(to top, rgba(10,10,20,0.9) 0%, transparent 100%)',
+          background: 'linear-gradient(to top, rgba(8,12,18,0.9) 0%, transparent 100%)',
         }}
       />
 
