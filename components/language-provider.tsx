@@ -26,8 +26,22 @@ type ServiceItem = {
   features: string[]
 }
 
+type CardItem = {
+  tag: string
+  title: string
+  body: string
+  stat: string
+  sub: string
+}
+
+type ProductItem2 = {
+  label: string
+  status: string
+}
+
 type Translation = {
   nav: {
+    home: string
     about: string
     projects: string
     services: string
@@ -93,6 +107,69 @@ type Translation = {
   marquee: {
     words: string[]
   }
+  sections: {
+    features: {
+      label: string
+      title1: string
+      title2: string
+      title3: string
+      cards: CardItem[]
+    }
+    insights: {
+      liveLabel: string
+      title: string
+      subtitle: string
+      globalLabel: string
+      globalDesc: string
+      stat1Label: string
+      stat1Sub: string
+      stat2Label: string
+      stat2Sub: string
+      pipelineLabel: string
+      pipelineTitle: string
+      pipelineDesc: string
+      perfLabel: string
+      perfTitle: string
+      chips: string[]
+      legendA: string
+      legendB: string
+      dayLabels: string[]
+      footerLinks: string[]
+      footerCopy: string
+      statusActive: string
+      statusOutput: string
+    }
+    testimonials: {
+      starsLabel: string
+      quote: string
+      author: string
+      role: string
+      stats: Array<{ value: string; label: string }>
+    }
+    workspace: {
+      title: string
+      subtitle: string
+      priceBtn: string
+      productsLabel: string
+      productsCount: string
+      products: ProductItem2[]
+      chips: string[]
+      btnPrimary: string
+      btnSecondary: string
+      dialUptime: string
+      dialLabel: string
+    }
+    cta: {
+      label: string
+      title1: string
+      title2: string
+      subtitle: string
+      btnPrimary: string
+      btnSecondary: string
+      links: string[]
+      copyright: string
+    }
+  }
 }
 
 const translations: Record<Language, Translation> = {
@@ -109,15 +186,15 @@ const translations: Record<Language, Translation> = {
       backToTop: 'Voltar ao topo',
     },
     hero: {
-      intro: 'Software & inovação',
-      main1: 'CRIAMOS',
-      main2: 'SOFTWARE',
-      main3: '',
+      intro: 'Vol. 01 — Digital Studio · 2026',
+      main1: 'Criamos',
+      main2: 'digital',
+      main3: 'produtos.',
       subtitle:
-        'Desenvolvemos agora aplicações web modernas que transformam a forma como as equipas trabalham. Do conceito ao lançamento, construímos produtos digitais que fazem a diferença.',
-      work: 'Ver Produtos',
-      talk: 'Fale Conosco',
-      scroll: 'Scroll',
+        'Um studio focado onde design encontra tecnologia — construído para marcas que se preocupam com o detalhe.',
+      work: 'Abrir Studio',
+      talk: 'Descobrir',
+      scroll: 'Scroll para explorar',
       rotatingBadge: '• DESCOBRE • EXPERIMENTA • SUBSCREVE • CRESCE ',
     },
     about: {
@@ -245,15 +322,15 @@ const translations: Record<Language, Translation> = {
       backToTop: 'Back to top',
     },
     hero: {
-      intro: 'Software & innovation',
-      main1: 'WE BUILD',
-      main2: 'AMAZING',
-      main3: 'SOFTWARE',
+      intro: 'Vol. 01 — Digital Studio · 2026',
+      main1: 'We build',
+      main2: 'digital',
+      main3: 'products.',
       subtitle:
-        'We craft modern web applications that transform the way teams work. From concept to launch, we build digital products that make a real difference.',
-      work: 'See Products',
-      talk: 'Talk to Us',
-      scroll: 'Scroll',
+        'A focused studio where design meets technology — built for brands that care about every detail.',
+      work: 'Open Studio',
+      talk: 'Discover',
+      scroll: 'Scroll to explore',
       rotatingBadge: '• DISCOVER • TRY • SUBSCRIBE • GROW ',
     },
     about: {

@@ -2,8 +2,6 @@
 
 import { useEffect, useState, memo } from 'react'
 import { ArrowRight, ExternalLink, Calendar, CheckCircle, BarChart2, Users, Bell, Shield } from 'lucide-react'
-import { SplineBackground } from '@/components/spline-background'
-import { CursorFollower } from '@/components/cursor-follower'
 import { ProductNav } from '@/components/product-nav'
 import { Reveal } from '@/components/reveal-animation'
 import { MagneticButton } from '@/components/magnetic-button'
@@ -289,9 +287,8 @@ export default function CalendarioDeFeriasPage() {
   }, [])
 
   return (
-    <>
-      <div className="hidden md:block"><CursorFollower /></div>
-      <SplineBackground />
+    <div style={{ background: 'var(--bg)', minHeight: '100dvh', color: 'var(--ink)' }}>
+      <div style={{ position: 'fixed', inset: 0, background: 'radial-gradient(ellipse 70% 55% at 70% 35%, var(--glow-soft), transparent 60%), radial-gradient(ellipse 55% 40% at 25% 70%, var(--glow-faint), transparent 65%)', filter: 'blur(20px)', opacity: 0.9, pointerEvents: 'none', zIndex: 0 }} />
       <ProductNav externalUrl={APP_URL} tryLabel={t.tryLabel} />
 
       <main className="relative z-10">
@@ -575,6 +572,6 @@ export default function CalendarioDeFeriasPage() {
           </div>
         </footer>
       </main>
-    </>
+    </div>
   )
 }

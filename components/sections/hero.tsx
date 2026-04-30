@@ -1,188 +1,245 @@
-"use client"
+'use client'
 
-import { memo, useEffect, useState } from 'react'
-import { ArrowRight, MessageCircle } from 'lucide-react'
-import { TextSplit } from '../text-split'
-import { RotatingText } from '../rotating-text'
-import { useLanguage } from '../language-provider'
-import { ScrambleText } from '../scramble-text'
+import { useEffect, useRef, useState } from 'react'
+import Ico from '@/components/icons'
+import AmbientNetwork from '@/components/ambient-network'
+import Link from 'next/link'
+import { useLang, useSwitch } from '@/components/language-provider'
+import { ScrambleText } from '@/components/scramble-text'
 
-const MemoizedRotatingText = memo(RotatingText)
+const PTCL = Array.from({ length: 22 }, (_, i) => ({
+  id: i, x: 4 + (i * 1873) % 90, y: 5 + (i * 2137) % 87,
+  sz: i % 5 === 0 ? 2.8 : i % 3 === 0 ? 1.8 : 1.1,
+  glow: i % 5 === 0,
+  dur: 3.5 + (i % 4) * 0.8, del: (i * 0.33) % 3,
+  dx: `${(i % 5 - 2) * 10}px`, dy: `${-(12 + (i % 12))}px`,
+}))
 
-export function HeroSection() {
-  const [isVisible, setIsVisible] = useState(false)
-  const { t, lang } = useLanguage()
+function Particles() {
+  return (
+    <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1, overflow: 'hidden' }}>
+      {PTCL.map(p => (
+        <div key={p.id} style={{
+          position: 'absolute', left: `${p.x}%`, top: `${p.y}%`,
+          width: p.sz, height: p.sz, borderRadius: '50%',
+          background: p.glow ? 'var(--glow)' : 'rgba(255,255,255,0.42)',
+          boxShadow: p.glow ? `0 0 ${p.sz * 4}px var(--glow)` : 'none',
+          ['--dx' as string]: p.dx, ['--dy' as string]: p.dy,
+          animation: `particleFloat ${p.dur}s ease-in-out ${p.del}s infinite alternate`,
+          willChange: 'transform, opacity',
+        }} />
+      ))}
+    </div>
+  )
+}
+
+function MagBtn({ children, className }: { children: React.ReactNode; className: string }) {
+  const ref = useRef<HTMLButtonElement>(null)
+  const onMove = (e: React.MouseEvent) => {
+    if (!ref.current) return
+    const r = ref.current.getBoundingClientRect()
+    ref.current.style.transition = 'transform 0.1s ease'
+    ref.current.style.transform = `translate(${(e.clientX - r.left - r.width / 2) * 0.28}px,${(e.clientY - r.top - r.height / 2) * 0.28}px)`
+  }
+  const onLeave = () => {
+    if (!ref.current) return
+    ref.current.style.transition = 'transform 0.5s cubic-bezier(.2,.7,.3,1)'
+    ref.current.style.transform = ''
+  }
+  return <button ref={ref} className={`${className} mag-btn`} onMouseMove={onMove} onMouseLeave={onLeave}>{children}</button>
+}
+
+function HeroVisual() {
+  const wrapRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const raf = requestAnimationFrame(() => setIsVisible(true))
-    return () => cancelAnimationFrame(raf)
+    let posY = 24, velY = 0, posX = 0, velX = 0
+    let mx = 0.5, my = 0.5, tmx = 0.5, tmy = 0.5
+    const SPRING = 0.048, DAMP = 0.80
+    let raf: number
+    const onMouse = (e: MouseEvent) => { tmx = e.clientX / window.innerWidth; tmy = e.clientY / window.innerHeight }
+    window.addEventListener('mousemove', onMouse, { passive: true })
+    const loop = (now: number) => {
+      mx += (tmx - mx) * 0.04; my += (tmy - my) * 0.04
+      const floatY = Math.sin(now * 0.00072) * 9
+      const targetX = (mx - 0.5) * 14
+      velY = (velY + (floatY - posY) * SPRING) * DAMP
+      velX = (velX + (targetX - posX) * SPRING) * DAMP
+      posY += velY; posX += velX
+      if (wrapRef.current) wrapRef.current.style.transform =
+        `translate(${posX}px, calc(-50% + ${posY}px))`
+      raf = requestAnimationFrame(loop)
+    }
+    raf = requestAnimationFrame(loop)
+    return () => { cancelAnimationFrame(raf); window.removeEventListener('mousemove', onMouse) }
   }, [])
 
-  function openChat() {
-    window.dispatchEvent(new CustomEvent('open-chat'))
-  }
-
-  const fadeIn = (delay: number) => ({
-    opacity: isVisible ? 1 : 0,
-    transform: isVisible ? 'translateY(0)' : 'translateY(24px)',
-    transition: `opacity 700ms ${delay}ms ease-out, transform 700ms ${delay}ms ease-out`,
-  })
-
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center px-6 md:px-12 pt-24 pb-36 overflow-hidden">
-      {/* Static radial glow */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div className="w-[700px] h-[700px] rounded-full bg-white/[0.022] blur-[130px]" />
-      </div>
-
-      {/* Subtle grid */}
-      <div
-        className="absolute inset-0 pointer-events-none"
+    <div ref={wrapRef} style={{
+      position: 'absolute', right: '-2%', top: '50%', transform: 'translateY(-50%)',
+      width: 'clamp(380px, 50vw, 740px)', height: 'clamp(380px, 50vw, 740px)',
+      willChange: 'transform', zIndex: 2,
+      WebkitMaskImage: 'linear-gradient(to right, transparent 0%, transparent 8%, rgba(0,0,0,0.35) 22%, black 40%)',
+      maskImage: 'linear-gradient(to right, transparent 0%, transparent 8%, rgba(0,0,0,0.35) 22%, black 40%)',
+    }}>
+      <img
+        src="/lindo.gif"
+        alt=""
         style={{
-          backgroundImage:
-            'linear-gradient(rgba(255,255,255,0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.4) 1px, transparent 1px)',
-          backgroundSize: '80px 80px',
-          opacity: 0.022,
-          maskImage: 'radial-gradient(ellipse 65% 65% at 50% 45%, black 0%, transparent 100%)',
-          WebkitMaskImage: 'radial-gradient(ellipse 65% 65% at 50% 45%, black 0%, transparent 100%)',
+          width: '100%', height: '100%',
+          objectFit: 'cover',
+          borderRadius: '50%',
+          display: 'block',
+          mixBlendMode: 'screen',
         }}
       />
+    </div>
+  )
+}
 
-      <div className="max-w-7xl w-full mx-auto text-center relative z-10">
-        <ScrambleText
-          as="p"
-          text={t.hero.intro}
-          className="text-white/40 text-xs md:text-sm tracking-[0.3em] uppercase mb-6 md:mb-8"
-          style={fadeIn(0)}
-        />
+function NavHeader() {
+  const ref = useRef<HTMLElement>(null)
+  const { t, toggleLanguage } = useLang()
+  const { isSwitching } = useSwitch()
+  const navLinks = [
+    { label: 'Início',   href: '/',                               active: true  },
+    { label: 'Studio',   href: '/start',                          active: false },
+    { label: 'Projetos', href: '/produtos/calendario-de-ferias',  active: false },
+    { label: 'Preços',   href: '/pricing',                        active: false },
+  ]
+  useEffect(() => {
+    const fn = () => {
+      if (!ref.current) return
+      const s = window.scrollY > 30
+      ref.current.style.background = s ? 'rgba(5,5,5,0.72)' : 'transparent'
+      ref.current.style.backdropFilter = s ? 'blur(22px) saturate(180%)' : 'none'
+      ref.current.style.borderBottom = s ? '1px solid rgba(255,255,255,0.07)' : '1px solid transparent'
+    }
+    window.addEventListener('scroll', fn, { passive: true })
+    return () => window.removeEventListener('scroll', fn)
+  }, [])
+  return (
+    <header ref={ref} className="nav" style={{ transition: 'background 0.35s, border-color 0.35s', position: 'relative', animation: 'fadeSlideUp 0.6s ease 0.1s both' }}>
+      <div className="row gap-12">
+        <Link href="/" className="logo" aria-label="FRPC"><Ico.Logo size={20} /></Link>
+      </div>
+      <nav className="nav-pill" aria-label="Primary">
+        {navLinks.map(({ label, href, active }) => (
+          <Link key={label} href={href} className={active ? 'active' : ''}>{label}</Link>
+        ))}
+        <Link className="badge" href="/start">Contacto <Ico.ArrowUpRight size={11} /></Link>
+        <span className="shield" title="Verificado"><Ico.Shield size={14} color="#0a0a0a" /></span>
+      </nav>
+      <div className="acct">
+        <button
+          onClick={toggleLanguage}
+          disabled={isSwitching}
+          className="btn btn-ghost"
+          style={{ padding: '8px 16px', fontSize: 13, position: 'relative', overflow: 'hidden', minWidth: 48 }}
+        >
+          <span style={{ display: 'inline-block', transition: 'opacity 0.2s, transform 0.2s', opacity: isSwitching ? 0 : 1, transform: isSwitching ? 'scale(0.9)' : 'scale(1)' }}>
+            {t.nav.language}
+          </span>
+          {isSwitching && (
+            <span style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, animation: 'glitchPulse 0.15s steps(1) infinite' }}>
+              {t.nav.language}
+            </span>
+          )}
+        </button>
+      </div>
+    </header>
+  )
+}
 
-        <div style={fadeIn(100)}>
-          <TextSplit
-            text={t.hero.main1}
-            className="font-serif font-bold text-white leading-none tracking-tight justify-center"
-            style={{ fontSize: 'clamp(3.5rem, 15vw, 12rem)' }}
-            delay={200}
-            stagger={0.04}
-            nowrap
-          />
-        </div>
+export function HeroSection() {
+  const { t } = useLang()
+  const bgRef = useRef<HTMLDivElement>(null), midRef = useRef<HTMLDivElement>(null)
+  const nodeRef = useRef<HTMLDivElement>(null), copyRef = useRef<HTMLDivElement>(null)
 
-        <div className="flex items-center justify-center gap-4 md:gap-8 mt-[-0.05em]">
-          <div
-            className="hidden md:flex items-center justify-center"
-            style={{
-              opacity: isVisible ? 1 : 0,
-              transform: isVisible ? 'scale(1)' : 'scale(0.5)',
-              transition: 'opacity 700ms 300ms ease-out, transform 700ms 300ms ease-out',
-            }}
-          >
-            <div className="relative">
-              <MemoizedRotatingText text={t.hero.rotatingBadge} radius={50} className="text-white/70" />
-              <ArrowRight className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-5 h-5 text-white" />
+  useEffect(() => {
+    let rafId: number, sy = 0, mx = 0.5, my = 0.5, tmx = 0.5, tmy = 0.5
+    const onMouse = (e: MouseEvent) => { tmx = e.clientX / window.innerWidth; tmy = e.clientY / window.innerHeight }
+    window.addEventListener('mousemove', onMouse, { passive: true })
+    const loop = () => {
+      sy += (window.scrollY - sy) * 0.09
+      mx += (tmx - mx) * 0.04; my += (tmy - my) * 0.04
+      const dx = (mx - 0.5) * 36, dy = (my - 0.5) * 22
+      if (bgRef.current) bgRef.current.style.transform = `translate3d(${dx * 0.45}px,${sy * 0.25 + dy * 0.45}px,0)`
+      if (midRef.current) midRef.current.style.transform = `translate3d(${dx * 0.22}px,${sy * 0.35}px,0)`
+      if (nodeRef.current) nodeRef.current.style.transform = `translate3d(${dx * 0.09}px,${sy * 0.12}px,0)`
+      if (copyRef.current) copyRef.current.style.transform = `translate3d(0,${sy * 0.05}px,0)`
+      rafId = requestAnimationFrame(loop)
+    }
+    rafId = requestAnimationFrame(loop)
+    return () => { cancelAnimationFrame(rafId); window.removeEventListener('mousemove', onMouse) }
+  }, [])
+
+  return (
+    <div className="screen" style={{ overflow: 'hidden' }}>
+      <div ref={bgRef} style={{ position: 'absolute', top: '-22%', left: '-15%', right: '-15%', bottom: '-55%', willChange: 'transform', zIndex: 0, pointerEvents: 'none' }}>
+        <div style={{ position: 'absolute', top: '22%', left: '54%', width: 680, height: 680, borderRadius: '50%', background: 'radial-gradient(circle, var(--glow-soft), transparent 55%)', filter: 'blur(52px)', animation: 'glowPulse 7s ease-in-out infinite' }} />
+        <div style={{ position: 'absolute', top: '48%', left: '10%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, var(--glow-faint), transparent 65%)', filter: 'blur(72px)', animation: 'glowPulse 9.5s ease-in-out 3s infinite' }} />
+        <div style={{ position: 'absolute', top: '3%', left: '38%', width: 280, height: 280, borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,255,255,0.018), transparent 70%)', filter: 'blur(40px)', animation: 'glowPulse 12s ease-in-out 1.5s infinite' }} />
+      </div>
+
+      <div ref={midRef} style={{ position: 'absolute', inset: '-8%', willChange: 'transform', zIndex: 1, pointerEvents: 'none' }}>
+        <AmbientNetwork />
+      </div>
+
+      <Particles />
+      <HeroVisual />
+
+      <div style={{ position: 'relative', zIndex: 10 }}><NavHeader /></div>
+
+      <div style={{ position: 'absolute', top: 104, left: '50%', transform: 'translateX(-50%)', zIndex: 10 }}>
+        <button aria-label="Ver intro" style={{ width: 44, height: 44, borderRadius: '50%', background: 'rgba(14,14,18,0.5)', border: '1px solid var(--line-strong)', color: 'var(--ink)', cursor: 'pointer', display: 'grid', placeItems: 'center', backdropFilter: 'blur(16px)', transition: 'transform 0.2s, background 0.2s', animation: 'fadeSlideUp 0.7s ease 0.4s both, playRipple 3.5s ease-out 2.2s infinite' }}>
+          <Ico.Play size={12} />
+        </button>
+      </div>
+
+      <div ref={nodeRef} style={{ position: 'absolute', inset: 0, willChange: 'transform', zIndex: 3, pointerEvents: 'none' }} />
+
+      <div ref={copyRef} style={{ position: 'absolute', inset: 0, willChange: 'transform', zIndex: 4, display: 'flex', alignItems: 'center', padding: '0 0 0 max(40px, 7vw)', pointerEvents: 'none' }}>
+        <div style={{ pointerEvents: 'all', maxWidth: 'min(660px, 58%)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 36, animation: 'fadeSlideUp 0.6s ease 0.2s both' }}>
+            <div style={{ width: 28, height: 1, background: 'var(--glow)', boxShadow: '0 0 6px var(--glow)', flexShrink: 0 }} />
+            <ScrambleText text={t.hero.intro} style={{ fontSize: 10, letterSpacing: '0.24em', textTransform: 'uppercase', color: 'var(--ink-mute)', fontFamily: 'var(--font-mono)', whiteSpace: 'nowrap' }} />
+          </div>
+
+          <h1 className="display" style={{ fontSize: 'clamp(48px, 9vw, 140px)', margin: '0 0 32px', lineHeight: 0.93, letterSpacing: '-0.03em' }}>
+            <div style={{ overflow: 'hidden' }}>
+              <ScrambleText text={t.hero.main1} style={{ display: 'block', animation: 'wordReveal 0.72s cubic-bezier(.2,.7,.3,1) 0.40s both' }} />
+            </div>
+            <div style={{ overflow: 'hidden' }}>
+              <ScrambleText text={t.hero.main2} style={{ display: 'block', color: 'rgba(244,244,241,0.48)', animation: 'wordReveal 0.72s cubic-bezier(.2,.7,.3,1) 0.55s both' }} />
+            </div>
+            <div style={{ overflow: 'hidden' }}>
+              <ScrambleText text={t.hero.main3} style={{ display: 'block', fontStyle: 'italic', animation: 'wordReveal 0.72s cubic-bezier(.2,.7,.3,1) 0.70s both' }} />
+            </div>
+          </h1>
+
+          <div style={{ height: 1, background: 'linear-gradient(90deg, var(--line-strong) 0%, var(--line) 55%, transparent 100%)', marginBottom: 28, transformOrigin: 'left center', animation: 'shimmerLine 0.9s ease 0.88s both' }} />
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 28, flexWrap: 'wrap', animation: 'fadeSlideUp 0.6s ease 1.05s both' }}>
+            <ScrambleText as="p" text={t.hero.subtitle} style={{ color: 'var(--ink-dim)', fontSize: 14, lineHeight: 1.65, maxWidth: 270, margin: 0, flex: '0 0 auto' }} />
+            <div style={{ display: 'flex', gap: 10, flex: '0 0 auto' }}>
+              <Link href="/start">
+                <MagBtn className="btn btn-dark"><ScrambleText text={t.hero.work} /> <Ico.ArrowUpRight size={11} /></MagBtn>
+              </Link>
+              <Link href="/produtos/calendario-de-ferias">
+                <MagBtn className="btn btn-light"><ScrambleText text={t.hero.talk} /></MagBtn>
+              </Link>
             </div>
           </div>
-
-          <div style={fadeIn(300)}>
-            <TextSplit
-              text={t.hero.main2}
-              className="font-serif font-bold leading-none tracking-tight justify-center"
-              style={{
-                fontSize: 'clamp(3.5rem, 15vw, 12rem)',
-                WebkitTextStroke: '1.5px rgba(255,255,255,0.45)',
-                WebkitTextFillColor: 'transparent',
-              }}
-              delay={400}
-              stagger={0.04}
-              nowrap
-            />
-          </div>
-        </div>
-
-        <div style={{ ...fadeIn(500), marginTop: '-0.05em' }}>
-          <TextSplit
-            text={t.hero.main3}
-            className="font-serif font-bold text-white leading-none tracking-tight justify-center"
-            style={{ fontSize: 'clamp(3.5rem, 15vw, 12rem)' }}
-            delay={500}
-            stagger={0.04}
-            nowrap
-          />
-        </div>
-
-        <ScrambleText
-          as="p"
-          text={t.hero.subtitle}
-          className="text-white/55 text-base md:text-lg lg:text-xl max-w-2xl mx-auto leading-relaxed mt-10 md:mt-16"
-          style={fadeIn(700)}
-        />
-
-        <div
-          className="mt-10 md:mt-12 flex flex-col sm:flex-row items-center justify-center gap-3"
-          style={fadeIn(900)}
-        >
-          <a
-            href="#projects"
-            className="group relative overflow-hidden px-8 py-4 bg-white text-black text-sm font-semibold rounded-full flex items-center gap-3"
-            style={{ boxShadow: '0 0 28px rgba(255,255,255,0.1)', transition: 'background-color 250ms' }}
-          >
-            <ScrambleText text={t.hero.work} />
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
-          </a>
-
-          <a
-            href="#contact"
-            className="px-8 py-4 text-white/75 hover:text-white text-sm font-medium rounded-full"
-            style={{
-              border: '1px solid rgba(255,255,255,0.18)',
-              transition: 'color 250ms, background-color 250ms, border-color 250ms',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.07)'
-              e.currentTarget.style.borderColor = 'rgba(255,255,255,0.32)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = ''
-              e.currentTarget.style.borderColor = 'rgba(255,255,255,0.18)'
-            }}
-          >
-            <ScrambleText text={t.hero.talk} />
-          </a>
-
-          <button
-            onClick={openChat}
-            className="flex items-center gap-2 px-8 py-4 text-white/75 hover:text-white text-sm font-medium rounded-full"
-            style={{
-              border: '1px solid rgba(255,255,255,0.18)',
-              transition: 'color 250ms, background-color 250ms, border-color 250ms',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.07)'
-              e.currentTarget.style.borderColor = 'rgba(255,255,255,0.32)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = ''
-              e.currentTarget.style.borderColor = 'rgba(255,255,255,0.18)'
-            }}
-          >
-            <MessageCircle className="w-4 h-4" />
-            {lang === 'pt' ? 'Chat IA' : 'AI Chat'}
-          </button>
         </div>
       </div>
 
-      {/* Scroll indicator */}
-      <div
-        className="absolute bottom-8 md:bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/35"
-        style={{ opacity: isVisible ? 1 : 0, transition: 'opacity 700ms 1100ms ease-out' }}
-      >
-        <ScrambleText text={t.hero.scroll} className="text-xs tracking-widest uppercase" />
-        <div className="relative w-px h-10 overflow-hidden">
-          <div
-            className="absolute inset-x-0 top-0 h-full bg-gradient-to-b from-white/50 to-transparent"
-            style={{ animation: 'scrollLine 1.8s ease-in-out infinite' }}
-          />
-        </div>
+      <div style={{ position: 'absolute', left: 'max(40px,7vw)', bottom: 44, display: 'flex', alignItems: 'center', gap: 10, color: 'var(--ink-dim)', fontSize: 11, fontFamily: 'var(--font-mono)', letterSpacing: '0.08em', zIndex: 5, animation: 'fadeSlideUp 0.8s ease 1.5s both' }}>
+        <span style={{ width: 28, height: 28, borderRadius: '50%', background: 'rgba(244,244,241,0.12)', border: '1px solid rgba(255,255,255,0.18)', color: 'var(--ink)', display: 'grid', placeItems: 'center', animation: 'glowPulse 3s ease-in-out infinite' }}>
+          <Ico.Down size={11} />
+        </span>
+        <ScrambleText text={t.hero.scroll} />
       </div>
-    </section>
+    </div>
   )
 }

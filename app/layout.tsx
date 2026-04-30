@@ -1,24 +1,11 @@
 import type { Metadata } from 'next'
-import { Playfair_Display, Inter } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
-import { ThemeProvider } from '@/components/theme-provider'
 import { LanguageProvider } from '@/components/language-provider'
 import './globals.css'
 
-const playfair = Playfair_Display({ 
-  subsets: ["latin"],
-  variable: '--font-serif',
-  weight: ['400', '500', '600', '700', '800', '900']
-});
-
-const inter = Inter({ 
-  subsets: ["latin"],
-  variable: '--font-sans'
-});
-
 export const metadata: Metadata = {
-  title: 'FRPC | Digital Innovation Studio',
-  description: 'We craft extraordinary digital experiences that push the boundaries of creativity and technology.',
+  title: 'FRPC | Digital Studio',
+  description: 'A full-service digital studio where design meets technology — built for brands that care about craft.',
 }
 
 export default function RootLayout({
@@ -27,18 +14,19 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${playfair.variable} ${inter.variable} font-sans antialiased`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <LanguageProvider>
-            {children}
-          </LanguageProvider>
-        </ThemeProvider>
+    <html lang="pt" suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body>
+        <LanguageProvider>
+          {children}
+        </LanguageProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>

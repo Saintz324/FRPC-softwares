@@ -1,14 +1,13 @@
 "use client"
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, ArrowRight, Check, X, Clock, ChevronDown } from 'lucide-react'
-import { SplineBackground } from '@/components/spline-background'
-import { CursorFollower } from '@/components/cursor-follower'
+import { ArrowRight, Check, X, Clock, ChevronDown } from 'lucide-react'
 import { Reveal } from '@/components/reveal-animation'
 import { MagneticButton } from '@/components/magnetic-button'
 import { useLang, useSwitch } from '@/components/language-provider'
 import { ScrambleText } from '@/components/scramble-text'
+import Ico from '@/components/icons'
 
 // ─── Translations ────────────────────────────────────────────────────────────
 const T = {
@@ -406,10 +405,23 @@ export default function PricingPage() {
   const { lang, toggleLanguage, t: navT } = useLang()
   const { isSwitching } = useSwitch()
   const t = T[lang as Lang]
+  const navRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
     const raf = requestAnimationFrame(() => setIsVisible(true))
     return () => cancelAnimationFrame(raf)
+  }, [])
+
+  useEffect(() => {
+    const fn = () => {
+      if (!navRef.current) return
+      const s = window.scrollY > 30
+      navRef.current.style.background = s ? 'rgba(5,5,5,0.82)' : 'transparent'
+      navRef.current.style.backdropFilter = s ? 'blur(22px) saturate(180%)' : 'none'
+      navRef.current.style.borderBottom = s ? '1px solid rgba(255,255,255,0.07)' : '1px solid transparent'
+    }
+    window.addEventListener('scroll', fn, { passive: true })
+    return () => window.removeEventListener('scroll', fn)
   }, [])
 
   const vis = (delay = '') => ({
@@ -418,32 +430,33 @@ export default function PricingPage() {
   })
 
   return (
-    <>
-      <div className="hidden md:block"><CursorFollower /></div>
-      <SplineBackground />
+    <div style={{ background: 'var(--bg)', minHeight: '100dvh', color: 'var(--ink)' }}>
+      {/* Ambient glow */}
+      <div style={{ position: 'fixed', inset: 0, background: 'radial-gradient(ellipse 70% 55% at 70% 35%, var(--glow-soft), transparent 60%), radial-gradient(ellipse 55% 40% at 25% 70%, var(--glow-faint), transparent 65%)', filter: 'blur(20px)', opacity: 0.9, pointerEvents: 'none', zIndex: 0 }} />
 
       {/* Nav */}
-      <nav className="fixed top-0 left-0 right-0 z-50 px-6 md:px-12 py-6">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Link href="/" className="flex items-center gap-2 text-white/45 hover:text-white text-sm transition-[color] duration-200 group">
-              <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform duration-200" />
-              <ScrambleText text={t.back} className="hidden sm:block tracking-[0.2em] uppercase text-xs" />
-            </Link>
-            <div className="w-px h-4 bg-white/15" />
-            <Link href="/" className="text-2xl md:text-3xl font-serif font-bold text-white hover:opacity-80 transition-opacity duration-200" style={{ fontFamily: 'var(--font-serif)' }}>
-              FRPC
-            </Link>
-          </div>
-          <MagneticButton
+      <header ref={navRef} className="nav" style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50, transition: 'background 0.35s, border-color 0.35s' }}>
+        <div className="row gap-12">
+          <Link href="/" className="logo" aria-label="FRPC"><Ico.Logo size={20} /></Link>
+        </div>
+        <nav className="nav-pill" aria-label="Primary">
+          <Link href="/">Início</Link>
+          <Link href="/produtos/calendario-de-ferias">Produtos</Link>
+          <Link href="/pricing" className="active">Preços</Link>
+          <Link href="/start" className="badge">Contacto <Ico.ArrowUpRight size={11} /></Link>
+          <span className="shield" title="Verificado"><Ico.Shield size={14} color="#0a0a0a" /></span>
+        </nav>
+        <div className="acct">
+          <button
             onClick={toggleLanguage}
             disabled={isSwitching}
-            className="px-4 py-2 border border-white/25 text-white text-sm font-medium rounded-full hover:bg-white/10 transition-[background-color] duration-200"
+            className="btn btn-ghost"
+            style={{ padding: '8px 14px', fontSize: 13 }}
           >
             {navT.nav.language}
-          </MagneticButton>
+          </button>
         </div>
-      </nav>
+      </header>
 
       <main className="relative z-10">
 
@@ -662,6 +675,6 @@ export default function PricingPage() {
           </div>
         </footer>
       </main>
-    </>
+    </div>
   )
 }

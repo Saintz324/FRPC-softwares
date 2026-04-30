@@ -1,82 +1,50 @@
 "use client"
 
-import { useState, useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, ExternalLink } from 'lucide-react'
-import { MagneticButton } from './magnetic-button'
 import { useLanguage } from './language-provider'
+import Ico from '@/components/icons'
 
 export function ProductNav({ externalUrl, tryLabel = 'Experimentar' }: { externalUrl: string; tryLabel?: string }) {
-  const [isScrolled, setIsScrolled] = useState(false)
   const { t, toggleLanguage, isSwitching } = useLanguage()
+  const navRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
-    let rafId: number | null = null
-    const handleScroll = () => {
-      if (rafId !== null) cancelAnimationFrame(rafId)
-      rafId = requestAnimationFrame(() => setIsScrolled(window.scrollY > 50))
+    const fn = () => {
+      if (!navRef.current) return
+      const s = window.scrollY > 30
+      navRef.current.style.background = s ? 'rgba(5,5,5,0.82)' : 'transparent'
+      navRef.current.style.backdropFilter = s ? 'blur(22px) saturate(180%)' : 'none'
+      navRef.current.style.borderBottom = s ? '1px solid rgba(255,255,255,0.07)' : '1px solid transparent'
     }
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => {
-      window.removeEventListener('scroll', handleScroll)
-      if (rafId !== null) cancelAnimationFrame(rafId)
-    }
+    window.addEventListener('scroll', fn, { passive: true })
+    return () => window.removeEventListener('scroll', fn)
   }, [])
 
   return (
-    <nav
-      className={`fixed top-0 left-0 right-0 z-50 px-6 md:px-12 py-6 transition-all duration-500 ${
-        isScrolled ? 'backdrop-blur-md bg-black/20' : ''
-      }`}
-    >
-      <div className="max-w-7xl mx-auto flex items-center justify-between gap-6">
-        {/* Left: back + logo */}
-        <div className="flex items-center gap-4">
-          <Link
-            href="/"
-            className="flex items-center gap-2 text-white/50 hover:text-white text-sm transition-colors group"
-          >
-            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-200" />
-            <span className="hidden sm:block tracking-[0.2em] uppercase text-xs">Voltar</span>
-          </Link>
-
-          <div className="w-px h-4 bg-white/20" />
-
-          <Link
-            href="/"
-            className="text-2xl md:text-3xl font-serif font-bold tracking-tight text-white hover:opacity-80 transition-opacity"
-            style={{ fontFamily: 'var(--font-serif)' }}
-          >
-            FRPC
-          </Link>
-        </div>
-
-        {/* Right: language + try */}
-        <div className="flex items-center gap-3">
-          <MagneticButton
-            onClick={toggleLanguage}
-            disabled={isSwitching}
-            className={`relative overflow-hidden px-4 py-2 bg-transparent border border-white/30 text-white text-sm font-medium rounded-full hover:bg-white/10 transition-all duration-300 ${
-              isSwitching ? 'opacity-70 cursor-wait' : ''
-            }`}
-          >
-            <span
-              className={`inline-block transition-all duration-300 ${
-                isSwitching ? 'opacity-0 scale-95' : 'opacity-100 scale-100'
-              }`}
-            >
-              {t.nav.language}
-            </span>
-          </MagneticButton>
-
-          <a href={externalUrl} target="_blank" rel="noopener noreferrer">
-            <MagneticButton className="flex items-center gap-2 px-6 py-3 bg-white text-black text-sm font-medium rounded-full hover:bg-white/90 transition-colors">
-              {tryLabel}
-              <ExternalLink className="w-3.5 h-3.5" />
-            </MagneticButton>
-          </a>
-        </div>
+    <header ref={navRef} className="nav" style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50, transition: 'background 0.35s, border-color 0.35s' }}>
+      <div className="row gap-12">
+        <Link href="/" className="logo" aria-label="FRPC"><Ico.Logo size={20} /></Link>
       </div>
-    </nav>
+      <nav className="nav-pill" aria-label="Primary">
+        <Link href="/">Início</Link>
+        <Link href="/produtos/calendario-de-ferias">Produtos</Link>
+        <Link href="/pricing">Preços</Link>
+        <a href={externalUrl} target="_blank" rel="noopener noreferrer" className="badge">
+          {tryLabel} <Ico.ArrowUpRight size={11} />
+        </a>
+        <span className="shield" title="Verificado"><Ico.Shield size={14} color="#0a0a0a" /></span>
+      </nav>
+      <div className="acct">
+        <button
+          onClick={toggleLanguage}
+          disabled={isSwitching}
+          className="btn btn-ghost"
+          style={{ padding: '8px 14px', fontSize: 13 }}
+        >
+          {t.nav.language}
+        </button>
+      </div>
+    </header>
   )
 }
