@@ -2,16 +2,14 @@
 
 import React, { useEffect, useRef } from 'react'
 import Ico from '@/components/icons'
+import { useLang } from '@/components/language-provider'
 
-const CARDS = [
-  { icon: 'Spark', tag: '01 — Design', title: 'Design & UX', body: 'Interfaces, sistemas de design e identidade visual construídos com atenção obsessiva ao detalhe — do wireframe ao produto final.', stat: '100%', sub: 'foco no utilizador' },
-  { icon: 'Triangle', tag: '02 — Produto', title: 'Desenvolvimento', body: 'Apps web, SaaS e APIs modernas com as tecnologias certas — escaláveis desde o primeiro dia e prontas a crescer.', stat: '99.9%', sub: 'uptime garantido' },
-  { icon: 'Sun', tag: '03 — Lançamento', title: 'Do conceito ao mercado', body: 'Acompanhamos o teu projeto desde a ideia até ao lançamento, com um processo claro, iterativo e sem surpresas.', stat: '48h', sub: 'resposta garantida' },
-]
+type Card = { tag: string; title: string; body: string; stat: string; sub: string }
+const ICONS = ['Spark', 'Triangle', 'Sun']
 
-function FeatureCard({ card, delay }: { card: typeof CARDS[0]; delay: number }) {
+function FeatureCard({ card, delay, icon }: { card: Card; delay: number; icon: string }) {
   const ref = useRef<HTMLDivElement>(null)
-  const IconC = (Ico as Record<string, (props: { size: number; color: string }) => React.ReactElement>)[card.icon]
+  const IconC = (Ico as Record<string, (props: { size: number; color: string }) => React.ReactElement>)[icon]
 
   useEffect(() => {
     const el = ref.current
@@ -61,6 +59,9 @@ function FeatureCard({ card, delay }: { card: typeof CARDS[0]; delay: number }) 
 }
 
 export function FeaturesSection() {
+  const { t } = useLang()
+  const s = t.sections.features
+
   return (
     <div style={{ position: 'relative', background: '#06060b', minHeight: '100dvh', padding: '80px max(40px,7vw) 120px' }}>
       <div style={{ position: 'absolute', top: '30%', right: '10%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, var(--glow-faint), transparent 65%)', filter: 'blur(80px)', pointerEvents: 'none', zIndex: 0 }} />
@@ -69,17 +70,17 @@ export function FeaturesSection() {
         <div style={{ marginBottom: 64 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 26 }}>
             <div style={{ width: 28, height: 1, background: 'var(--glow)', boxShadow: '0 0 6px var(--glow)' }} />
-            <span style={{ fontSize: 10, letterSpacing: '0.24em', textTransform: 'uppercase', color: 'var(--ink-mute)', fontFamily: 'var(--font-mono)' }}>O Studio</span>
+            <span style={{ fontSize: 10, letterSpacing: '0.24em', textTransform: 'uppercase', color: 'var(--ink-mute)', fontFamily: 'var(--font-mono)' }}>{s.label}</span>
           </div>
           <h2 className="display" style={{ fontSize: 'clamp(38px, 5.5vw, 82px)', margin: 0, lineHeight: 0.93, letterSpacing: '-0.03em', maxWidth: 600 }}>
-            Do conceito ao produto<br />
-            com atenção a<br />
-            <em style={{ fontStyle: 'italic', color: 'rgba(244,244,241,0.45)' }}>cada detalhe.</em>
+            {s.title1}<br />
+            {s.title2}<br />
+            <em style={{ fontStyle: 'italic', color: 'rgba(244,244,241,0.45)' }}>{s.title3}</em>
           </h2>
         </div>
 
         <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
-          {CARDS.map((c, i) => <FeatureCard key={c.title} card={c} delay={i * 0.13} />)}
+          {s.cards.map((c, i) => <FeatureCard key={i} card={c} delay={i * 0.13} icon={ICONS[i]} />)}
         </div>
       </div>
     </div>

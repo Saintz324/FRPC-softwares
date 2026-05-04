@@ -1,9 +1,8 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
-import Link from 'next/link'
+import { useState, useEffect } from 'react'
 import { useLang } from '@/components/language-provider'
-import Ico from '@/components/icons'
+import { SiteNav } from '@/components/site-nav'
 import { ScrambleText } from '@/components/scramble-text'
 import {
   Globe, ShoppingCart, LayoutDashboard, Smartphone, Server, Layers,
@@ -226,7 +225,7 @@ function TypeTile({ type, selected, onClick, lang, delay }: {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function StartPage() {
-  const { lang, toggleLanguage } = useLang()
+  const { lang } = useLang()
   const isPt = lang === 'pt'
 
   const [name,        setName]        = useState('')
@@ -237,23 +236,10 @@ export default function StartPage() {
   const [deadline,    setDeadline]    = useState('')
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle')
   const [mounted, setMounted] = useState(false)
-  const navRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
     const tid = setTimeout(() => setMounted(true), 50)
     return () => clearTimeout(tid)
-  }, [])
-
-  useEffect(() => {
-    const fn = () => {
-      if (!navRef.current) return
-      const s = window.scrollY > 30
-      navRef.current.style.background = s ? 'rgba(5,5,5,0.82)' : 'transparent'
-      navRef.current.style.backdropFilter = s ? 'blur(22px) saturate(180%)' : 'none'
-      navRef.current.style.borderBottom = s ? '1px solid rgba(255,255,255,0.07)' : '1px solid transparent'
-    }
-    window.addEventListener('scroll', fn, { passive: true })
-    return () => window.removeEventListener('scroll', fn)
   }, [])
 
   const deadlines = isPt ? DEADLINES_PT : DEADLINES_EN
@@ -301,24 +287,7 @@ export default function StartPage() {
       {/* Ambient glow */}
       <div style={{ position: 'fixed', inset: 0, background: 'radial-gradient(ellipse 70% 55% at 70% 35%, var(--glow-soft), transparent 60%), radial-gradient(ellipse 55% 40% at 25% 70%, var(--glow-faint), transparent 65%)', filter: 'blur(20px)', opacity: 0.9, pointerEvents: 'none', zIndex: 0 }} />
 
-      {/* Nav */}
-      <header ref={navRef} className="nav" style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50, transition: 'background 0.35s, border-color 0.35s' }}>
-        <div className="row gap-12">
-          <Link href="/" className="logo" aria-label="FRPC"><Ico.Logo size={20} /></Link>
-        </div>
-        <nav className="nav-pill" aria-label="Primary">
-          <Link href="/">Início</Link>
-          <Link href="/produtos/calendario-de-ferias">Produtos</Link>
-          <Link href="/pricing">Preços</Link>
-          <Link href="/start" className="badge">Contacto <Ico.ArrowUpRight size={11} /></Link>
-          <span className="shield" title="Verificado"><Ico.Shield size={14} color="#0a0a0a" /></span>
-        </nav>
-        <div className="acct">
-          <button onClick={toggleLanguage} className="btn btn-ghost" style={{ padding: '8px 14px', fontSize: 13 }}>
-            {isPt ? 'EN' : 'PT'}
-          </button>
-        </div>
-      </header>
+      <SiteNav />
 
       <main className="relative z-10 min-h-screen">
         <div className="max-w-7xl mx-auto px-6 md:px-12 pt-32 pb-24">

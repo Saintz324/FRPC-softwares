@@ -4,8 +4,20 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Ico from '@/components/icons'
 import AmbientNetwork from '@/components/ambient-network'
+import { useLang } from '@/components/language-provider'
 
-function Dial({ mounted }: { mounted: boolean }) {
+const PRODUCT_HREFS = [
+  '/produtos/calendario-de-ferias',
+  '/produtos/project-manager',
+  '/pricing',
+]
+const PRODUCT_COLORS = [
+  { bg: 'rgba(59,130,246,0.15)', dot: '#60a5fa' },
+  { bg: 'rgba(52,211,153,0.12)', dot: '#34d399' },
+  { bg: 'rgba(139,92,246,0.10)', dot: '#a78bfa' },
+]
+
+function Dial({ mounted, dialUptime, dialLabel }: { mounted: boolean; dialUptime: string; dialLabel: string }) {
   const size = 360, cx = size / 2, cy = size / 2
   const r1 = 160, r2 = 130, r3 = 100
   const arc = (radius: number, startDeg: number, endDeg: number) => {
@@ -32,7 +44,7 @@ function Dial({ mounted }: { mounted: boolean }) {
         const r0 = r1 + 6, r4 = r1 + 12
         return <line key={i} x1={cx + r0 * Math.cos(a)} y1={cy + r0 * Math.sin(a)} x2={cx + r4 * Math.cos(a)} y2={cy + r4 * Math.sin(a)} stroke="rgba(255,255,255,0.2)" strokeWidth="1" />
       })}
-      <text x={cx - 130} y={cy - 110} fill="rgba(255,255,255,0.55)" fontSize="11" fontFamily="var(--font-mono)">Uptime</text>
+      <text x={cx - 130} y={cy - 110} fill="rgba(255,255,255,0.55)" fontSize="11" fontFamily="var(--font-mono)">{dialUptime}</text>
       <text x={cx - 130} y={cy - 95} fill="rgba(255,255,255,0.85)" fontSize="13" fontFamily="var(--font-mono)">99.9%</text>
       <text x={cx - 130} y={cy - 60} fill="rgba(255,255,255,0.55)" fontSize="11" fontFamily="var(--font-mono)">Versão</text>
       <text x={cx - 130} y={cy - 45} fill="rgba(255,255,255,0.85)" fontSize="13" fontFamily="var(--font-mono)">2025</text>
@@ -41,26 +53,16 @@ function Dial({ mounted }: { mounted: boolean }) {
       <g transform={`translate(${cx - 10} ${cy - 10})`}>
         <path d="M13 0 4 12h7l-1 8 9-12h-7l1-8z" fill="white" />
       </g>
-      <text x={cx} y={cy + 38} textAnchor="middle" fill="rgba(255,255,255,0.6)" fontSize="11" fontFamily="var(--font-mono)">Produtos Ativos</text>
+      <text x={cx} y={cy + 38} textAnchor="middle" fill="rgba(255,255,255,0.6)" fontSize="11" fontFamily="var(--font-mono)">{dialLabel}</text>
     </svg>
   )
 }
 
-const PRODUCTS = [
-  { label: 'Calendário de Férias', status: 'Ativo', href: '/produtos/calendario-de-ferias', color: 'rgba(59,130,246,0.15)', dot: '#60a5fa' },
-  { label: 'Project Manager',      status: 'Ativo', href: '/produtos/project-manager',      color: 'rgba(52,211,153,0.12)', dot: '#34d399' },
-  { label: 'Portal FRPC',          status: 'Em breve', href: '/pricing',                   color: 'rgba(139,92,246,0.10)', dot: '#a78bfa' },
-]
-
 export function WorkspaceSection() {
   const [mounted, setMounted] = useState(false)
+  const { t } = useLang()
+  const s = t.sections.workspace
   useEffect(() => setMounted(true), [])
-
-  const chips: [string, boolean][] = [
-    ['Calendário de Férias', false], ['Project Manager', false], ['Portal FRPC', true],
-    ['Cloud Native', false], ['Suporte Prioritário', false], ['Feito em Portugal', false],
-    ['Enterprise Ready', false],
-  ]
 
   return (
     <div style={{ position: 'relative', background: '#050506', minHeight: '100dvh', padding: '80px 0 120px', overflow: 'hidden', color: 'var(--ink)' }}>
@@ -68,30 +70,30 @@ export function WorkspaceSection() {
       <AmbientNetwork />
 
       <div style={{ textAlign: 'center', position: 'relative', zIndex: 1, padding: '0 20px 24px' }}>
-        <h2 className="display" style={{ fontSize: 'clamp(48px, 6vw, 84px)', margin: '0 0 12px' }}>Os nossos Produtos</h2>
+        <h2 className="display" style={{ fontSize: 'clamp(48px, 6vw, 84px)', margin: '0 0 12px' }}>{s.title}</h2>
         <p style={{ color: 'var(--ink-dim)', maxWidth: 540, margin: '0 auto 22px', fontSize: 14 }}>
-          Software feito em Portugal para simplificar o trabalho das equipas — do calendário de férias à gestão de projetos.
+          {s.subtitle}
         </p>
         <Link href="/pricing">
-          <button className="btn btn-ghost" style={{ padding: '10px 18px', fontSize: 13 }}>Ver preços</button>
+          <button className="btn btn-ghost" style={{ padding: '10px 18px', fontSize: 13 }}>{s.priceBtn}</button>
         </Link>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 32, alignItems: 'center', padding: '36px 56px', position: 'relative', zIndex: 1, maxWidth: 1280, margin: '0 auto' }} className="ws-grid">
         <div>
-          <div style={{ fontSize: 12, color: 'var(--ink-mute)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 6 }}>Produtos em produção</div>
-          <div style={{ fontSize: 'clamp(64px, 7vw, 92px)', fontFamily: 'var(--font-display)', letterSpacing: '-0.02em', lineHeight: 1, marginBottom: 28 }}>2 Ativos</div>
+          <div style={{ fontSize: 12, color: 'var(--ink-mute)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 6 }}>{s.productsLabel}</div>
+          <div style={{ fontSize: 'clamp(64px, 7vw, 92px)', fontFamily: 'var(--font-display)', letterSpacing: '-0.02em', lineHeight: 1, marginBottom: 28 }}>{s.productsCount}</div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, maxWidth: 380 }}>
-            {PRODUCTS.map((p) => (
-              <Link key={p.label} href={p.href} style={{ textDecoration: 'none' }}>
-                <div className="card" style={{ padding: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, background: p.color, cursor: 'pointer', transition: 'border-color 0.2s' }}>
+            {s.products.map((p, i) => (
+              <Link key={i} href={PRODUCT_HREFS[i] ?? '/'} style={{ textDecoration: 'none' }}>
+                <div className="card" style={{ padding: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, background: PRODUCT_COLORS[i]?.bg, cursor: 'pointer', transition: 'border-color 0.2s' }}>
                   <div>
                     <div style={{ fontSize: 13, color: 'var(--ink)' }}>{p.label}</div>
                     <div style={{ fontSize: 11, color: 'var(--ink-mute)', fontFamily: 'var(--font-mono)', marginTop: 2 }}>frpc.pt</div>
                   </div>
                   <div style={{ textAlign: 'right', display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <span style={{ width: 6, height: 6, borderRadius: '50%', background: p.dot, boxShadow: `0 0 8px ${p.dot}`, flexShrink: 0 }} />
+                    <span style={{ width: 6, height: 6, borderRadius: '50%', background: PRODUCT_COLORS[i]?.dot, boxShadow: `0 0 8px ${PRODUCT_COLORS[i]?.dot}`, flexShrink: 0 }} />
                     <div style={{ fontSize: 12, color: 'var(--ink-dim)', fontFamily: 'var(--font-mono)' }}>{p.status}</div>
                   </div>
                 </div>
@@ -101,20 +103,22 @@ export function WorkspaceSection() {
 
           <div className="row gap-8" style={{ marginTop: 24 }}>
             <Link href="/produtos/calendario-de-ferias">
-              <button className="btn btn-light" style={{ padding: '8px 18px' }}>Ver Produtos</button>
+              <button className="btn btn-light" style={{ padding: '8px 18px' }}>{s.btnPrimary}</button>
             </Link>
             <Link href="/pricing">
-              <button className="btn btn-ghost" style={{ padding: '8px 18px' }}>Preços</button>
+              <button className="btn btn-ghost" style={{ padding: '8px 18px' }}>{s.btnSecondary}</button>
             </Link>
           </div>
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}><Dial mounted={mounted} /></div>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <Dial mounted={mounted} dialUptime={s.dialUptime} dialLabel={s.dialLabel} />
+        </div>
       </div>
 
       <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap', padding: '0 32px 24px', position: 'relative', zIndex: 1 }}>
-        {chips.map(([label, on]) => (
-          <span key={label} className="chip" style={on ? { background: '#f4f4f1', color: '#0a0a0a', borderColor: '#f4f4f1' } : {}}>{label}</span>
+        {s.chips.map((label, i) => (
+          <span key={i} className="chip" style={i === 2 ? { background: '#f4f4f1', color: '#0a0a0a', borderColor: '#f4f4f1' } : {}}>{label}</span>
         ))}
       </div>
 

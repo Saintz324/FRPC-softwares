@@ -1,11 +1,12 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import Ico from '@/components/icons'
 import AmbientNetwork from '@/components/ambient-network'
 import Link from 'next/link'
-import { useLang, useSwitch } from '@/components/language-provider'
+import { useLang } from '@/components/language-provider'
 import { ScrambleText } from '@/components/scramble-text'
+import { SiteNav } from '@/components/site-nav'
 
 const PTCL = Array.from({ length: 22 }, (_, i) => ({
   id: i, x: 4 + (i * 1873) % 90, y: 5 + (i * 2137) % 87,
@@ -97,59 +98,6 @@ function HeroVisual() {
   )
 }
 
-function NavHeader() {
-  const ref = useRef<HTMLElement>(null)
-  const { t, toggleLanguage } = useLang()
-  const { isSwitching } = useSwitch()
-  const navLinks = [
-    { label: 'Início',   href: '/',                               active: true  },
-    { label: 'Studio',   href: '/start',                          active: false },
-    { label: 'Projetos', href: '/produtos/calendario-de-ferias',  active: false },
-    { label: 'Preços',   href: '/pricing',                        active: false },
-  ]
-  useEffect(() => {
-    const fn = () => {
-      if (!ref.current) return
-      const s = window.scrollY > 30
-      ref.current.style.background = s ? 'rgba(5,5,5,0.72)' : 'transparent'
-      ref.current.style.backdropFilter = s ? 'blur(22px) saturate(180%)' : 'none'
-      ref.current.style.borderBottom = s ? '1px solid rgba(255,255,255,0.07)' : '1px solid transparent'
-    }
-    window.addEventListener('scroll', fn, { passive: true })
-    return () => window.removeEventListener('scroll', fn)
-  }, [])
-  return (
-    <header ref={ref} className="nav" style={{ transition: 'background 0.35s, border-color 0.35s', position: 'relative', animation: 'fadeSlideUp 0.6s ease 0.1s both' }}>
-      <div className="row gap-12">
-        <Link href="/" className="logo" aria-label="FRPC"><Ico.Logo size={20} /></Link>
-      </div>
-      <nav className="nav-pill" aria-label="Primary">
-        {navLinks.map(({ label, href, active }) => (
-          <Link key={label} href={href} className={active ? 'active' : ''}>{label}</Link>
-        ))}
-        <Link className="badge" href="/start">Contacto <Ico.ArrowUpRight size={11} /></Link>
-        <span className="shield" title="Verificado"><Ico.Shield size={14} color="#0a0a0a" /></span>
-      </nav>
-      <div className="acct">
-        <button
-          onClick={toggleLanguage}
-          disabled={isSwitching}
-          className="btn btn-ghost"
-          style={{ padding: '8px 16px', fontSize: 13, position: 'relative', overflow: 'hidden', minWidth: 48 }}
-        >
-          <span style={{ display: 'inline-block', transition: 'opacity 0.2s, transform 0.2s', opacity: isSwitching ? 0 : 1, transform: isSwitching ? 'scale(0.9)' : 'scale(1)' }}>
-            {t.nav.language}
-          </span>
-          {isSwitching && (
-            <span style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, animation: 'glitchPulse 0.15s steps(1) infinite' }}>
-              {t.nav.language}
-            </span>
-          )}
-        </button>
-      </div>
-    </header>
-  )
-}
 
 export function HeroSection() {
   const { t } = useLang()
@@ -189,7 +137,7 @@ export function HeroSection() {
       <Particles />
       <HeroVisual />
 
-      <div style={{ position: 'relative', zIndex: 10 }}><NavHeader /></div>
+      <div style={{ position: 'relative', zIndex: 10 }}><SiteNav /></div>
 
       <div style={{ position: 'absolute', top: 104, left: '50%', transform: 'translateX(-50%)', zIndex: 10 }}>
         <button aria-label="Ver intro" style={{ width: 44, height: 44, borderRadius: '50%', background: 'rgba(14,14,18,0.5)', border: '1px solid var(--line-strong)', color: 'var(--ink)', cursor: 'pointer', display: 'grid', placeItems: 'center', backdropFilter: 'blur(16px)', transition: 'transform 0.2s, background 0.2s', animation: 'fadeSlideUp 0.7s ease 0.4s both, playRipple 3.5s ease-out 2.2s infinite' }}>

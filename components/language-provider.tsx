@@ -51,6 +51,7 @@ type Translation = {
     startProject: string
     viewAll: string
     backToTop: string
+    tutorials: string
   }
   hero: {
     intro: string
@@ -119,6 +120,7 @@ type Translation = {
       liveLabel: string
       title: string
       subtitle: string
+      description: string
       globalLabel: string
       globalDesc: string
       stat1Label: string
@@ -184,6 +186,8 @@ const translations: Record<Language, Translation> = {
       startProject: 'Iniciar Projeto',
       viewAll: 'Ver Todos',
       backToTop: 'Voltar ao topo',
+      home: 'Início',
+      tutorials: 'Tutoriais',
     },
     hero: {
       intro: 'Vol. 01 — Digital Studio · 2026',
@@ -308,6 +312,83 @@ const translations: Record<Language, Translation> = {
     marquee: {
       words: ['SOFTWARE', 'INOVAÇÃO', 'SAAS', 'WEB APP', 'DESIGN', 'TYPESCRIPT'],
     },
+    sections: {
+      features: {
+        label: 'O Studio',
+        title1: 'Do conceito ao produto',
+        title2: 'com atenção a',
+        title3: 'cada detalhe.',
+        cards: [
+          { tag: '01 — Design', title: 'Design & UX', body: 'Interfaces, sistemas de design e identidade visual construídos com atenção obsessiva ao detalhe — do wireframe ao produto final.', stat: '100%', sub: 'foco no utilizador' },
+          { tag: '02 — Produto', title: 'Desenvolvimento', body: 'Apps web, SaaS e APIs modernas com as tecnologias certas — escaláveis desde o primeiro dia e prontas a crescer.', stat: '99.9%', sub: 'uptime garantido' },
+          { tag: '03 — Lançamento', title: 'Do conceito ao mercado', body: 'Acompanhamos o teu projeto desde a ideia até ao lançamento, com um processo claro, iterativo e sem surpresas.', stat: '48h', sub: 'resposta garantida' },
+        ],
+      },
+      insights: {
+        liveLabel: 'Live · Q2 2026',
+        title: 'Resultados',
+        subtitle: 'mensuráveis',
+        description: 'Um dashboard vivo. Métricas que respiram. Cada sinal é um fio que podes puxar.',
+        globalLabel: 'Taxa de satisfação · global',
+        globalDesc: 'Clientes satisfeitos com produtos entregues a tempo e com qualidade.',
+        stat1Label: 'Projetos entregues',
+        stat1Sub: 'desde o lançamento',
+        stat2Label: 'Resposta',
+        stat2Sub: 'tempo médio de resposta',
+        pipelineLabel: '02 — Processo',
+        pipelineTitle: 'Desenvolvimento Ágil',
+        pipelineDesc: 'Iterações rápidas, feedback constante — o produto evolui com as tuas necessidades reais.',
+        perfLabel: '03 — Performance',
+        perfTitle: 'Entregas por semana',
+        chips: ['↗ +1.2k / mês', 'Novo projeto', 'Auto-assign'],
+        legendA: 'Entregues',
+        legendB: 'Revistos',
+        dayLabels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+        footerLinks: ['Suporte', 'Status', 'Docs'],
+        footerCopy: 'Criado no FRPC Studio · 2026',
+        statusActive: 'Ativo',
+        statusOutput: 'Output',
+      },
+      testimonials: {
+        starsLabel: 'Destaques de clientes',
+        quote: '"A FRPC entregou o nosso Calendário de Férias num tempo recorde. O resultado superou todas as expectativas — interface limpa, produto sólido."',
+        author: 'Ricardo Fonseca',
+        role: 'CEO, TechFlow Lisboa',
+        stats: [
+          { value: '48h', label: 'Resposta garantida' },
+          { value: '3+', label: 'Produtos lançados' },
+          { value: '100%', label: 'Foco no cliente' },
+          { value: '2025', label: 'A crescer desde' },
+        ],
+      },
+      workspace: {
+        title: 'Os nossos Produtos',
+        subtitle: 'Software feito em Portugal para simplificar o trabalho das equipas — do calendário de férias à gestão de projetos.',
+        priceBtn: 'Ver preços',
+        productsLabel: 'Produtos em produção',
+        productsCount: '2 Ativos',
+        products: [
+          { label: 'Calendário de Férias', status: 'Ativo' },
+          { label: 'Project Manager', status: 'Ativo' },
+          { label: 'Portal FRPC', status: 'Em breve' },
+        ],
+        chips: ['Calendário de Férias', 'Project Manager', 'Portal FRPC', 'Cloud Native', 'Suporte Prioritário', 'Feito em Portugal', 'Enterprise Ready'],
+        btnPrimary: 'Ver Produtos',
+        btnSecondary: 'Preços',
+        dialUptime: 'Uptime',
+        dialLabel: 'Produtos Ativos',
+      },
+      cta: {
+        label: 'Começa hoje — é grátis',
+        title1: 'Inicia o teu',
+        title2: 'projeto.',
+        subtitle: 'Os teus melhores designs, as tecnologias certas, o teu melhor trabalho — num único lugar tranquilo.',
+        btnPrimary: 'Começar grátis',
+        btnSecondary: 'Fala connosco',
+        links: ['Privacidade', 'Termos', 'Docs', 'Status'],
+        copyright: '© 2026 FRPC Studio',
+      },
+    },
   },
   en: {
     nav: {
@@ -320,6 +401,8 @@ const translations: Record<Language, Translation> = {
       startProject: 'Start Project',
       viewAll: 'View All',
       backToTop: 'Back to top',
+      home: 'Home',
+      tutorials: 'Tutorials',
     },
     hero: {
       intro: 'Vol. 01 — Digital Studio · 2026',
@@ -443,6 +526,83 @@ const translations: Record<Language, Translation> = {
     },
     marquee: {
       words: ['SOFTWARE', 'INNOVATION', 'SAAS', 'WEB APP', 'DESIGN', 'TYPESCRIPT'],
+    },
+    sections: {
+      features: {
+        label: 'The Studio',
+        title1: 'From concept to product',
+        title2: 'with attention to',
+        title3: 'every detail.',
+        cards: [
+          { tag: '01 — Design', title: 'Design & UX', body: 'Interfaces, design systems and visual identity built with obsessive attention to detail — from wireframe to final product.', stat: '100%', sub: 'user focused' },
+          { tag: '02 — Product', title: 'Development', body: 'Web apps, SaaS and modern APIs with the right technologies — scalable from day one and ready to grow.', stat: '99.9%', sub: 'guaranteed uptime' },
+          { tag: '03 — Launch', title: 'Concept to Market', body: 'We accompany your project from idea to launch, with a clear, iterative process and no surprises.', stat: '48h', sub: 'guaranteed response' },
+        ],
+      },
+      insights: {
+        liveLabel: 'Live · Q2 2026',
+        title: 'Measurable',
+        subtitle: 'results',
+        description: 'A living dashboard. Metrics that breathe. Every signal is a thread you can pull.',
+        globalLabel: 'Satisfaction rate · global',
+        globalDesc: 'Clients satisfied with products delivered on time and with quality.',
+        stat1Label: 'Projects delivered',
+        stat1Sub: 'since launch',
+        stat2Label: 'Response',
+        stat2Sub: 'average response time',
+        pipelineLabel: '02 — Process',
+        pipelineTitle: 'Agile Development',
+        pipelineDesc: 'Fast iterations, constant feedback — the product evolves with your real needs.',
+        perfLabel: '03 — Performance',
+        perfTitle: 'Deliveries per week',
+        chips: ['↗ +1.2k / month', 'New project', 'Auto-assign'],
+        legendA: 'Delivered',
+        legendB: 'Reviewed',
+        dayLabels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        footerLinks: ['Support', 'Status', 'Docs'],
+        footerCopy: 'Created at FRPC Studio · 2026',
+        statusActive: 'Active',
+        statusOutput: 'Output',
+      },
+      testimonials: {
+        starsLabel: 'Customer highlights',
+        quote: '"FRPC delivered our Vacation Calendar in record time. The result exceeded all expectations — clean interface, solid product."',
+        author: 'Ricardo Fonseca',
+        role: 'CEO, TechFlow Lisboa',
+        stats: [
+          { value: '48h', label: 'Guaranteed response' },
+          { value: '3+', label: 'Products launched' },
+          { value: '100%', label: 'Customer focus' },
+          { value: '2025', label: 'Growing since' },
+        ],
+      },
+      workspace: {
+        title: 'Our Products',
+        subtitle: 'Software made in Portugal to simplify team workflows — from vacation calendars to project management.',
+        priceBtn: 'See pricing',
+        productsLabel: 'Products in production',
+        productsCount: '2 Active',
+        products: [
+          { label: 'Vacation Calendar', status: 'Active' },
+          { label: 'Project Manager', status: 'Active' },
+          { label: 'FRPC Portal', status: 'Coming soon' },
+        ],
+        chips: ['Vacation Calendar', 'Project Manager', 'FRPC Portal', 'Cloud Native', 'Priority Support', 'Made in Portugal', 'Enterprise Ready'],
+        btnPrimary: 'View Products',
+        btnSecondary: 'Pricing',
+        dialUptime: 'Uptime',
+        dialLabel: 'Active Products',
+      },
+      cta: {
+        label: "Start today — it's free",
+        title1: 'Start your',
+        title2: 'project.',
+        subtitle: 'Your best designs, the right technologies, your best work — all in one calm place.',
+        btnPrimary: 'Start for free',
+        btnSecondary: 'Talk to us',
+        links: ['Privacy', 'Terms', 'Docs', 'Status'],
+        copyright: '© 2026 FRPC Studio',
+      },
     },
   },
 }

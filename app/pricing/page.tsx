@@ -1,13 +1,13 @@
 "use client"
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { ArrowRight, Check, X, Clock, ChevronDown } from 'lucide-react'
 import { Reveal } from '@/components/reveal-animation'
 import { MagneticButton } from '@/components/magnetic-button'
-import { useLang, useSwitch } from '@/components/language-provider'
+import { useLang } from '@/components/language-provider'
 import { ScrambleText } from '@/components/scramble-text'
-import Ico from '@/components/icons'
+import { SiteNav } from '@/components/site-nav'
 
 // ─── Translations ────────────────────────────────────────────────────────────
 const T = {
@@ -402,26 +402,12 @@ export default function PricingPage() {
   const [isVisible, setIsVisible] = useState(false)
   const [yearly, setYearly] = useState(false)
   const [openFaq, setOpenFaq] = useState<number | null>(null)
-  const { lang, toggleLanguage, t: navT } = useLang()
-  const { isSwitching } = useSwitch()
+  const { lang } = useLang()
   const t = T[lang as Lang]
-  const navRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
     const raf = requestAnimationFrame(() => setIsVisible(true))
     return () => cancelAnimationFrame(raf)
-  }, [])
-
-  useEffect(() => {
-    const fn = () => {
-      if (!navRef.current) return
-      const s = window.scrollY > 30
-      navRef.current.style.background = s ? 'rgba(5,5,5,0.82)' : 'transparent'
-      navRef.current.style.backdropFilter = s ? 'blur(22px) saturate(180%)' : 'none'
-      navRef.current.style.borderBottom = s ? '1px solid rgba(255,255,255,0.07)' : '1px solid transparent'
-    }
-    window.addEventListener('scroll', fn, { passive: true })
-    return () => window.removeEventListener('scroll', fn)
   }, [])
 
   const vis = (delay = '') => ({
@@ -434,29 +420,7 @@ export default function PricingPage() {
       {/* Ambient glow */}
       <div style={{ position: 'fixed', inset: 0, background: 'radial-gradient(ellipse 70% 55% at 70% 35%, var(--glow-soft), transparent 60%), radial-gradient(ellipse 55% 40% at 25% 70%, var(--glow-faint), transparent 65%)', filter: 'blur(20px)', opacity: 0.9, pointerEvents: 'none', zIndex: 0 }} />
 
-      {/* Nav */}
-      <header ref={navRef} className="nav" style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50, transition: 'background 0.35s, border-color 0.35s' }}>
-        <div className="row gap-12">
-          <Link href="/" className="logo" aria-label="FRPC"><Ico.Logo size={20} /></Link>
-        </div>
-        <nav className="nav-pill" aria-label="Primary">
-          <Link href="/">Início</Link>
-          <Link href="/produtos/calendario-de-ferias">Produtos</Link>
-          <Link href="/pricing" className="active">Preços</Link>
-          <Link href="/start" className="badge">Contacto <Ico.ArrowUpRight size={11} /></Link>
-          <span className="shield" title="Verificado"><Ico.Shield size={14} color="#0a0a0a" /></span>
-        </nav>
-        <div className="acct">
-          <button
-            onClick={toggleLanguage}
-            disabled={isSwitching}
-            className="btn btn-ghost"
-            style={{ padding: '8px 14px', fontSize: 13 }}
-          >
-            {navT.nav.language}
-          </button>
-        </div>
-      </header>
+      <SiteNav />
 
       <main className="relative z-10">
 
@@ -493,7 +457,7 @@ export default function PricingPage() {
         </section>
 
         {/*  CALENDÁRIO DE FÉRIAS  */}
-        <section className="relative px-6 md:px-12 pb-24">
+        <section id="calendar" className="relative px-6 md:px-12 pb-24">
           <div className="max-w-7xl mx-auto">
             <Reveal>
               <div className="rounded-3xl border border-white/15 bg-white/[0.07] overflow-hidden">
@@ -540,7 +504,7 @@ export default function PricingPage() {
         </section>
 
         {/*  PROJECT MANAGER  */}
-        <section className="relative px-6 md:px-12 pb-24">
+        <section id="manager" className="relative px-6 md:px-12 pb-24">
           <div className="max-w-7xl mx-auto">
             <Reveal>
               <div className="rounded-3xl border border-white/10 bg-white/[0.02] overflow-hidden">
@@ -651,7 +615,7 @@ export default function PricingPage() {
               </h2>
             </Reveal>
             <Reveal delay={100}>
-              <p className="text-white/35 text-lg max-w-md mx-auto mb-10">{t.bottomDesc}</p>
+              <ScrambleText as="p" text={t.bottomDesc} className="text-white/35 text-lg max-w-md mx-auto mb-10" />
             </Reveal>
             <Reveal delay={200}>
               <Link href="/#contact">
@@ -670,8 +634,8 @@ export default function PricingPage() {
         <footer className="relative py-10 border-t border-white/[0.06]">
           <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row items-center justify-between gap-4">
             <Link href="/" className="text-2xl font-serif font-bold text-white hover:opacity-70 transition-opacity" style={{ fontFamily: 'var(--font-serif)' }}>FRPC</Link>
-            <p className="text-white/25 text-sm">© {new Date().getFullYear()} FRPC. {t.footerRights}</p>
-            <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="text-white/30 hover:text-white text-sm transition-[color] duration-200">{lang === 'pt' ? 'Voltar ao topo ↑' : 'Back to top ↑'}</button>
+            <ScrambleText as="p" text={`© ${new Date().getFullYear()} FRPC. ${t.footerRights}`} className="text-white/25 text-sm" />
+            <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="text-white/30 hover:text-white text-sm transition-[color] duration-200"><ScrambleText text={lang === 'pt' ? 'Voltar ao topo ↑' : 'Back to top ↑'} /></button>
           </div>
         </footer>
       </main>

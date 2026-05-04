@@ -1,6 +1,10 @@
 import type { Metadata } from 'next'
+import Script from 'next/script'
 import { Analytics } from '@vercel/analytics/next'
 import { LanguageProvider } from '@/components/language-provider'
+import { NavigationProgress } from '@/components/navigation-progress'
+import { PageTransition } from '@/components/page-transition'
+import { GlobalEffects } from '@/components/global-effects'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -24,8 +28,13 @@ export default function RootLayout({
         />
       </head>
       <body>
+        <Script id="scroll-restore" strategy="beforeInteractive">{`history.scrollRestoration='manual';`}</Script>
+        <GlobalEffects />
+        <NavigationProgress />
         <LanguageProvider>
-          {children}
+          <PageTransition>
+            {children}
+          </PageTransition>
         </LanguageProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>

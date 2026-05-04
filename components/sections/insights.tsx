@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
 import Ico from '@/components/icons'
 import AmbientNetwork from '@/components/ambient-network'
+import { useLang } from '@/components/language-provider'
 
 function useCountUp(target: number, duration = 1800, deps: unknown[] = []) {
   const [val, setVal] = useState(0)
@@ -137,7 +138,7 @@ function BarTower3D({ t }: { t: number }) {
   )
 }
 
-function StatTile({ label, value, suffix, sub, accent, delay = 0 }: { label: string; value: number; suffix: string; sub: string; accent?: boolean; delay?: number }) {
+function StatTile({ label, value, suffix, sub, accent, delay = 0, statusTag }: { label: string; value: number; suffix: string; sub: string; accent?: boolean; delay?: number; statusTag: string }) {
   const v = useCountUp(value, 1500)
   const ref = useRef<HTMLDivElement>(null)
   useTilt(ref, 5)
@@ -146,7 +147,7 @@ function StatTile({ label, value, suffix, sub, accent, delay = 0 }: { label: str
       <div style={{ position: 'absolute', top: 18, right: 18 }}>
         <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '4px 10px', borderRadius: 999, background: 'rgba(255,255,255,0.06)', border: '1px solid var(--line)', fontSize: 11, fontFamily: 'var(--font-mono)' }}>
           <span style={{ width: 6, height: 6, borderRadius: '50%', background: accent ? 'var(--glow)' : '#fff', boxShadow: accent ? '0 0 8px var(--glow)' : 'none' }} />
-          {accent ? 'Output' : 'Ativo'}
+          {statusTag}
         </span>
       </div>
       <div style={{ fontSize: 12, color: 'var(--ink-mute)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: 28, marginTop: 4 }}>{label}</div>
@@ -207,8 +208,9 @@ function PeriodFilter() {
   )
 }
 
-function PromptChart({ t }: { t: number }) {
-  const data = [{ label: 'Seg', a: 24, b: 18 }, { label: 'Ter', a: 38, b: 22 }, { label: 'Qua', a: 52, b: 30 }, { label: 'Qui', a: 46, b: 34 }, { label: 'Sex', a: 64, b: 28 }, { label: 'Sáb', a: 32, b: 20 }, { label: 'Dom', a: 28, b: 16 }]
+function PromptChart({ t, dayLabels, legendA, legendB }: { t: number; dayLabels: string[]; legendA: string; legendB: string }) {
+  const rawData = [{ a: 24, b: 18 }, { a: 38, b: 22 }, { a: 52, b: 30 }, { a: 46, b: 34 }, { a: 64, b: 28 }, { a: 32, b: 20 }, { a: 28, b: 16 }]
+  const data = rawData.map((d, i) => ({ ...d, label: dayLabels[i] ?? '' }))
   const max = 70
   const [hover, setHover] = useState(-1)
   const [mounted, setMounted] = useState(false)
@@ -233,18 +235,20 @@ function PromptChart({ t }: { t: number }) {
         {data.map((d, i) => <div key={i} style={{ flex: 1, textAlign: 'center', fontSize: 10, color: 'rgba(255,255,255,0.4)', fontFamily: 'var(--font-mono)' }}>{d.label}</div>)}
       </div>
       <div style={{ display: 'flex', gap: 18, marginTop: 16, fontSize: 11, color: 'var(--ink-dim)', fontFamily: 'var(--font-mono)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><span style={{ width: 10, height: 10, background: 'var(--glow)', borderRadius: 2, boxShadow: '0 0 6px var(--glow)' }} /> Entregues</div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><span style={{ width: 10, height: 10, background: 'rgba(255,255,255,0.7)', borderRadius: 2 }} /> Revistos</div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><span style={{ width: 10, height: 10, background: 'var(--glow)', borderRadius: 2, boxShadow: '0 0 6px var(--glow)' }} /> {legendA}</div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><span style={{ width: 10, height: 10, background: 'rgba(255,255,255,0.7)', borderRadius: 2 }} /> {legendB}</div>
       </div>
     </div>
   )
 }
 
 export function InsightsSection() {
-  const t = useNow()
+  const clock = useNow()
   const mouse = useMouse()
   const heroRef = useRef<HTMLDivElement>(null)
   useTilt(heroRef, 6)
+  const { t } = useLang()
+  const s = t.sections.insights
 
   return (
     <div style={{ position: 'relative', background: '#050506', padding: '80px max(40px,7vw) 120px', perspective: '1400px', overflow: 'hidden', color: 'var(--ink)' }}>
@@ -259,13 +263,13 @@ export function InsightsSection() {
       <div style={{ textAlign: 'center', position: 'relative', zIndex: 1, marginTop: 8, marginBottom: 32, opacity: 0, animation: 'insFadeUp 0.9s cubic-bezier(.2,.7,.3,1) 0.1s forwards' }}>
         <div style={{ fontSize: 11, color: 'var(--ink-mute)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.18em', marginBottom: 14, display: 'inline-flex', alignItems: 'center', gap: 8 }}>
           <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--glow)', boxShadow: '0 0 12px var(--glow)', animation: 'pulse 2s ease-in-out infinite' }} />
-          Live · Q2 2026
+          {s.liveLabel}
         </div>
         <h2 className="display" style={{ fontSize: 'clamp(48px, 6.5vw, 92px)', margin: '0 0 14px', letterSpacing: '-0.025em' }}>
-          Resultados <em style={{ fontStyle: 'italic', color: 'var(--glow)', textShadow: '0 0 40px var(--glow-soft)' }}>mensuráveis</em>
+          {s.title} <em style={{ fontStyle: 'italic', color: 'var(--glow)', textShadow: '0 0 40px var(--glow-soft)' }}>{s.subtitle}</em>
         </h2>
         <p style={{ color: 'var(--ink-dim)', maxWidth: 580, margin: '0 auto', fontSize: 15, lineHeight: 1.55 }}>
-          Um dashboard vivo. Métricas que respiram. Cada sinal é um fio que podes puxar.
+          {s.description}
         </p>
       </div>
 
@@ -276,57 +280,47 @@ export function InsightsSection() {
             <div style={{ flex: 1 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 22 }}>
                 <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--glow)', boxShadow: '0 0 12px var(--glow)' }} />
-                <span style={{ fontSize: 11, color: 'var(--ink-dim)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.16em' }}>Taxa de satisfação · global</span>
+                <span style={{ fontSize: 11, color: 'var(--ink-dim)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.16em' }}>{s.globalLabel}</span>
               </div>
               <CountedHero />
               <div style={{ fontSize: 14, color: 'var(--ink-dim)', maxWidth: 320, lineHeight: 1.5, marginTop: 12 }}>
-                Clientes satisfeitos com produtos entregues <em style={{ fontStyle: 'italic' }}>a tempo e com qualidade</em>.
+                {s.globalDesc}
               </div>
             </div>
-            <Globe3D t={t} />
+            <Globe3D t={clock} />
           </div>
           <div style={{ borderTop: '1px solid var(--line)', marginTop: 28, paddingTop: 18, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-              <AnimatedChip delay={0.6}>↗ +1.2k / mês</AnimatedChip>
-              <AnimatedChip delay={0.7}><Ico.Plus size={10} /> Novo projeto</AnimatedChip>
-              <AnimatedChip delay={0.8} active><Ico.Plus size={10} /> Auto-assign</AnimatedChip>
+              <AnimatedChip delay={0.6}>{s.chips[0]}</AnimatedChip>
+              <AnimatedChip delay={0.7}><Ico.Plus size={10} /> {s.chips[1]}</AnimatedChip>
+              <AnimatedChip delay={0.8} active><Ico.Plus size={10} /> {s.chips[2]}</AnimatedChip>
             </div>
-            <LiveSparkline t={t} />
+            <LiveSparkline t={clock} />
           </div>
         </div>
 
         <div className="card tilt-card-mini" style={{ padding: 24, display: 'flex', flexDirection: 'column', minHeight: 340, gridRow: 'span 2', opacity: 0, animation: 'insFadeUp 0.9s cubic-bezier(.2,.7,.3,1) 0.4s forwards' }}>
-          <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}><BarTower3D t={t} /></div>
+          <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}><BarTower3D t={clock} /></div>
           <div style={{ borderTop: '1px solid var(--line)', paddingTop: 18, marginTop: 12 }}>
-            <div style={{ fontSize: 11, color: 'var(--ink-mute)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.16em', marginBottom: 8 }}>02 — Processo</div>
-            <div style={{ fontSize: 24, fontFamily: 'var(--font-display)', marginBottom: 8, letterSpacing: '-0.01em' }}>Desenvolvimento Ágil</div>
-            <div style={{ fontSize: 13, color: 'var(--ink-dim)', lineHeight: 1.55 }}>Iterações rápidas, feedback constante — o produto evolui com as tuas necessidades reais.</div>
+            <div style={{ fontSize: 11, color: 'var(--ink-mute)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.16em', marginBottom: 8 }}>{s.pipelineLabel}</div>
+            <div style={{ fontSize: 24, fontFamily: 'var(--font-display)', marginBottom: 8, letterSpacing: '-0.01em' }}>{s.pipelineTitle}</div>
+            <div style={{ fontSize: 13, color: 'var(--ink-dim)', lineHeight: 1.55 }}>{s.pipelineDesc}</div>
           </div>
         </div>
 
-        <StatTile delay={0.55} label="Projetos entregues" value={12} suffix="+" sub="desde o lançamento" accent />
-        <StatTile delay={0.7} label="Resposta" value={48} suffix="h" sub="tempo médio de resposta" />
+        <StatTile delay={0.55} label={s.stat1Label} value={12} suffix="+" sub={s.stat1Sub} statusTag={s.statusOutput} accent />
+        <StatTile delay={0.7} label={s.stat2Label} value={48} suffix="h" sub={s.stat2Sub} statusTag={s.statusActive} />
 
         <div className="card" style={{ padding: 28, gridColumn: 'span 2', opacity: 0, animation: 'insFadeUp 0.9s cubic-bezier(.2,.7,.3,1) 0.85s forwards' }}>
           <div className="row" style={{ justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 18 }}>
             <div>
-              <div style={{ fontSize: 11, color: 'var(--ink-mute)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: 8 }}>03 — Performance</div>
-              <div style={{ fontSize: 24, fontFamily: 'var(--font-display)', letterSpacing: '-0.01em' }}>Entregas por semana</div>
+              <div style={{ fontSize: 11, color: 'var(--ink-mute)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: 8 }}>{s.perfLabel}</div>
+              <div style={{ fontSize: 24, fontFamily: 'var(--font-display)', letterSpacing: '-0.01em' }}>{s.perfTitle}</div>
             </div>
             <PeriodFilter />
           </div>
-          <PromptChart t={t} />
+          <PromptChart t={clock} dayLabels={s.dayLabels} legendA={s.legendA} legendB={s.legendB} />
         </div>
-      </div>
-
-      <div style={{ marginTop: 28, paddingTop: 16, borderTop: '1px solid var(--line)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: 'var(--ink-mute)', fontSize: 12, position: 'relative', zIndex: 1 }}>
-        <div className="row gap-16">
-          <a href="#" style={{ color: 'inherit', textDecoration: 'none' }}>Suporte</a>
-          <a href="#" style={{ color: 'inherit', textDecoration: 'none' }}>Status</a>
-          <a href="#" style={{ color: 'inherit', textDecoration: 'none' }}>Docs</a>
-        </div>
-        <div>Criado no FRPC Studio · 2026</div>
-        <div className="row gap-16"><Ico.X size={12} /><Ico.Linkedin size={12} /></div>
       </div>
 
       <style>{`
