@@ -50,8 +50,7 @@ export function ProductPageTemplate({ product }: { product: ProductData }) {
   const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
-    const raf = requestAnimationFrame(() => setIsVisible(true))
-    return () => cancelAnimationFrame(raf)
+    setIsVisible(true)
   }, [])
 
   return (

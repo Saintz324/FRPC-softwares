@@ -139,12 +139,6 @@ export function HeroSection() {
 
       <div style={{ position: 'relative', zIndex: 10 }}><SiteNav /></div>
 
-      <div style={{ position: 'absolute', top: 104, left: '50%', transform: 'translateX(-50%)', zIndex: 10 }}>
-        <button aria-label="Ver intro" style={{ width: 44, height: 44, borderRadius: '50%', background: 'rgba(14,14,18,0.5)', border: '1px solid var(--line-strong)', color: 'var(--ink)', cursor: 'pointer', display: 'grid', placeItems: 'center', backdropFilter: 'blur(16px)', transition: 'transform 0.2s, background 0.2s', animation: 'fadeSlideUp 0.7s ease 0.4s both, playRipple 3.5s ease-out 2.2s infinite' }}>
-          <Ico.Play size={12} />
-        </button>
-      </div>
-
       <div ref={nodeRef} style={{ position: 'absolute', inset: 0, willChange: 'transform', zIndex: 3, pointerEvents: 'none' }} />
 
       <div ref={copyRef} style={{ position: 'absolute', inset: 0, willChange: 'transform', zIndex: 4, display: 'flex', alignItems: 'center', padding: '0 0 0 max(40px, 7vw)', pointerEvents: 'none' }}>

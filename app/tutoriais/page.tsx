@@ -393,8 +393,7 @@ export default function TutoriaisPage() {
   }, [])
 
   useEffect(() => {
-    const raf = requestAnimationFrame(() => setMounted(true))
-    return () => cancelAnimationFrame(raf)
+    setMounted(true)
   }, [])
 
   const fade = (delay = 0) => ({

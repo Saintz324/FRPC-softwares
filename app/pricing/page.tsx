@@ -2,14 +2,14 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { ArrowRight, Check, X, Clock, ChevronDown } from 'lucide-react'
+import { ArrowRight, Check, Clock, ChevronDown } from 'lucide-react'
 import { Reveal } from '@/components/reveal-animation'
 import { MagneticButton } from '@/components/magnetic-button'
 import { useLang } from '@/components/language-provider'
 import { ScrambleText } from '@/components/scramble-text'
 import { SiteNav } from '@/components/site-nav'
 
-// ─── Translations ────────────────────────────────────────────────────────────
+// ─── Translations ─────────────────────────────────────────────────────────────
 const T = {
   pt: {
     back: 'Voltar',
@@ -19,9 +19,13 @@ const T = {
     subtitle: 'Paga apenas o que usas. Cada produto FRPC tem o seu próprio plano — começa grátis, cresce quando precisas.',
     monthly: 'Mensal',
     yearly: 'Anual',
+    lifetime: 'Vitalício',
+    recommended: 'Recomendado',
     save: 'Poupa 2 meses',
-    perMonth: '/mês + IVA',
-    perYear: '/ano + IVA',
+    perMonth: '/mês',
+    perYear: '/ano',
+    perLifetime: 'único',
+    vatNote: '+ IVA',
     free: 'Grátis',
     ctaFree: 'Começar grátis',
     ctaPro: 'Começar agora',
@@ -44,37 +48,36 @@ const T = {
     bottomDesc: 'Volumes elevados, integrações específicas ou requisitos enterprise — fala connosco.',
     bottomCta: 'Falar com a equipa',
     footerRights: 'Todos os direitos reservados.',
-    calendarSubtitle: 'Escolha o plano ideal para gerir as férias da sua equipa',
-    calendarSupport: 'Comece com 14 dias gratuitos e escolha depois o plano que melhor se adapta à dimensão da sua empresa',
     calendarNote: 'Necessita de algo personalizado? Entre em contacto para uma proposta à medida.',
     calendarNoteCta: 'Falar connosco',
     products: {
       calendar: {
         badge: 'Calendário de Férias',
         tagline: 'Gestão de férias e ausências para equipas',
-        description: 'A forma mais simples de gerir férias, folgas e ausências da tua equipa. Visual, intuitivo e pronto a usar em minutos.',
         url: '/produtos/calendario-de-ferias',
         plans: [
           {
             name: 'Essencial',
+            users: 'Até 5 utilizadores',
             price: { monthly: 19, yearly: 190, lifetime: 490 },
-            description: 'Para equipas pequenas que querem começar.',
-            features: ['Até 5 utilizadores', '1 calendário', 'Aprovações simples', 'Vista mensal', 'Exportar PDF'],
+            popular: false,
+            features: ['1 calendário', 'Aprovações simples', 'Vista mensal', 'Exportar PDF'],
             notIncluded: ['Múltiplos calendários', 'Integrações', 'Relatórios', 'Suporte prioritário'],
           },
           {
             name: 'Pro',
+            users: 'Até 25 utilizadores',
             price: { monthly: 39, yearly: 390, lifetime: 990 },
-            description: 'Para equipas em crescimento.',
             popular: true,
-            features: ['Até 25 utilizadores', 'Múltiplos calendários', 'Aprovações avançadas', 'Relatórios de ausências', 'Integração Google Calendar', 'Notificações por email', 'Suporte prioritário'],
+            features: ['Múltiplos calendários', 'Aprovações avançadas', 'Relatórios de ausências', 'Google Calendar', 'Notificações email', 'Suporte prioritário'],
             notIncluded: ['Utilizadores ilimitados', 'API access'],
           },
           {
             name: 'Enterprise',
+            users: 'Utilizadores ilimitados',
             price: { monthly: 69, yearly: 690, lifetime: 1690 },
-            description: 'Para empresas que precisam de controlo total.',
-            features: ['Utilizadores ilimitados', 'Múltiplos calendários', 'API access completo', 'SSO / SAML', 'Relatórios avançados', 'SLA garantido', 'Suporte dedicado 24/7', 'Onboarding personalizado'],
+            popular: false,
+            features: ['Múltiplos calendários', 'API access completo', 'SSO / SAML', 'Relatórios avançados', 'SLA garantido', 'Suporte dedicado 24/7', 'Onboarding personalizado'],
             notIncluded: [],
           },
         ],
@@ -82,29 +85,30 @@ const T = {
       manager: {
         badge: 'Project Manager',
         tagline: 'Gestão de projetos e tarefas para equipas',
-        description: 'Kanban, timelines e gestão de equipas numa interface moderna e intuitiva. Entrega mais rápido, com menos stress.',
         url: '/produtos/project-manager',
         plans: [
           {
             name: 'Essencial',
-            price: { monthly: 5, yearly: 50 },
-            description: 'Para começar a organizar os teus projetos.',
-            features: ['3 projetos', 'Até 5 utilizadores', 'Quadros Kanban', 'Vista de tarefas'],
+            users: 'Até 5 utilizadores',
+            price: { monthly: 5, yearly: 50, lifetime: undefined as number | undefined },
+            popular: false,
+            features: ['3 projetos', 'Quadros Kanban', 'Vista de tarefas'],
             notIncluded: ['Projetos ilimitados', 'Relatórios', 'Integrações', 'Suporte prioritário'],
           },
           {
             name: 'Pro',
-            price: { monthly: 12, yearly: 120 },
-            description: 'Para equipas que precisam de mais.',
+            users: 'Até 25 utilizadores',
+            price: { monthly: 12, yearly: 120, lifetime: undefined as number | undefined },
             popular: true,
-            features: ['Projetos ilimitados', 'Até 25 utilizadores', 'Timelines e prazos', 'Relatórios e KPIs', 'Notificações por email', 'Suporte prioritário'],
+            features: ['Projetos ilimitados', 'Timelines e prazos', 'Relatórios e KPIs', 'Notificações email', 'Suporte prioritário'],
             notIncluded: ['Utilizadores ilimitados', 'API access'],
           },
           {
             name: 'Enterprise',
-            price: { monthly: 25, yearly: 250 },
-            description: 'Para empresas com controlo total.',
-            features: ['Utilizadores ilimitados', 'Projetos ilimitados', 'API access completo', 'SSO / SAML', 'Relatórios avançados', 'SLA garantido', 'Suporte dedicado 24/7'],
+            users: 'Utilizadores ilimitados',
+            price: { monthly: 25, yearly: 250, lifetime: undefined as number | undefined },
+            popular: false,
+            features: ['Projetos ilimitados', 'API access completo', 'SSO / SAML', 'Relatórios avançados', 'SLA garantido', 'Suporte dedicado 24/7'],
             notIncluded: [],
           },
         ],
@@ -118,10 +122,14 @@ const T = {
     titleAccent: 'product.',
     subtitle: 'Pay only for what you use. Each FRPC product has its own plan — start free, scale when you need to.',
     monthly: 'Monthly',
-    yearly: 'Yearly',
+    yearly: 'Annual',
+    lifetime: 'Lifetime',
+    recommended: 'Recommended',
     save: 'Save 2 months',
-    perMonth: '/mo + VAT',
-    perYear: '/yr + VAT',
+    perMonth: '/mo',
+    perYear: '/yr',
+    perLifetime: 'once',
+    vatNote: '+ VAT',
     free: 'Free',
     ctaFree: 'Start for free',
     ctaPro: 'Get started',
@@ -144,37 +152,36 @@ const T = {
     bottomDesc: 'High volumes, specific integrations or enterprise requirements — get in touch.',
     bottomCta: 'Talk to the team',
     footerRights: 'All rights reserved.',
-    calendarSubtitle: 'Choose the ideal plan to manage your team\'s vacations',
-    calendarSupport: 'Start with a 14-day free trial and then choose the plan that best fits your company\'s size',
     calendarNote: 'Need something custom? Get in touch for a tailored proposal.',
     calendarNoteCta: 'Talk to us',
     products: {
       calendar: {
         badge: 'Vacation Schedule',
         tagline: 'Vacation & absence management for teams',
-        description: 'The simplest way to manage your team\'s vacations, days off and absences. Visual, intuitive and ready to use in minutes.',
         url: '/produtos/calendario-de-ferias',
         plans: [
           {
             name: 'Essential',
-            price: { monthly: 0, yearly: 0, lifetime: 0 },
-            description: 'For small teams getting started.',
-            features: ['Up to 5 users', '1 calendar', 'Simple approvals', 'Monthly view', 'PDF export'],
+            users: 'Up to 5 users',
+            price: { monthly: 19, yearly: 190, lifetime: 490 },
+            popular: false,
+            features: ['1 calendar', 'Simple approvals', 'Monthly view', 'PDF export'],
             notIncluded: ['Multiple calendars', 'Integrations', 'Reports', 'Priority support'],
           },
           {
             name: 'Pro',
-            price: { monthly: 9, yearly: 90, lifetime: 249 },
-            description: 'For growing teams.',
+            users: 'Up to 25 users',
+            price: { monthly: 39, yearly: 390, lifetime: 990 },
             popular: true,
-            features: ['Up to 25 users', 'Multiple calendars', 'Advanced approvals', 'Absence reports', 'Google Calendar sync', 'Email notifications', 'Priority support'],
+            features: ['Multiple calendars', 'Advanced approvals', 'Absence reports', 'Google Calendar', 'Email notifications', 'Priority support'],
             notIncluded: ['Unlimited users', 'API access'],
           },
           {
             name: 'Enterprise',
-            price: { monthly: 19, yearly: 190, lifetime: 490 },
-            description: 'For companies needing full control.',
-            features: ['Unlimited users', 'Multiple calendars', 'Full API access', 'SSO / SAML', 'Advanced reports', 'Guaranteed SLA', 'Dedicated 24/7 support', 'Custom onboarding'],
+            users: 'Unlimited users',
+            price: { monthly: 69, yearly: 690, lifetime: 1690 },
+            popular: false,
+            features: ['Multiple calendars', 'Full API access', 'SSO / SAML', 'Advanced reports', 'Guaranteed SLA', 'Dedicated 24/7 support', 'Custom onboarding'],
             notIncluded: [],
           },
         ],
@@ -182,29 +189,30 @@ const T = {
       manager: {
         badge: 'Project Manager',
         tagline: 'Project & task management for teams',
-        description: 'Kanban, timelines and team management in a modern, intuitive interface. Ship faster, with less stress.',
         url: '/produtos/project-manager',
         plans: [
           {
             name: 'Essential',
-            price: { monthly: 5, yearly: 50 },
-            description: 'To start organizing your projects.',
-            features: ['3 projects', 'Up to 5 users', 'Kanban boards', 'Task view'],
+            users: 'Up to 5 users',
+            price: { monthly: 5, yearly: 50, lifetime: undefined as number | undefined },
+            popular: false,
+            features: ['3 projects', 'Kanban boards', 'Task view'],
             notIncluded: ['Unlimited projects', 'Reports', 'Integrations', 'Priority support'],
           },
           {
             name: 'Pro',
-            price: { monthly: 12, yearly: 120 },
-            description: 'For teams that need more.',
+            users: 'Up to 25 users',
+            price: { monthly: 12, yearly: 120, lifetime: undefined as number | undefined },
             popular: true,
-            features: ['Unlimited projects', 'Up to 25 users', 'Timelines & deadlines', 'Reports & KPIs', 'Email notifications', 'Priority support'],
+            features: ['Unlimited projects', 'Timelines & deadlines', 'Reports & KPIs', 'Email notifications', 'Priority support'],
             notIncluded: ['Unlimited users', 'API access'],
           },
           {
-            name: 'Business',
-            price: { monthly: 25, yearly: 250 },
-            description: 'For companies with full control.',
-            features: ['Unlimited users', 'Unlimited projects', 'Full API access', 'SSO / SAML', 'Advanced reports', 'Guaranteed SLA', 'Dedicated 24/7 support'],
+            name: 'Enterprise',
+            users: 'Unlimited users',
+            price: { monthly: 25, yearly: 250, lifetime: undefined as number | undefined },
+            popular: false,
+            features: ['Unlimited projects', 'Full API access', 'SSO / SAML', 'Advanced reports', 'Guaranteed SLA', 'Dedicated 24/7 support'],
             notIncluded: [],
           },
         ],
@@ -214,200 +222,160 @@ const T = {
 }
 
 type Lang = 'pt' | 'en'
-type Plan = { name: string; price: { monthly: number; yearly: number; lifetime?: number }; description?: string; popular?: boolean; features: string[]; notIncluded: string[] }
+type Plan = {
+  name: string
+  users: string
+  price: { monthly: number; yearly: number; lifetime?: number }
+  popular: boolean
+  features: string[]
+  notIncluded: string[]
+}
 
-// ─── Plan card ───────────────────────────────────────────────────────────────
-function PlanCard({ plan, yearly, lang, productUrl }: { plan: Plan; yearly: boolean; lang: Lang; productUrl?: string }) {
+// ─── Pricing table ────────────────────────────────────────────────────────────
+function PricingTable({ plans, lang, productUrl }: { plans: Plan[]; lang: Lang; productUrl: string }) {
   const t = T[lang]
-  const isPro = !!plan.popular
-  const isBusiness = plan.name === 'Business'
-  const price = yearly ? plan.price.yearly : plan.price.monthly
-  const isFree = price === 0
-
-  const ctaLabel = isBusiness ? t.ctaBusiness : isFree ? t.ctaFree : t.ctaPro
-  const ctaHref = isBusiness ? '/#contact' : (productUrl ?? '/')
+  const hasLifetime = plans.some(p => p.price.lifetime !== undefined)
 
   return (
-    <div className={`relative flex flex-col rounded-2xl border ${
-      isPro
-        ? 'border-white/25 bg-white/[0.07] shadow-[0_0_40px_rgba(255,255,255,0.05)]'
-        : 'border-white/[0.08] bg-white/[0.03]'
-    }`}>
-      {/* Pro gradient top line */}
-      {isPro && (
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent rounded-t-2xl" />
-      )}
+    <div className="overflow-x-auto -mx-2 px-2">
+      <div style={{ minWidth: hasLifetime ? 580 : 440 }}>
 
-      {/* Popular badge — sits above the card, needs overflow-visible on parent */}
-      {isPro && (
-        <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10 px-3 py-1 rounded-full bg-white text-black text-[10px] font-bold tracking-wide uppercase whitespace-nowrap">
-          {t.popular}
-        </div>
-      )}
-
-      <div className={`p-7 flex flex-col gap-6 ${isPro ? 'pt-9' : ''}`}>
-        {/* Header */}
-        <div>
-          <ScrambleText text={plan.name} className="text-white/40 text-xs font-semibold tracking-widest uppercase mb-2 block" />
-          {plan.description && <ScrambleText text={plan.description} className="text-white/35 text-sm leading-relaxed block" />}
-        </div>
-
-        {/* Price */}
-        <div className="flex items-end gap-1.5">
-          <span
-            className="font-serif font-bold text-white leading-none"
-            style={{ fontFamily: 'var(--font-serif)', fontSize: isFree ? '2.5rem' : 'clamp(2rem,5vw,3rem)' }}
-          >
-            <ScrambleText text={isFree ? t.free : `€${price}`} />
-          </span>
-          {!isFree && (
-            <ScrambleText text={yearly ? t.perYear : t.perMonth} className="text-white/35 text-sm mb-1" />
+        {/* Column headers */}
+        <div className="grid gap-3 mb-3" style={{ gridTemplateColumns: hasLifetime ? '200px repeat(3,1fr)' : '200px repeat(2,1fr)' }}>
+          <div />
+          {/* Monthly */}
+          <div className="flex flex-col items-center gap-1.5 px-3 py-3 rounded-xl border border-white/[0.06] bg-white/[0.02]">
+            <span className="text-[10px] tracking-[0.2em] uppercase text-white/35 font-semibold">{t.monthly}</span>
+          </div>
+          {/* Annual — highlighted */}
+          <div className="flex flex-col items-center gap-1.5 px-3 py-3 rounded-xl border border-white/20 bg-white/[0.06] relative overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent" />
+            <span className="text-[10px] tracking-[0.2em] uppercase text-white font-semibold">{t.yearly}</span>
+            <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-[9px] font-bold tracking-wide uppercase">{t.save}</span>
+          </div>
+          {/* Lifetime */}
+          {hasLifetime && (
+            <div className="flex flex-col items-center gap-1.5 px-3 py-3 rounded-xl border border-white/[0.06] bg-white/[0.02]">
+              <span className="text-[10px] tracking-[0.2em] uppercase text-white/35 font-semibold">{t.lifetime}</span>
+              <span className="text-[9px] text-white/20">{lang === 'pt' ? 'paga uma vez' : 'pay once'}</span>
+            </div>
           )}
         </div>
 
-        {/* Features */}
-        <ul className="space-y-2.5">
-          {plan.features.map(f => (
-            <li key={f} className="flex items-start gap-2.5">
-              <div className={`mt-0.5 w-4 h-4 rounded-full flex items-center justify-center shrink-0 ${isPro ? 'bg-emerald-500/20' : 'bg-white/[0.06]'}`}>
-                <Check className={`w-2.5 h-2.5 ${isPro ? 'text-emerald-400' : 'text-white/45'}`} />
-              </div>
-              <ScrambleText text={f} className={`text-sm ${isPro ? 'text-white/75' : 'text-white/50'}`} />
-            </li>
-          ))}
-          {plan.notIncluded.map(f => (
-            <li key={f} className="flex items-start gap-2.5 opacity-30">
-              <X className="w-4 h-4 text-white/30 shrink-0 mt-0.5" />
-              <ScrambleText text={f} className="text-sm text-white/30 line-through" />
-            </li>
-          ))}
-        </ul>
-
-        {/* CTA */}
-        <Link href={ctaHref} className="mt-auto block">
-          <MagneticButton className={`w-full py-3 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 group transition-colors duration-200 ${
-            isPro
-              ? 'bg-white text-black hover:bg-white/90'
-              : 'border border-white/15 text-white/60 hover:text-white hover:border-white/30 hover:bg-white/[0.05]'
-          }`}>
-            <ScrambleText text={ctaLabel} />
-            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform duration-200" />
-          </MagneticButton>
-        </Link>
-      </div>
-    </div>
-  )
-}
-
-// ─── Calendar pricing table ───────────────────────────────────────────────────
-function CalendarTable({ plans, lang }: { plans: Plan[]; lang: Lang }) {
-  const t = T[lang]
-  const isPt = lang === 'pt'
-
-  return (
-    <div className="overflow-x-auto">
-      <div className="min-w-[480px]">
-        {/* Column headers */}
-        <div className="grid grid-cols-[1.5fr_1fr_1.1fr_1fr] gap-2 mb-4 px-4">
-          <div />
-          <div className="text-center">
-            <span className="text-[10px] tracking-widest uppercase text-white/40 font-semibold">{t.monthly}</span>
-          </div>
-          <div className="text-center">
-            <span className="text-[10px] tracking-widest uppercase text-white/40 font-semibold">{t.yearly}</span>
-            <span className="block mt-1 px-2 py-0.5 rounded-full bg-white/10 text-white/50 text-[9px] font-bold tracking-wide uppercase whitespace-nowrap">
-              {isPt ? 'Recomendado' : 'Recommended'}
-            </span>
-          </div>
-          <div className="text-center">
-            <span className="text-[10px] tracking-widest uppercase text-white/40 font-semibold">{isPt ? 'Vitalício' : 'Lifetime'}</span>
-          </div>
-        </div>
-
-        {/* Plan rows */}
-        <div className="space-y-2">
+        {/* Rows */}
+        <div className="space-y-2.5">
           {plans.map((plan) => {
-            const isPro = !!plan.popular
+            const isPro = plan.popular
             return (
               <div
                 key={plan.name}
-                className={`relative grid grid-cols-[1.5fr_1fr_1.1fr_1fr] gap-2 items-center rounded-2xl border px-4 py-5 ${
+                className={`relative rounded-2xl border transition-all duration-300 ${
                   isPro
-                    ? 'border-white/20 bg-white/[0.07] shadow-[0_0_30px_rgba(255,255,255,0.03)]'
-                    : 'border-white/[0.09] bg-white/[0.04]'
+                    ? 'border-white/20 bg-white/[0.07] shadow-[0_0_50px_rgba(255,255,255,0.04)]'
+                    : 'border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.05]'
                 }`}
               >
                 {isPro && (
-                  <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent rounded-t-2xl" />
+                  <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/35 to-transparent rounded-t-2xl" />
                 )}
 
-                {/* Plan name */}
-                <div>
-                  <span className={`text-sm font-semibold ${isPro ? 'text-white' : 'text-white/80'}`}>{plan.name}</span>
-                  {plan.description && (
-                    <span className="block text-white/30 text-xs mt-0.5 leading-snug">{plan.description}</span>
-                  )}
-                </div>
+                <div className="grid gap-3 items-center px-5 py-5" style={{ gridTemplateColumns: hasLifetime ? '200px repeat(3,1fr)' : '200px repeat(2,1fr)' }}>
+                  {/* Plan info */}
+                  <div className="pr-4 min-w-0">
+                    <div className="flex items-center gap-2 mb-1 flex-wrap">
+                      <span className={`text-sm font-bold ${isPro ? 'text-white' : 'text-white/75'}`}>{plan.name}</span>
+                      {isPro && (
+                        <span className="px-2 py-0.5 rounded-full bg-white text-black text-[9px] font-bold tracking-wide uppercase">{t.popular}</span>
+                      )}
+                    </div>
+                    <span className={`text-xs ${isPro ? 'text-white/50' : 'text-white/30'}`}>{plan.users}</span>
 
-                {/* Monthly */}
-                <div className="text-center">
-                  {plan.price.monthly === 0 ? (
-                    <span className={`text-sm font-semibold ${isPro ? 'text-white/80' : 'text-white/55'}`}>{t.free}</span>
-                  ) : (
+                    {/* Feature chips */}
+                    <div className="mt-3 flex flex-wrap gap-1">
+                      {plan.features.slice(0, 3).map(f => (
+                        <span key={f} className={`inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-md ${isPro ? 'bg-white/10 text-white/60' : 'bg-white/[0.05] text-white/35'}`}>
+                          <Check className="w-2 h-2 shrink-0" />{f}
+                        </span>
+                      ))}
+                      {plan.features.length > 3 && (
+                        <span className={`text-[10px] px-1.5 py-0.5 rounded-md ${isPro ? 'text-white/40 bg-white/[0.06]' : 'text-white/25 bg-white/[0.03]'}`}>
+                          +{plan.features.length - 3}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Monthly price */}
+                  <div className="text-center px-2">
                     <div>
-                      <span className={`font-bold text-base ${isPro ? 'text-white' : 'text-white/75'}`}>€{plan.price.monthly}</span>
-                      <span className="text-white/30 text-[10px] ml-0.5">{t.perMonth}</span>
+                      <span className={`font-bold ${isPro ? 'text-white' : 'text-white/65'}`} style={{ fontSize: 'clamp(1.4rem, 3vw, 1.9rem)', fontFamily: 'var(--font-serif)', lineHeight: 1 }}>
+                        €{plan.price.monthly}
+                      </span>
+                      <span className={`block text-[10px] mt-1 ${isPro ? 'text-white/35' : 'text-white/25'}`}>{t.perMonth} {t.vatNote}</span>
+                    </div>
+                  </div>
+
+                  {/* Annual price — highlighted */}
+                  <div className="text-center px-2 py-2 rounded-xl border border-white/[0.08] bg-white/[0.04]">
+                    <div>
+                      <span className={`font-bold ${isPro ? 'text-white' : 'text-white/70'}`} style={{ fontSize: 'clamp(1.4rem, 3vw, 1.9rem)', fontFamily: 'var(--font-serif)', lineHeight: 1 }}>
+                        €{plan.price.yearly}
+                      </span>
+                      <span className={`block text-[10px] mt-1 ${isPro ? 'text-white/35' : 'text-white/25'}`}>{t.perYear} {t.vatNote}</span>
+                    </div>
+                  </div>
+
+                  {/* Lifetime price */}
+                  {hasLifetime && (
+                    <div className="text-center px-2">
+                      {plan.price.lifetime !== undefined ? (
+                        <div>
+                          <span className={`font-bold ${isPro ? 'text-white/80' : 'text-white/55'}`} style={{ fontSize: 'clamp(1.4rem, 3vw, 1.9rem)', fontFamily: 'var(--font-serif)', lineHeight: 1 }}>
+                            €{plan.price.lifetime}
+                          </span>
+                          <span className={`block text-[10px] mt-1 ${isPro ? 'text-white/30' : 'text-white/20'}`}>{t.perLifetime} {t.vatNote}</span>
+                        </div>
+                      ) : (
+                        <span className="text-white/20 text-lg">—</span>
+                      )}
                     </div>
                   )}
                 </div>
 
-                {/* Annual */}
-                <div className="text-center">
-                  {plan.price.yearly === 0 ? (
-                    <span className={`text-sm font-semibold ${isPro ? 'text-white/80' : 'text-white/55'}`}>{t.free}</span>
-                  ) : (
-                    <div>
-                      <span className={`font-bold text-base ${isPro ? 'text-white' : 'text-white/75'}`}>€{plan.price.yearly}</span>
-                      <span className="text-white/30 text-[10px] ml-0.5">{t.perYear}</span>
-                    </div>
-                  )}
-                </div>
-
-                {/* Lifetime */}
-                <div className="text-center">
-                  {plan.price.lifetime !== undefined ? (
-                    plan.price.lifetime === 0 ? (
-                      <span className={`text-sm font-semibold ${isPro ? 'text-white/80' : 'text-white/55'}`}>{t.free}</span>
-                    ) : (
-                      <div>
-                        <span className={`font-bold text-base ${isPro ? 'text-white/90' : 'text-white/70'}`}>€{plan.price.lifetime}</span>
-                        <span className="text-white/25 text-[10px] block">{isPt ? 'único + IVA' : 'once + VAT'}</span>
-                      </div>
-                    )
-                  ) : (
-                    <span className="text-white/20 text-sm">—</span>
-                  )}
+                {/* CTA row */}
+                <div className="px-5 pb-4 pt-1 border-t border-white/[0.05] flex justify-end">
+                  <Link href={plan.name === 'Enterprise' ? '/#contact' : productUrl}>
+                    <button className={`inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-[11px] font-semibold group transition-all duration-200 ${
+                      isPro
+                        ? 'bg-white text-black hover:bg-white/85'
+                        : 'border border-white/10 text-white/40 hover:text-white/70 hover:border-white/20'
+                    }`}>
+                      {plan.name === 'Enterprise' ? t.ctaBusiness : t.ctaPro}
+                      <ArrowRight className="w-2.5 h-2.5 group-hover:translate-x-0.5 transition-transform duration-200" />
+                    </button>
+                  </Link>
                 </div>
               </div>
             )
           })}
         </div>
+
+        {/* Trial note */}
+        <p className="text-center text-white/20 text-xs mt-5">{t.trialNote}</p>
       </div>
     </div>
   )
 }
 
-// ─── Page ────────────────────────────────────────────────────────────────────
+// ─── Page ──────────────────────────────────────────────────────────────────────
 export default function PricingPage() {
   const [isVisible, setIsVisible] = useState(false)
-  const [yearly, setYearly] = useState(false)
   const [openFaq, setOpenFaq] = useState<number | null>(null)
   const { lang } = useLang()
   const t = T[lang as Lang]
 
   useEffect(() => {
-    const raf = requestAnimationFrame(() => setIsVisible(true))
-    return () => cancelAnimationFrame(raf)
+    setIsVisible(true)
   }, [])
 
   const vis = (delay = '') => ({
@@ -417,14 +385,13 @@ export default function PricingPage() {
 
   return (
     <div style={{ background: 'var(--bg)', minHeight: '100dvh', color: 'var(--ink)' }}>
-      {/* Ambient glow */}
       <div style={{ position: 'fixed', inset: 0, background: 'radial-gradient(ellipse 70% 55% at 70% 35%, var(--glow-soft), transparent 60%), radial-gradient(ellipse 55% 40% at 25% 70%, var(--glow-faint), transparent 65%)', filter: 'blur(20px)', opacity: 0.9, pointerEvents: 'none', zIndex: 0 }} />
 
       <SiteNav />
 
       <main className="relative z-10">
 
-        {/*  HERO  */}
+        {/* HERO */}
         <section className="relative px-6 md:px-12 pt-40 pb-16">
           <div className="max-w-7xl w-full mx-auto">
             <div {...vis('0ms')}>
@@ -437,31 +404,14 @@ export default function PricingPage() {
               </h1>
             </div>
             <ScrambleText as="p" text={t.subtitle} className={`text-white/45 text-lg md:text-xl max-w-xl mt-6 leading-relaxed transition-[opacity,transform] duration-700 delay-200 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`} />
-
-            {/* Billing toggle */}
-            <div className={`mt-10 flex items-center gap-4 transition-[opacity,transform] duration-700 delay-300 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}>
-              <ScrambleText text={t.monthly} className={`text-sm transition-[color] duration-200 ${!yearly ? 'text-white' : 'text-white/35'}`} />
-              <button
-                onClick={() => setYearly(v => !v)}
-                className={`relative w-11 h-6 rounded-full transition-[background-color] duration-300 ${yearly ? 'bg-white' : 'bg-white/20'}`}
-                aria-label="Toggle billing period"
-              >
-                <div className={`absolute top-1 w-4 h-4 rounded-full transition-[left] duration-300 ${yearly ? 'left-6 bg-black' : 'left-1 bg-white'}`} />
-              </button>
-              <ScrambleText text={t.yearly} className={`text-sm transition-[color] duration-200 ${yearly ? 'text-white' : 'text-white/35'}`} />
-              <span className={`px-2.5 py-1 rounded-full text-xs font-medium transition-[opacity,transform] duration-300 ${yearly ? 'opacity-100 scale-100 bg-emerald-500/15 text-emerald-400' : 'opacity-0 scale-90'}`}>
-                <ScrambleText text={t.save} />
-              </span>
-            </div>
           </div>
         </section>
 
-        {/*  CALENDÁRIO DE FÉRIAS  */}
+        {/* CALENDÁRIO DE FÉRIAS */}
         <section id="calendar" className="relative px-6 md:px-12 pb-24">
           <div className="max-w-7xl mx-auto">
             <Reveal>
-              <div className="rounded-3xl border border-white/15 bg-white/[0.07] overflow-hidden">
-                {/* Product header */}
+              <div className="rounded-3xl border border-white/15 bg-white/[0.04] overflow-hidden">
                 <div className="px-8 md:px-12 py-8 border-b border-white/[0.06] flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                   <div className="flex items-center gap-4">
                     <div className="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-400/20 flex items-center justify-center shrink-0">
@@ -470,7 +420,8 @@ export default function PricingPage() {
                       </svg>
                     </div>
                     <div>
-                      <ScrambleText text={t.products.calendar.badge} className="text-white font-bold text-xl md:text-2xl" />
+                      <ScrambleText text={t.products.calendar.badge} className="text-white font-bold text-xl md:text-2xl block" />
+                      <ScrambleText text={t.products.calendar.tagline} className="text-white/35 text-sm block mt-0.5" />
                     </div>
                   </div>
                   <Link href={t.products.calendar.url} className="group inline-flex items-center gap-2 text-white/45 hover:text-white text-sm transition-[color] duration-200">
@@ -479,20 +430,12 @@ export default function PricingPage() {
                   </Link>
                 </div>
 
-                {/* Subtitle + support text */}
-                <div className="px-8 md:px-12 py-7 border-b border-white/[0.06]">
-                  <ScrambleText as="h3" text={t.calendarSubtitle} className="text-white/85 text-base md:text-lg font-semibold leading-snug" />
-                  <ScrambleText as="p" text={t.calendarSupport} className="text-white/40 text-sm mt-2 leading-relaxed max-w-xl" />
-                </div>
+                <div className="p-6 md:p-10">
+                  <PricingTable plans={t.products.calendar.plans as Plan[]} lang={lang as Lang} productUrl={t.products.calendar.url} />
 
-                {/* Plans table */}
-                <div className="p-6 md:p-8 pt-8 md:pt-10">
-                  <CalendarTable plans={t.products.calendar.plans} lang={lang as Lang} />
-
-                  {/* Bottom note */}
                   <div className="mt-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-6 border-t border-white/[0.06]">
-                    <ScrambleText as="p" text={t.calendarNote} className="text-white/40 text-sm leading-relaxed" />
-                    <Link href="/#contact" className="group shrink-0 inline-flex items-center gap-2 text-white/60 hover:text-white text-sm font-medium transition-[color] duration-200">
+                    <ScrambleText as="p" text={t.calendarNote} className="text-white/35 text-sm leading-relaxed" />
+                    <Link href="/#contact" className="group shrink-0 inline-flex items-center gap-2 text-white/55 hover:text-white text-sm font-medium transition-[color] duration-200">
                       <ScrambleText text={t.calendarNoteCta} />
                       <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform duration-200" />
                     </Link>
@@ -503,12 +446,11 @@ export default function PricingPage() {
           </div>
         </section>
 
-        {/*  PROJECT MANAGER  */}
+        {/* PROJECT MANAGER */}
         <section id="manager" className="relative px-6 md:px-12 pb-24">
           <div className="max-w-7xl mx-auto">
             <Reveal>
               <div className="rounded-3xl border border-white/10 bg-white/[0.02] overflow-hidden">
-                {/* Product header */}
                 <div className="px-8 md:px-12 py-8 border-b border-white/[0.06] flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                   <div className="flex items-center gap-4">
                     <div className="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-400/20 flex items-center justify-center shrink-0">
@@ -517,8 +459,8 @@ export default function PricingPage() {
                       </svg>
                     </div>
                     <div>
-                      <ScrambleText text={t.products.manager.badge} className="text-white font-semibold" />
-                      <ScrambleText text={t.products.manager.tagline} className="text-white/35 text-sm" />
+                      <ScrambleText text={t.products.manager.badge} className="text-white font-bold text-xl md:text-2xl block" />
+                      <ScrambleText text={t.products.manager.tagline} className="text-white/35 text-sm block mt-0.5" />
                     </div>
                   </div>
                   <Link href={t.products.manager.url} className="group inline-flex items-center gap-2 text-white/45 hover:text-white text-sm transition-[color] duration-200">
@@ -527,21 +469,15 @@ export default function PricingPage() {
                   </Link>
                 </div>
 
-                {/* Plans grid */}
-                <div className="p-6 md:p-8 pt-8 md:pt-10">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
-                    {t.products.manager.plans.map((plan) => (
-                      <PlanCard key={plan.name} plan={plan} yearly={yearly} lang={lang as Lang} productUrl={t.products.manager.url} />
-                    ))}
-                  </div>
-                  <ScrambleText as="p" text={t.trialNote} className="text-center text-white/25 text-xs mt-6" />
+                <div className="p-6 md:p-10">
+                  <PricingTable plans={t.products.manager.plans as Plan[]} lang={lang as Lang} productUrl={t.products.manager.url} />
                 </div>
               </div>
             </Reveal>
           </div>
         </section>
 
-        {/* outros produtos — só Portal */}
+        {/* OUTROS PRODUTOS */}
         <section className="relative px-6 md:px-12 pb-32">
           <div className="max-w-7xl mx-auto">
             <Reveal>
@@ -551,7 +487,6 @@ export default function PricingPage() {
               </div>
             </Reveal>
 
-            {/* Portal FRPC — coming soon */}
             <Reveal delay={100}>
               <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] overflow-hidden">
                 <div className="px-8 py-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -578,7 +513,7 @@ export default function PricingPage() {
           </div>
         </section>
 
-        {/*  FAQ  */}
+        {/* FAQ */}
         <section className="relative py-24 border-t border-white/[0.06] px-6 md:px-12">
           <div className="max-w-3xl mx-auto">
             <Reveal>
@@ -605,7 +540,7 @@ export default function PricingPage() {
           </div>
         </section>
 
-        {/* ── BOTTOM CTA  */}
+        {/* BOTTOM CTA */}
         <section className="relative py-32 md:py-48 border-t border-white/[0.06]">
           <div className="max-w-7xl mx-auto px-6 md:px-12 text-center">
             <Reveal>
@@ -635,7 +570,9 @@ export default function PricingPage() {
           <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row items-center justify-between gap-4">
             <Link href="/" className="text-2xl font-serif font-bold text-white hover:opacity-70 transition-opacity" style={{ fontFamily: 'var(--font-serif)' }}>FRPC</Link>
             <ScrambleText as="p" text={`© ${new Date().getFullYear()} FRPC. ${t.footerRights}`} className="text-white/25 text-sm" />
-            <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="text-white/30 hover:text-white text-sm transition-[color] duration-200"><ScrambleText text={lang === 'pt' ? 'Voltar ao topo ↑' : 'Back to top ↑'} /></button>
+            <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="text-white/30 hover:text-white text-sm transition-[color] duration-200">
+              <ScrambleText text={lang === 'pt' ? 'Voltar ao topo ↑' : 'Back to top ↑'} />
+            </button>
           </div>
         </footer>
       </main>

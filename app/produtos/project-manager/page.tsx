@@ -304,8 +304,7 @@ export default function ProjectManagerPage() {
   const t = TRANSLATIONS[lang]
 
   useEffect(() => {
-    const raf = requestAnimationFrame(() => setIsVisible(true))
-    return () => cancelAnimationFrame(raf)
+    setIsVisible(true)
   }, [])
 
   return (

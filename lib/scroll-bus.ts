@@ -27,9 +27,12 @@ function boot() {
 export function subscribeScroll(fn: Listener): () => void {
   boot()
   listeners.add(fn)
-  // call immediately with current position
+  // call immediately with current position — guard ensures the fn is still
+  // registered when the RAF fires (prevents stale calls during StrictMode unmount/remount)
   if (typeof window !== 'undefined') {
-    requestAnimationFrame(() => fn(window.scrollY))
+    requestAnimationFrame(() => {
+      if (listeners.has(fn)) fn(window.scrollY)
+    })
   }
   return () => listeners.delete(fn)
 }

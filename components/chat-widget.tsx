@@ -562,8 +562,9 @@ export function ChatWidget() {
   answersRef.current = answers
 
   useEffect(() => {
+    if (!isOpen) return
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages, isTyping])
+  }, [messages, isTyping, isOpen])
 
   useEffect(() => {
     if (isOpen && stage !== 'done') {

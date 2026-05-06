@@ -1,7 +1,12 @@
 'use client'
 
-import { ChatWidget } from '@/components/chat-widget'
+import dynamic from 'next/dynamic'
 import { HeroSection } from '@/components/sections/hero'
+
+const ChatWidget = dynamic(
+  () => import('@/components/chat-widget').then(m => ({ default: m.ChatWidget })),
+  { ssr: false }
+)
 import { FeaturesSection } from '@/components/sections/features'
 import { InsightsSection } from '@/components/sections/insights'
 import { TestimonialsSection } from '@/components/sections/testimonials'

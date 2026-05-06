@@ -50,13 +50,6 @@ export function TestimonialsSection() {
           {s.quote}
         </blockquote>
 
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, opacity: vis ? 1 : 0, transition: 'opacity 0.6s ease 0.35s' }}>
-          <div style={{ width: 42, height: 42, borderRadius: '50%', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.14)', display: 'grid', placeItems: 'center', fontFamily: 'var(--font-display)', fontSize: 16 }}>R</div>
-          <div style={{ textAlign: 'left' }}>
-            <div style={{ fontSize: 14, fontWeight: 500, color: 'var(--ink)' }}>{s.author}</div>
-            <div style={{ fontSize: 11.5, color: 'var(--ink-mute)', fontFamily: 'var(--font-mono)' }}>{s.role}</div>
-          </div>
-        </div>
       </div>
     </div>
   )

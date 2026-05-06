@@ -196,7 +196,7 @@ const translations: Record<Language, Translation> = {
       main3: 'produtos.',
       subtitle:
         'Um studio focado onde design encontra tecnologia — construído para marcas que se preocupam com o detalhe.',
-      work: 'Abrir Studio',
+      work: 'Contacto',
       talk: 'Descobrir',
       scroll: 'Scroll para explorar',
       rotatingBadge: '• DESCOBRE • EXPERIMENTA • SUBSCREVE • CRESCE ',

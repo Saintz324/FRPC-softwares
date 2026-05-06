@@ -15,10 +15,10 @@
   --glow-soft: oklch(var(--glow-l) var(--glow-c) var(--glow-h) / 0.45);
   --glow-faint: oklch(var(--glow-l) var(--glow-c) var(--glow-h) / 0.18);
   --radius: 18px;
-  --font-display: "Instrument Serif", "Times New Roman", serif;
-  --font-serif: "Instrument Serif", "Times New Roman", serif;
-  --font-ui: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-mono: "Geist Mono", ui-monospace, monospace;
+  --font-display: var(--font-instrument-serif), "Times New Roman", serif;
+  --font-serif: var(--font-instrument-serif), "Times New Roman", serif;
+  --font-ui: var(--font-geist), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 }
 
 * { box-sizing: border-box; }
