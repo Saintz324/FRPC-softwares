@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect, useRef, useMemo } from 'react'
-import Ico from '@/components/icons'
 import AmbientNetwork from '@/components/ambient-network'
 import { useLang } from '@/components/language-provider'
 
@@ -66,11 +65,9 @@ function useMouse() {
 }
 
 function CountedHero() {
-  const v = useCountUp(98.2, 1800)
   return (
     <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
-      <span style={{ fontSize: 'clamp(80px, 9vw, 128px)', fontFamily: 'var(--font-display)', lineHeight: 0.9, letterSpacing: '-0.04em', fontVariantNumeric: 'tabular-nums' }}>{v.toFixed(1)}</span>
-      <span style={{ fontSize: 36, color: 'var(--glow)', fontFamily: 'var(--font-display)', textShadow: '0 0 30px var(--glow-soft)' }}>%</span>
+      <span style={{ fontSize: 'clamp(42px, 5vw, 72px)', fontFamily: 'var(--font-display)', lineHeight: 0.95, letterSpacing: '-0.03em' }}>Menos trabalho<br /><em style={{ fontStyle: 'italic', color: 'var(--glow)', textShadow: '0 0 30px var(--glow-soft)' }}>manual</em></span>
     </div>
   )
 }
@@ -138,12 +135,12 @@ function BarTower3D({ t }: { t: number }) {
   )
 }
 
-function StatTile({ label, value, suffix, sub, accent, delay = 0, statusTag }: { label: string; value: number; suffix: string; sub: string; accent?: boolean; delay?: number; statusTag: string }) {
-  const v = useCountUp(value, 1500)
+function StatTile({ label, value, textValue, suffix, sub, accent, delay = 0, statusTag }: { label: string; value?: number; textValue?: string; suffix?: string; sub: string; accent?: boolean; delay?: number; statusTag: string }) {
+  const v = useCountUp(value ?? 0, 1500)
   const ref = useRef<HTMLDivElement>(null)
   useTilt(ref, 5)
   return (
-    <div ref={ref} className="card tilt-card" style={{ padding: 22, position: 'relative', opacity: 0, animation: `insFadeUp 0.9s cubic-bezier(.2,.7,.3,1) ${delay}s forwards` }}>
+    <div ref={ref} className="card tilt-card" style={{ padding: 22, position: 'relative', opacity: 0, animation: `insFadeUp 0.9s cubic-bezier(.2,.7,.3,1) ${delay}s forwards`, display: 'flex', flexDirection: 'column' }}>
       <div style={{ position: 'absolute', top: 18, right: 18 }}>
         <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '4px 10px', borderRadius: 999, background: 'rgba(255,255,255,0.06)', border: '1px solid var(--line)', fontSize: 11, fontFamily: 'var(--font-mono)' }}>
           <span style={{ width: 6, height: 6, borderRadius: '50%', background: accent ? 'var(--glow)' : '#fff', boxShadow: accent ? '0 0 8px var(--glow)' : 'none' }} />
@@ -151,27 +148,49 @@ function StatTile({ label, value, suffix, sub, accent, delay = 0, statusTag }: {
         </span>
       </div>
       <div style={{ fontSize: 12, color: 'var(--ink-mute)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: 28, marginTop: 4 }}>{label}</div>
-      <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 4 }}>
-        <span style={{ fontSize: 56, fontFamily: 'var(--font-display)', lineHeight: 0.9, letterSpacing: '-0.03em', fontVariantNumeric: 'tabular-nums' }}>{value % 1 === 0 ? Math.round(v) : v.toFixed(1)}</span>
-        {suffix && <span style={{ fontSize: 22, fontFamily: 'var(--font-display)', color: 'var(--ink-dim)' }}>{suffix}</span>}
-        {accent && <span style={{ fontSize: 14, color: 'var(--glow)', fontFamily: 'var(--font-mono)', marginLeft: 4 }}>↗</span>}
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, marginBottom: 16 }}>
+        {textValue
+          ? <span style={{ fontSize: 42, fontFamily: 'var(--font-display)', lineHeight: 0.9, letterSpacing: '-0.02em' }}>{textValue}</span>
+          : <>
+              <span style={{ fontSize: 56, fontFamily: 'var(--font-display)', lineHeight: 0.9, letterSpacing: '-0.03em', fontVariantNumeric: 'tabular-nums' }}>{(value ?? 0) % 1 === 0 ? Math.round(v) : v.toFixed(1)}</span>
+              {suffix && <span style={{ fontSize: 22, fontFamily: 'var(--font-display)', color: 'var(--ink-dim)' }}>{suffix}</span>}
+              {accent && <span style={{ fontSize: 14, color: 'var(--glow)', fontFamily: 'var(--font-mono)', marginLeft: 4 }}>↗</span>}
+            </>
+        }
       </div>
-      <div style={{ fontSize: 12, color: 'var(--ink-mute)', fontFamily: 'var(--font-mono)', marginBottom: 14 }}>{sub}</div>
+      <div style={{ fontSize: 12, color: 'var(--ink-mute)', fontFamily: 'var(--font-mono)', flex: 1 }}>{sub}</div>
       <AnimatedSparkbars accent={accent} />
     </div>
   )
 }
 
 function AnimatedSparkbars({ accent }: { accent?: boolean }) {
-  const heights = accent ? [3, 5, 4, 7, 6, 9, 8, 12, 10, 14] : [8, 6, 9, 7, 11, 9, 13, 11, 15, 13]
+  const bases = accent ? [4, 6, 8, 11, 14, 17, 20, 24, 28, 32] : [4, 6, 8, 11, 14, 17, 20, 24, 28, 32]
   const [mounted, setMounted] = useState(false)
   useEffect(() => { const id = setTimeout(() => setMounted(true), 100); return () => clearTimeout(id) }, [])
   return (
-    <div style={{ display: 'flex', alignItems: 'flex-end', gap: 3, height: 28 }}>
-      {heights.map((h, i) => (
-        <div key={i} style={{ width: 6, height: mounted ? h * (accent ? 2 : 1.7) : 0, borderRadius: 1, background: accent && i > 7 ? 'var(--glow-soft)' : accent ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.45)', transition: `height 0.7s cubic-bezier(.2,.7,.3,1) ${i * 0.05}s` }} />
-      ))}
-    </div>
+    <>
+      <style>{`
+        @keyframes sparkWave {
+          0%, 100% { transform: scaleY(1); }
+          50% { transform: scaleY(0.35); }
+        }
+      `}</style>
+      <div style={{ display: 'flex', alignItems: 'flex-end', gap: 3, height: 36, marginTop: 18 }}>
+        {bases.map((h, i) => (
+          <div key={i} style={{
+            width: 6,
+            height: mounted ? h : 0,
+            borderRadius: 2,
+            transformOrigin: 'bottom',
+            background: accent && i > 7 ? 'var(--glow)' : accent ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.45)',
+            boxShadow: accent && i > 7 ? '0 0 6px var(--glow-soft)' : 'none',
+            transition: `height 0.7s cubic-bezier(.2,.7,.3,1) ${i * 0.05}s`,
+            animation: mounted ? `sparkWave ${2.8 + (i % 3) * 0.4}s ease-in-out ${i * 0.18}s infinite` : 'none',
+          }} />
+        ))}
+      </div>
+    </>
   )
 }
 
@@ -196,51 +215,6 @@ function LiveSparkline({ t }: { t: number }) {
   )
 }
 
-function PeriodFilter() {
-  const [active, setActive] = useState(1)
-  const periods = ['1S', '1M', '3M', 'YTD']
-  return (
-    <div style={{ display: 'flex', gap: 4, padding: 3, background: 'rgba(255,255,255,0.04)', border: '1px solid var(--line)', borderRadius: 10 }}>
-      {periods.map((p, i) => (
-        <button key={p} onClick={() => setActive(i)} style={{ background: active === i ? 'rgba(255,255,255,0.1)' : 'transparent', border: 'none', color: active === i ? 'var(--ink)' : 'var(--ink-dim)', padding: '5px 12px', borderRadius: 7, fontSize: 11, fontFamily: 'var(--font-mono)', cursor: 'pointer', transition: 'background 0.2s, color 0.2s' }}>{p}</button>
-      ))}
-    </div>
-  )
-}
-
-function PromptChart({ t, dayLabels, legendA, legendB }: { t: number; dayLabels: string[]; legendA: string; legendB: string }) {
-  const rawData = [{ a: 24, b: 18 }, { a: 38, b: 22 }, { a: 52, b: 30 }, { a: 46, b: 34 }, { a: 64, b: 28 }, { a: 32, b: 20 }, { a: 28, b: 16 }]
-  const data = rawData.map((d, i) => ({ ...d, label: dayLabels[i] ?? '' }))
-  const max = 70
-  const [hover, setHover] = useState(-1)
-  const [mounted, setMounted] = useState(false)
-  useEffect(() => { const id = setTimeout(() => setMounted(true), 200); return () => clearTimeout(id) }, [])
-  return (
-    <div>
-      <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-around', gap: 12, height: 200, perspective: '900px', transformStyle: 'preserve-3d', padding: '0 8px' }}>
-        {data.map((d, i) => {
-          const ha = (d.a / max) * 160, hb = (d.b / max) * 160
-          return (
-            <div key={i} onMouseEnter={() => setHover(i)} onMouseLeave={() => setHover(-1)} style={{ flex: 1, display: 'flex', alignItems: 'flex-end', gap: 4, justifyContent: 'center', cursor: 'pointer', transform: hover === i ? 'translateY(-8px)' : 'translateY(0)', transition: 'transform 0.25s cubic-bezier(.2,.7,.3,1)', position: 'relative' }}>
-              {hover === i && <div style={{ position: 'absolute', top: -42, left: '50%', transform: 'translateX(-50%)', background: 'rgba(15,15,16,0.95)', border: '1px solid var(--line-strong)', borderRadius: 8, padding: '6px 10px', fontSize: 11, fontFamily: 'var(--font-mono)', whiteSpace: 'nowrap', backdropFilter: 'blur(10px)', zIndex: 5 }}><span style={{ color: 'var(--glow)' }}>●</span> {d.a} / <span style={{ color: '#fff' }}>●</span> {d.b}</div>}
-              <div style={{ width: 16, height: mounted ? ha : 0, background: 'linear-gradient(180deg, var(--glow), rgba(255,255,255,0.3))', borderRadius: '4px 4px 0 0', position: 'relative', transition: `height 0.9s cubic-bezier(.2,.7,.3,1) ${i * 0.08}s`, boxShadow: hover === i ? '0 0 20px var(--glow-soft)' : '0 0 8px var(--glow-faint)' }}>
-                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: 'var(--glow)', borderRadius: '4px 4px 0 0', boxShadow: '0 0 10px var(--glow)' }} />
-              </div>
-              <div style={{ width: 16, height: mounted ? hb : 0, background: 'linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,255,255,0.3))', borderRadius: '4px 4px 0 0', transition: `height 0.9s cubic-bezier(.2,.7,.3,1) ${i * 0.08 + 0.1}s` }} />
-            </div>
-          )
-        })}
-      </div>
-      <div style={{ display: 'flex', justifyContent: 'space-around', marginTop: 12, padding: '0 8px' }}>
-        {data.map((d, i) => <div key={i} style={{ flex: 1, textAlign: 'center', fontSize: 10, color: 'rgba(255,255,255,0.4)', fontFamily: 'var(--font-mono)' }}>{d.label}</div>)}
-      </div>
-      <div style={{ display: 'flex', gap: 18, marginTop: 16, fontSize: 11, color: 'var(--ink-dim)', fontFamily: 'var(--font-mono)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><span style={{ width: 10, height: 10, background: 'var(--glow)', borderRadius: 2, boxShadow: '0 0 6px var(--glow)' }} /> {legendA}</div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><span style={{ width: 10, height: 10, background: 'rgba(255,255,255,0.7)', borderRadius: 2 }} /> {legendB}</div>
-      </div>
-    </div>
-  )
-}
 
 export function InsightsSection() {
   const clock = useNow()
@@ -292,8 +266,8 @@ export function InsightsSection() {
           <div style={{ borderTop: '1px solid var(--line)', marginTop: 28, paddingTop: 18, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
               <AnimatedChip delay={0.6}>{s.chips[0]}</AnimatedChip>
-              <AnimatedChip delay={0.7}><Ico.Plus size={10} /> {s.chips[1]}</AnimatedChip>
-              <AnimatedChip delay={0.8} active><Ico.Plus size={10} /> {s.chips[2]}</AnimatedChip>
+              <AnimatedChip delay={0.7}>{s.chips[1]}</AnimatedChip>
+              <AnimatedChip delay={0.8}>{s.chips[2]}</AnimatedChip>
             </div>
             <LiveSparkline t={clock} />
           </div>
@@ -308,19 +282,9 @@ export function InsightsSection() {
           </div>
         </div>
 
-        <StatTile delay={0.55} label={s.stat1Label} value={12} suffix="+" sub={s.stat1Sub} statusTag={s.statusOutput} accent />
-        <StatTile delay={0.7} label={s.stat2Label} value={48} suffix="h" sub={s.stat2Sub} statusTag={s.statusActive} />
+        <StatTile delay={0.55} label={s.stat1Label} textValue={s.stat1Value} sub={s.stat1Sub} statusTag={s.statusOutput} accent />
+        <StatTile delay={0.7} label={s.stat2Label} textValue={s.stat2Value} sub={s.stat2Sub} statusTag={s.statusActive} />
 
-        <div className="card" style={{ padding: 28, gridColumn: 'span 2', opacity: 0, animation: 'insFadeUp 0.9s cubic-bezier(.2,.7,.3,1) 0.85s forwards' }}>
-          <div className="row" style={{ justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 18 }}>
-            <div>
-              <div style={{ fontSize: 11, color: 'var(--ink-mute)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: 8 }}>{s.perfLabel}</div>
-              <div style={{ fontSize: 24, fontFamily: 'var(--font-display)', letterSpacing: '-0.01em' }}>{s.perfTitle}</div>
-            </div>
-            <PeriodFilter />
-          </div>
-          <PromptChart t={clock} dayLabels={s.dayLabels} legendA={s.legendA} legendB={s.legendB} />
-        </div>
       </div>
 
       <style>{`

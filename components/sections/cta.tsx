@@ -41,14 +41,11 @@ export function CTASection() {
           {s.subtitle}
         </p>
 
-        <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', opacity: vis ? 1 : 0, transition: 'opacity 0.7s ease 0.5s' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', opacity: vis ? 1 : 0, transition: 'opacity 0.7s ease 0.5s' }}>
           <Link href="/start">
             <button className="btn btn-light" style={{ padding: '14px 34px', fontSize: 14 }}>
               {s.btnPrimary} <Ico.ArrowUpRight size={13} />
             </button>
-          </Link>
-          <Link href="/start">
-            <button className="btn btn-ghost" style={{ padding: '14px 26px', fontSize: 14 }}>{s.btnSecondary}</button>
           </Link>
         </div>
       </div>
@@ -57,9 +54,9 @@ export function CTASection() {
         <span>{s.copyright}</span>
         <div style={{ display: 'flex', gap: 28 }}>
           {s.links.map(l => (
-            <a key={l} href="#" style={{ color: 'var(--ink-mute)', textDecoration: 'none', transition: 'color 0.2s', letterSpacing: '0.06em' }}
+            <a key={l.label} href={l.href} style={{ color: 'var(--ink-mute)', textDecoration: 'none', transition: 'color 0.2s', letterSpacing: '0.06em' }}
               onMouseEnter={e => (e.currentTarget.style.color = 'var(--ink)')}
-              onMouseLeave={e => (e.currentTarget.style.color = '')}>{l}</a>
+              onMouseLeave={e => (e.currentTarget.style.color = '')}>{l.label}</a>
           ))}
         </div>
         <div style={{ display: 'flex', gap: 14, alignItems: 'center' }}>

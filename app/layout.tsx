@@ -41,7 +41,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt" className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable}`} suppressHydrationWarning>
-      <body>
+      <body suppressHydrationWarning>
         <GlobalEffects />
         <NavigationProgress />
         <LanguageProvider>

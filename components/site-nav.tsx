@@ -127,15 +127,15 @@ export function SiteNav({ badgeLabel, badgeHref, badgeExternal }: SiteNavProps =
       style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50, transition: 'background 0.35s, border-color 0.35s' }}
     >
       <div className="row gap-12">
-        <Link href="/" className="logo" aria-label="FRPC"><Ico.Logo size={20} /></Link>
+        <Link href="/" className="logo" aria-label="FRPC"><img src="/logo-software.svg" alt="FRPC" height={28} /></Link>
       </div>
 
       <nav className="nav-pill" aria-label="Primary">
         <Link href="/" className={isHome ? 'active' : ''}>{isPt ? 'Início' : 'Home'}</Link>
-        <Link href="/start" className={isStudio ? 'active' : ''}>{isPt ? 'Studio' : 'Studio'}</Link>
+        <Link href="/start" className={isStudio ? 'active' : ''}>{isPt ? 'Soluções' : 'Solutions'}</Link>
         <Link href="/produtos/calendario-de-ferias" className={isProjects ? 'active' : ''}>{isPt ? 'Projetos' : 'Projects'}</Link>
-        <PillDropdown label={isPt ? 'Preços' : 'Pricing'} items={pricingItems} isActive={isPricing} />
-        <PillDropdown label={isPt ? 'Tutoriais' : 'Tutorials'} items={tutoriaisItems} isActive={isTutoriais} />
+        <PillDropdown label={isPt ? 'Planos' : 'Plans'} items={pricingItems} isActive={isPricing} />
+        <PillDropdown label={isPt ? 'Recursos' : 'Resources'} items={tutoriaisItems} isActive={isTutoriais} />
         {badgeExternal ? (
           <a href={ctaHref} target="_blank" rel="noopener noreferrer" className="badge">
             {ctaLabel} <Ico.ArrowUpRight size={11} />

@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Ico from '@/components/icons'
 import { useLang } from '@/components/language-provider'
 
@@ -9,17 +9,18 @@ const ICONS = ['Spark', 'Triangle', 'Sun']
 
 function FeatureCard({ card, delay, icon }: { card: Card; delay: number; icon: string }) {
   const ref = useRef<HTMLDivElement>(null)
+  const [visible, setVisible] = useState(false)
   const IconC = (Ico as Record<string, (props: { size: number; color: string }) => React.ReactElement>)[icon]
 
   useEffect(() => {
     const el = ref.current
     if (!el) return
-    const obs = new IntersectionObserver(([e]) => {
-      if (e.isIntersecting) el.style.animation = `fadeSlideUp 0.75s cubic-bezier(.2,.7,.3,1) ${delay}s both`
+    const obs = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) { setVisible(true); obs.disconnect() }
     }, { threshold: 0.15 })
     obs.observe(el)
     return () => obs.disconnect()
-  }, [delay])
+  }, [])
 
   const hover = (e: React.MouseEvent<HTMLDivElement>, on: boolean) => {
     const el = e.currentTarget
@@ -31,13 +32,15 @@ function FeatureCard({ card, delay, icon }: { card: Card; delay: number; icon: s
     <div ref={ref} onMouseEnter={e => hover(e, true)} onMouseLeave={e => hover(e, false)}
       style={{
         flex: '1 1 280px',
+        display: 'flex', flexDirection: 'column',
         background: 'linear-gradient(148deg, rgba(255,255,255,0.045) 0%, rgba(255,255,255,0.012) 100%)',
         border: '1px solid rgba(255,255,255,0.08)',
         borderRadius: 22, padding: '36px 32px',
         backdropFilter: 'blur(18px)',
         position: 'relative', overflow: 'hidden',
         transition: 'border-color 0.3s, transform 0.35s cubic-bezier(.2,.7,.3,1)',
-        opacity: 0,
+        opacity: visible ? undefined : 0,
+        animation: visible ? `fadeSlideUp 0.75s cubic-bezier(.2,.7,.3,1) ${delay}s both` : undefined,
       }}>
       <div style={{ position: 'absolute', top: -50, right: -50, width: 200, height: 200, borderRadius: '50%', background: 'radial-gradient(circle, var(--glow-faint), transparent 70%)', filter: 'blur(28px)', pointerEvents: 'none' }} />
 
@@ -48,9 +51,9 @@ function FeatureCard({ card, delay, icon }: { card: Card; delay: number; icon: s
       </div>
 
       <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 28, fontWeight: 400, letterSpacing: '-0.022em', margin: '0 0 12px', color: 'var(--ink)' }}>{card.title}</h3>
-      <p style={{ color: 'var(--ink-dim)', fontSize: 13.5, lineHeight: 1.68, margin: '0 0 30px' }}>{card.body}</p>
+      <p style={{ color: 'var(--ink-dim)', fontSize: 13.5, lineHeight: 1.68, margin: '0 0 30px', flex: 1 }}>{card.body}</p>
 
-      <div style={{ borderTop: '1px solid rgba(255,255,255,0.07)', paddingTop: 22, display: 'flex', alignItems: 'baseline', gap: 10 }}>
+      <div style={{ borderTop: '1px solid rgba(255,255,255,0.07)', paddingTop: 22, display: 'flex', alignItems: 'baseline', gap: 10, marginTop: 'auto' }}>
         <span style={{ fontFamily: 'var(--font-display)', fontSize: 40, letterSpacing: '-0.03em', lineHeight: 1 }}>{card.stat}</span>
         <span style={{ fontSize: 11, color: 'var(--ink-mute)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.12em' }}>{card.sub}</span>
       </div>

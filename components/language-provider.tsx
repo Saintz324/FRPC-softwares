@@ -36,6 +36,7 @@ type CardItem = {
 
 type ProductItem2 = {
   label: string
+  description: string
   status: string
 }
 
@@ -124,14 +125,17 @@ type Translation = {
       globalLabel: string
       globalDesc: string
       stat1Label: string
+      stat1Value: string
       stat1Sub: string
       stat2Label: string
+      stat2Value: string
       stat2Sub: string
       pipelineLabel: string
       pipelineTitle: string
       pipelineDesc: string
       perfLabel: string
       perfTitle: string
+      illustrativeLabel: string
       chips: string[]
       legendA: string
       legendB: string
@@ -168,7 +172,7 @@ type Translation = {
       subtitle: string
       btnPrimary: string
       btnSecondary: string
-      links: string[]
+      links: Array<{ label: string; href: string }>
       copyright: string
     }
   }
@@ -190,12 +194,12 @@ const translations: Record<Language, Translation> = {
       tutorials: 'Tutoriais',
     },
     hero: {
-      intro: 'Vol. 01 — Digital Studio · 2026',
-      main1: 'Criamos',
-      main2: 'digital',
-      main3: 'produtos.',
+      intro: 'AUTOMAÇÃO · IA · EFICIÊNCIA',
+      main1: 'Automatizamos',
+      main2: 'processos',
+      main3: 'com IA',
       subtitle:
-        'Um studio focado onde design encontra tecnologia — construído para marcas que se preocupam com o detalhe.',
+        'Criamos software à medida, automações internas e assistentes inteligentes para empresas que querem poupar tempo, reduzir erros e escalar operações.',
       work: 'Contacto',
       talk: 'Descobrir',
       scroll: 'Scroll para explorar',
@@ -305,7 +309,7 @@ const translations: Record<Language, Translation> = {
       socialNames: [],
     },
     footer: {
-      copyright: '© {year} FRPC. Todos os direitos reservados.',
+      copyright: '© {year} FRPC Tech. Todos os direitos reservados.',
       backToTop: 'Voltar ao topo',
       logo: 'FRPC',
     },
@@ -314,40 +318,43 @@ const translations: Record<Language, Translation> = {
     },
     sections: {
       features: {
-        label: 'O Studio',
-        title1: 'Do conceito ao produto',
-        title2: 'com atenção a',
-        title3: 'cada detalhe.',
+        label: 'O QUE FAZEMOS',
+        title1: 'Software',
+        title2: 'Automação',
+        title3: 'IA aplicada',
         cards: [
-          { tag: '01 — Design', title: 'Design & UX', body: 'Interfaces, sistemas de design e identidade visual construídos com atenção obsessiva ao detalhe — do wireframe ao produto final.', stat: '100%', sub: 'foco no utilizador' },
-          { tag: '02 — Produto', title: 'Desenvolvimento', body: 'Apps web, SaaS e APIs modernas com as tecnologias certas — escaláveis desde o primeiro dia e prontas a crescer.', stat: '99.9%', sub: 'uptime garantido' },
-          { tag: '03 — Lançamento', title: 'Do conceito ao mercado', body: 'Acompanhamos o teu projeto desde a ideia até ao lançamento, com um processo claro, iterativo e sem surpresas.', stat: '48h', sub: 'resposta garantida' },
+          { tag: '01 — SOFTWARE', title: 'Software à medida', body: 'Criamos plataformas, portais e sistemas internos adaptados à forma como a tua empresa trabalha — sem software genérico, sem complicação desnecessária.', stat: '', sub: 'ajustado ao teu processo' },
+          { tag: '02 — AUTOMAÇÃO', title: 'Processos mais eficientes', body: 'Automatizamos tarefas repetitivas, emails, documentos, pastas, aprovações e fluxos internos para reduzir erros e libertar tempo à equipa.', stat: '', sub: 'menos tarefas manuais' },
+          { tag: '03 — IA', title: 'Assistentes inteligentes', body: 'Desenvolvemos assistentes com IA que respondem com base nos dados internos da empresa — por chat, voz ou integração com as ferramentas existentes.', stat: '', sub: 'IA útil, aplicada ao negócio' },
         ],
       },
       insights: {
-        liveLabel: 'Live · Q2 2026',
-        title: 'Resultados',
-        subtitle: 'mensuráveis',
-        description: 'Um dashboard vivo. Métricas que respiram. Cada sinal é um fio que podes puxar.',
-        globalLabel: 'Taxa de satisfação · global',
-        globalDesc: 'Clientes satisfeitos com produtos entregues a tempo e com qualidade.',
-        stat1Label: 'Projetos entregues',
-        stat1Sub: 'desde o lançamento',
-        stat2Label: 'Resposta',
-        stat2Sub: 'tempo médio de resposta',
+        liveLabel: 'Exemplo de dashboard',
+        title: 'Impacto',
+        subtitle: 'mensurável',
+        description: 'Criamos soluções que tornam o trabalho mais simples, controlado e fácil de acompanhar — desde tarefas automatizadas até dashboards de gestão.',
+        globalLabel: 'Eficiência · operação',
+        globalDesc: 'Reduza tarefas repetitivas, emails manuais, documentos dispersos e processos internos pouco eficientes com soluções digitais feitas à medida.',
+        stat1Label: 'Processos internos',
+        stat1Value: 'Processos organizados',
+        stat1Sub: 'Pedidos, aprovações, documentos e tarefas internas centralizados numa solução simples de acompanhar.',
+        stat2Label: 'Análise inicial',
+        stat2Value: 'Processo claro',
+        stat2Sub: 'Antes de desenvolver, analisamos a operação da empresa e identificamos onde faz sentido automatizar, integrar ou aplicar IA.',
         pipelineLabel: '02 — Processo',
-        pipelineTitle: 'Desenvolvimento Ágil',
-        pipelineDesc: 'Iterações rápidas, feedback constante — o produto evolui com as tuas necessidades reais.',
-        perfLabel: '03 — Performance',
-        perfTitle: 'Entregas por semana',
-        chips: ['↗ +1.2k / mês', 'Novo projeto', 'Auto-assign'],
-        legendA: 'Entregues',
-        legendB: 'Revistos',
+        pipelineTitle: 'Do processo à solução',
+        pipelineDesc: 'Analisamos a forma como a empresa trabalha e criamos tecnologia ajustada à operação real — não software genérico. Cada solução nasce de um processo concreto, com o objetivo de o tornar mais simples, rápido e fácil de gerir.',
+        perfLabel: '03 — Dashboard',
+        perfTitle: 'Exemplo de eficiência operacional',
+        illustrativeLabel: 'Exemplo ilustrativo',
+        chips: ['↗ produtividade', '+ controlo', '↘ erros'],
+        legendA: 'Manual',
+        legendB: 'Automatizado',
         dayLabels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
         footerLinks: ['Suporte', 'Status', 'Docs'],
-        footerCopy: 'Criado no FRPC Studio · 2026',
-        statusActive: 'Ativo',
-        statusOutput: 'Output',
+        footerCopy: 'Criado no FRPC Tech · 2026',
+        statusActive: 'Estratégia',
+        statusOutput: 'Gestão',
       },
       testimonials: {
         starsLabel: 'Destaques de clientes',
@@ -365,28 +372,28 @@ const translations: Record<Language, Translation> = {
         title: 'Os nossos Produtos',
         subtitle: 'Software feito em Portugal para simplificar o trabalho das equipas — do calendário de férias à gestão de projetos.',
         priceBtn: 'Ver preços',
-        productsLabel: 'Produtos em produção',
-        productsCount: '2 Ativos',
+        productsLabel: 'Soluções em produção',
+        productsCount: '2 ativos · 1 em breve',
         products: [
-          { label: 'Calendário de Férias', status: 'Ativo' },
-          { label: 'Project Manager', status: 'Ativo' },
-          { label: 'Portal FRPC', status: 'Em breve' },
+          { label: 'Calendário de Férias', description: 'Gestão simples de férias, ausências e aprovações.', status: 'Ativo' },
+          { label: 'Gestão de Projetos', description: 'Acompanhamento de projetos, tarefas e equipas.', status: 'Ativo' },
+          { label: 'Portal FRPC', description: 'Acesso centralizado a ferramentas, documentos e pedidos internos.', status: 'Em breve' },
         ],
-        chips: ['Calendário de Férias', 'Project Manager', 'Portal FRPC', 'Cloud Native', 'Suporte Prioritário', 'Feito em Portugal', 'Enterprise Ready'],
-        btnPrimary: 'Ver Produtos',
-        btnSecondary: 'Preços',
-        dialUptime: 'Uptime',
-        dialLabel: 'Produtos Ativos',
+        chips: ['Feito em Portugal', 'Cloud', 'Suporte prioritário', 'Microsoft 365', 'Pronto para equipas', 'Atualizações contínuas'],
+        btnPrimary: 'Explorar produtos',
+        btnSecondary: 'Ver planos',
+        dialUptime: 'Ativos',
+        dialLabel: 'Ecossistema FRPC',
       },
       cta: {
-        label: 'Começa hoje — é grátis',
+        label: 'PRONTO PARA COMEÇAR?',
         title1: 'Inicia o teu',
-        title2: 'projeto.',
-        subtitle: 'Os teus melhores designs, as tecnologias certas, o teu melhor trabalho — num único lugar tranquilo.',
-        btnPrimary: 'Começar grátis',
+        title2: 'projeto',
+        subtitle: 'Da ideia ao desenvolvimento, ajudamos a criar soluções digitais simples, úteis e prontas para a realidade da sua empresa.',
+        btnPrimary: 'Pedir proposta',
         btnSecondary: 'Fala connosco',
-        links: ['Privacidade', 'Termos', 'Docs', 'Status'],
-        copyright: '© 2026 FRPC Studio',
+        links: [],
+        copyright: '© 2026 FRPC Tech',
       },
     },
   },
@@ -406,9 +413,9 @@ const translations: Record<Language, Translation> = {
     },
     hero: {
       intro: 'Vol. 01 — Digital Studio · 2026',
-      main1: 'We build',
-      main2: 'digital',
-      main3: 'products.',
+      main1: 'Automated',
+      main2: 'processes',
+      main3: 'with AI',
       subtitle:
         'A focused studio where design meets technology — built for brands that care about every detail.',
       work: 'Open Studio',
@@ -540,29 +547,32 @@ const translations: Record<Language, Translation> = {
         ],
       },
       insights: {
-        liveLabel: 'Live · Q2 2026',
+        liveLabel: 'Dashboard example',
         title: 'Measurable',
-        subtitle: 'results',
-        description: 'A living dashboard. Metrics that breathe. Every signal is a thread you can pull.',
-        globalLabel: 'Satisfaction rate · global',
-        globalDesc: 'Clients satisfied with products delivered on time and with quality.',
-        stat1Label: 'Projects delivered',
-        stat1Sub: 'since launch',
-        stat2Label: 'Response',
-        stat2Sub: 'average response time',
+        subtitle: 'impact',
+        description: 'We build solutions that make work simpler, more controlled and easier to track — from automated tasks to management dashboards.',
+        globalLabel: 'Efficiency · operations',
+        globalDesc: 'Reduce repetitive tasks, manual emails, scattered documents and inefficient internal processes with tailor-made digital solutions.',
+        stat1Label: 'Internal processes',
+        stat1Value: 'Organised processes',
+        stat1Sub: 'Requests, approvals, documents and internal tasks centralised in a simple solution to track.',
+        stat2Label: 'Initial analysis',
+        stat2Value: 'Clear process',
+        stat2Sub: 'Before building, we analyse the company\'s operations and identify where it makes sense to automate, integrate or apply AI.',
         pipelineLabel: '02 — Process',
-        pipelineTitle: 'Agile Development',
-        pipelineDesc: 'Fast iterations, constant feedback — the product evolves with your real needs.',
-        perfLabel: '03 — Performance',
-        perfTitle: 'Deliveries per week',
-        chips: ['↗ +1.2k / month', 'New project', 'Auto-assign'],
-        legendA: 'Delivered',
-        legendB: 'Reviewed',
+        pipelineTitle: 'From process to solution',
+        pipelineDesc: 'We analyse how the company works and create technology tailored to real operations — not generic software. Each solution starts from a concrete process, with the goal of making it simpler, faster and easier to manage.',
+        perfLabel: '03 — Dashboard',
+        perfTitle: 'Operational efficiency example',
+        illustrativeLabel: 'Illustrative example',
+        chips: ['↗ productivity', '+ control', '↘ errors'],
+        legendA: 'Manual',
+        legendB: 'Automated',
         dayLabels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
         footerLinks: ['Support', 'Status', 'Docs'],
-        footerCopy: 'Created at FRPC Studio · 2026',
-        statusActive: 'Active',
-        statusOutput: 'Output',
+        footerCopy: 'Created at FRPC Tech · 2026',
+        statusActive: 'Strategy',
+        statusOutput: 'Management',
       },
       testimonials: {
         starsLabel: 'Customer highlights',
@@ -580,28 +590,28 @@ const translations: Record<Language, Translation> = {
         title: 'Our Products',
         subtitle: 'Software made in Portugal to simplify team workflows — from vacation calendars to project management.',
         priceBtn: 'See pricing',
-        productsLabel: 'Products in production',
-        productsCount: '2 Active',
+        productsLabel: 'Solutions in production',
+        productsCount: '2 active · 1 coming soon',
         products: [
-          { label: 'Vacation Calendar', status: 'Active' },
-          { label: 'Project Manager', status: 'Active' },
-          { label: 'FRPC Portal', status: 'Coming soon' },
+          { label: 'Vacation Calendar', description: 'Simple management of holidays, absences and approvals.', status: 'Active' },
+          { label: 'Project Manager', description: 'Track projects, tasks and teams in one place.', status: 'Active' },
+          { label: 'FRPC Portal', description: 'Centralised access to tools, documents and internal requests.', status: 'Coming soon' },
         ],
-        chips: ['Vacation Calendar', 'Project Manager', 'FRPC Portal', 'Cloud Native', 'Priority Support', 'Made in Portugal', 'Enterprise Ready'],
-        btnPrimary: 'View Products',
-        btnSecondary: 'Pricing',
-        dialUptime: 'Uptime',
-        dialLabel: 'Active Products',
+        chips: ['Made in Portugal', 'Cloud', 'Priority support', 'Microsoft 365', 'Team ready', 'Continuous updates'],
+        btnPrimary: 'Explore products',
+        btnSecondary: 'Request a demo',
+        dialUptime: 'Active',
+        dialLabel: 'FRPC Ecosystem',
       },
       cta: {
         label: "Start today — it's free",
         title1: 'Start your',
         title2: 'project.',
         subtitle: 'Your best designs, the right technologies, your best work — all in one calm place.',
-        btnPrimary: 'Start for free',
+        btnPrimary: 'Request a proposal',
         btnSecondary: 'Talk to us',
-        links: ['Privacy', 'Terms', 'Docs', 'Status'],
-        copyright: '© 2026 FRPC Studio',
+        links: [],
+        copyright: '© 2026 FRPC Tech',
       },
     },
   },
