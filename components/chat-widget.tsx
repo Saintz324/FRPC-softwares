@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback, memo } from 'react'
 import { Send, Sparkles, User, ChevronDown, Check, Zap, CheckCircle, ExternalLink } from 'lucide-react'
+import { usePathname } from 'next/navigation'
 import { useLang } from '@/components/language-provider'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -543,6 +544,7 @@ function TypingIndicator() {
 
 export function ChatWidget() {
   const { lang } = useLang()
+  const pathname = usePathname()
 
   const [isOpen, setIsOpen] = useState(false)
   const [messages, setMessages] = useState<ChatMsg[]>([])
@@ -556,6 +558,7 @@ export function ChatWidget() {
   const inputRef = useRef<HTMLInputElement>(null)
   const stageRef = useRef<Stage>('init')
   const answersRef = useRef<Answers>({})
+  const prevPathname = useRef(pathname)
 
   // Keep refs in sync (avoid stale closures in timeouts)
   stageRef.current = stage
@@ -578,6 +581,14 @@ export function ChatWidget() {
     window.addEventListener('open-chat', handler)
     return () => window.removeEventListener('open-chat', handler)
   }, [])
+
+  // Close the chat panel on route change (handles Next.js router cache
+  // restoring the page with isOpen=true, which would cover page content)
+  useEffect(() => {
+    if (prevPathname.current === pathname) return
+    prevPathname.current = pathname
+    setIsOpen(false)
+  }, [pathname])
 
   // Reset conversation when language changes (unless already finished)
   useEffect(() => {
