@@ -1,66 +1,66 @@
 "use client"
 
 import { memo } from 'react'
-import { Reveal } from '../reveal-animation'
+import Link from 'next/link'
 import { useLanguage } from '../language-provider'
-import { ScrambleText } from '../scramble-text'
 
-export const Footer = memo(function Footer() {
+const LINKEDIN_URL = 'https://www.linkedin.com/company/frpc'
+
+function LinkedInIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+    </svg>
+  )
+}
+
+function FooterContent() {
   const { t } = useLanguage()
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="relative py-12 border-t border-white/10">
-      <div className="max-w-7xl mx-auto px-6 md:px-12">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+    <footer className="relative border-t border-white/10">
+      <div className="max-w-7xl mx-auto px-6 md:px-12 py-10">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Logo */}
-          <Reveal>
-            <a 
-              href="#" 
-              className="text-3xl md:text-4xl font-serif font-bold text-white hover:opacity-70 transition-opacity"
-              style={{ fontFamily: 'var(--font-serif)' }}
-            >
-              FRPC
-            </a>
-          </Reveal>
+          <Link
+            href="/"
+            className="text-2xl font-serif font-bold text-white hover:opacity-70 transition-opacity"
+            style={{ fontFamily: 'var(--font-serif)' }}
+          >
+            FRPC
+          </Link>
 
           {/* Copyright */}
-          <Reveal delay={100}>
-            <ScrambleText
-              as="p"
-              text={t.footer.copyright.replace('{year}', currentYear.toString())}
-              className="text-white/40 text-sm text-center"
-            />
-          </Reveal>
+          <p className="text-white/30 text-sm text-center">
+            {t.footer.copyright.replace('{year}', currentYear.toString())}
+          </p>
 
-          {/* Back to top */}
-          <Reveal delay={200}>
+          {/* Social + Back to top */}
+          <div className="flex items-center gap-4">
+            <a
+              href={LINKEDIN_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center w-9 h-9 rounded-full border border-white/10 text-white/40 hover:text-white hover:border-white/30 transition-all duration-200"
+              aria-label="LinkedIn"
+            >
+              <LinkedInIcon />
+            </a>
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              className="group flex items-center gap-3 text-white/60 hover:text-white text-sm transition-colors"
+              className="text-white/30 hover:text-white text-sm transition-colors duration-200"
             >
-              <ScrambleText text={t.footer.backToTop} />
-              <div className="w-10 h-10 rounded-full border border-white/30 flex items-center justify-center group-hover:bg-white group-hover:border-white transition-all">
-                <svg 
-                  className="w-4 h-4 text-white group-hover:text-black -rotate-90 transition-colors" 
-                  fill="none" 
-                  viewBox="0 0 24 24" 
-                  stroke="currentColor"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                </svg>
-              </div>
+              {t.footer.backToTop} ↑
             </button>
-          </Reveal>
-        </div>
-
-        {/* Bottom decoration */}
-        <div className="mt-12 flex items-center justify-center">
-          <div className="w-2 h-2 rounded-full bg-white/20" />
-          <div className="w-24 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent mx-4" />
-          <div className="w-2 h-2 rounded-full bg-white/20" />
+          </div>
         </div>
       </div>
     </footer>
   )
-})
+}
+
+export const Footer = memo(FooterContent)
+
+// Named export used by pages that don't import the default Footer
+export const SharedFooter = memo(FooterContent)

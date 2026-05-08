@@ -5,7 +5,7 @@ import { useLang } from '@/components/language-provider'
 import { SiteNav } from '@/components/site-nav'
 import { ScrambleText } from '@/components/scramble-text'
 import {
-  Globe, ShoppingCart, LayoutDashboard, Smartphone, Server, Layers,
+  Globe, ShoppingCart, LayoutDashboard, Smartphone, Server, Layers, MoreHorizontal,
   ArrowRight, CheckCircle, Loader2, Sparkles, User, Mail, Phone, ChevronRight
 } from 'lucide-react'
 
@@ -43,6 +43,7 @@ const PROJECT_TYPES: ProjectType[] = [
   { key: 'mobile',    labelPt: 'App Mobile',               labelEn: 'Mobile App',             icon: <Smartphone size={22} />,    baseBudget: 4500 },
   { key: 'api',       labelPt: 'API / Backend',            labelEn: 'API / Backend',          icon: <Server size={22} />,        baseBudget: 2000 },
   { key: 'landing',   labelPt: 'Página de Apresentação',   labelEn: 'Landing Page',           icon: <Layers size={22} />,        baseBudget: 800  },
+  { key: 'outro',    labelPt: 'Outro',                    labelEn: 'Other',                  icon: <MoreHorizontal size={22} />, baseBudget: 2000 },
 ]
 
 const DEADLINES_PT = ['< 2 semanas', '1 mês', '2-3 meses', '3-6 meses', 'Flexível']

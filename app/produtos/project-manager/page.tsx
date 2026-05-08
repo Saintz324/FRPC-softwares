@@ -7,6 +7,7 @@ import { Reveal } from '@/components/reveal-animation'
 import { MagneticButton } from '@/components/magnetic-button'
 import { TextSplit } from '@/components/text-split'
 import { useLanguage } from '@/components/language-provider'
+import { SharedFooter } from '@/components/sections/footer'
 
 const APP_URL = 'https://frpc-project-production.up.railway.app/login.html'
 
@@ -310,7 +311,7 @@ export default function ProjectManagerPage() {
   return (
     <div style={{ background: 'var(--bg)', minHeight: '100dvh', color: 'var(--ink)' }}>
       <div style={{ position: 'fixed', inset: 0, background: 'radial-gradient(ellipse 70% 55% at 70% 35%, var(--glow-soft), transparent 60%), radial-gradient(ellipse 55% 40% at 25% 70%, var(--glow-faint), transparent 65%)', filter: 'blur(20px)', opacity: 0.9, pointerEvents: 'none', zIndex: 0 }} />
-      <ProductNav externalUrl={APP_URL} tryLabel={t.tryLabel} />
+      <ProductNav />
 
       <main className="relative z-10">
 
@@ -542,14 +543,7 @@ export default function ProjectManagerPage() {
           </div>
         </section>
 
-        {/* Footer */}
-        <footer className="relative py-10 border-t border-white/10">
-          <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row items-center justify-between gap-4">
-            <a href="/" className="text-2xl font-serif font-bold text-white hover:opacity-70 transition-opacity" style={{ fontFamily: 'var(--font-serif)' }}>FRPC</a>
-            <p className="text-white/30 text-sm">© {new Date().getFullYear()} FRPC. {t.footerRights}</p>
-            <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="text-white/40 hover:text-white text-sm transition-colors">{t.backToTop}</button>
-          </div>
-        </footer>
+        <SharedFooter />
       </main>
     </div>
   )

@@ -55,7 +55,7 @@ export function ProductPageTemplate({ product }: { product: ProductData }) {
 
   return (
     <>
-      <ProductNav externalUrl={product.externalUrl} tryLabel={product.ctaPrimary} />
+      <ProductNav />
 
       {/* Gradient background — lighter than the Spline version */}
       <div

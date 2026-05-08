@@ -131,23 +131,6 @@ export function Navigation() {
   const calendarIcon = <Calendar size={16} />
   const kanbanIcon = <Kanban size={16} />
 
-  const pricingDropdown: DropdownItem[] = [
-    {
-      label: lang === 'en' ? 'Vacation Calendar' : 'Calendário de Férias',
-      description: lang === 'en' ? 'Vacation & absence management' : 'Gestão de férias e ausências',
-      href: '/pricing#calendar',
-      accent: '#60a5fa',
-      icon: calendarIcon,
-    },
-    {
-      label: 'Project Manager',
-      description: lang === 'en' ? 'Projects, tasks & team management' : 'Projetos, tarefas e equipas',
-      href: '/pricing#manager',
-      accent: '#34d399',
-      icon: kanbanIcon,
-    },
-  ]
-
   const tutoriaisDropdown: DropdownItem[] = [
     {
       label: lang === 'en' ? 'Vacation Calendar' : 'Calendário de Férias',
@@ -169,7 +152,6 @@ export function Navigation() {
     { key: 'about', label: t.nav.about, href: '/#about' },
     { key: 'projects', label: t.nav.projects, href: '/#projects' },
     { key: 'services', label: t.nav.services, href: '/#services' },
-    { key: 'pricing', label: t.nav.pricing, href: '/pricing', dropdown: pricingDropdown },
     { key: 'tutorials', label: t.nav.tutorials, href: '/tutoriais', dropdown: tutoriaisDropdown },
   ]
 
@@ -247,9 +229,9 @@ export function Navigation() {
                 {t.nav.language}
               </span>
             </MagneticButton>
-            <Link href="/start">
+            <Link href="/pricing">
               <MagneticButton className="px-6 py-3 bg-white text-black text-sm font-medium rounded-full hover:bg-white/90 transition-colors">
-                <ScrambleText text={t.nav.startProject} />
+                <ScrambleText text={lang === 'pt' ? 'Pedir Orçamento' : 'Request Quote'} />
               </MagneticButton>
             </Link>
           </div>
@@ -345,9 +327,9 @@ export function Navigation() {
               {t.nav.language}
             </span>
           </MagneticButton>
-          <Link href="/start" onClick={() => setIsMenuOpen(false)}>
+          <Link href="/pricing" onClick={() => setIsMenuOpen(false)}>
             <MagneticButton className="px-8 py-3 bg-white text-black text-base font-medium rounded-full hover:bg-white/90 transition-colors">
-              <ScrambleText text={t.nav.startProject} />
+              <ScrambleText text={lang === 'pt' ? 'Pedir Orçamento' : 'Request Quote'} />
             </MagneticButton>
           </Link>
         </div>
