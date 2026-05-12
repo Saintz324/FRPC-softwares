@@ -162,7 +162,7 @@ export function WorkspaceSection() {
           </div>
 
           <div className="row gap-8" style={{ marginTop: 24 }}>
-            <Link href="/produtos/calendario-de-ferias">
+            <Link href="/projetos">
               <button className="btn btn-light" style={{ padding: '10px 20px' }}>{s.btnPrimary}</button>
             </Link>
             <Link href="/pricing">
@@ -187,7 +187,6 @@ export function WorkspaceSection() {
         <button className="btn btn-ghost" style={{ padding: 8, width: 36, height: 36, justifyContent: 'center', transform: 'rotate(180deg)' }}><Ico.Down size={14} /></button>
       </div>
 
-      <style>{`@media (max-width: 900px) { .ws-grid { grid-template-columns: 1fr !important; padding: 24px !important; } }`}</style>
     </div>
   )
 }

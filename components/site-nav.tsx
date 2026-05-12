@@ -109,8 +109,7 @@ export function SiteNav({ badgeLabel, badgeHref, badgeExternal }: SiteNavProps =
 
   const isHome = pathname === '/'
   const isTutoriais = pathname === '/tutoriais'
-  const isProjects = pathname.startsWith('/produtos')
-  const isStudio = pathname === '/start'
+  const isProjects = pathname.startsWith('/projetos') || pathname.startsWith('/produtos')
   const isPricing = pathname === '/pricing'
 
   const ctaLabel = badgeLabel ?? (isPt ? 'Pedir Orçamento' : 'Request Quote')
@@ -118,8 +117,7 @@ export function SiteNav({ badgeLabel, badgeHref, badgeExternal }: SiteNavProps =
 
   const mobileLinks = [
     { label: isPt ? 'Início' : 'Home', href: '/', active: isHome },
-    { label: isPt ? 'Soluções' : 'Solutions', href: '/start', active: isStudio },
-    { label: isPt ? 'Projetos' : 'Projects', href: '/produtos/calendario-de-ferias', active: isProjects },
+    { label: isPt ? 'Projetos' : 'Projects', href: '/projetos', active: isProjects },
     { label: isPt ? 'Recursos' : 'Resources', href: '/tutoriais', active: isTutoriais },
   ]
 
@@ -137,8 +135,7 @@ export function SiteNav({ badgeLabel, badgeHref, badgeExternal }: SiteNavProps =
         {/* Desktop pill nav */}
         <nav className="nav-pill" aria-label="Primary">
           <Link href="/" className={isHome ? 'active' : ''}>{isPt ? 'Início' : 'Home'}</Link>
-          <Link href="/start" className={isStudio ? 'active' : ''}>{isPt ? 'Soluções' : 'Solutions'}</Link>
-          <Link href="/produtos/calendario-de-ferias" className={isProjects ? 'active' : ''}>{isPt ? 'Projetos' : 'Projects'}</Link>
+          <Link href="/projetos" className={isProjects ? 'active' : ''}>{isPt ? 'Projetos' : 'Projects'}</Link>
           <PillDropdown label={isPt ? 'Recursos' : 'Resources'} items={recursosItems} isActive={isTutoriais} />
           {badgeExternal ? (
             <a href={ctaHref} target="_blank" rel="noopener noreferrer" className="badge">

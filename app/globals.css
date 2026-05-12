@@ -30,6 +30,7 @@ html, body {
   font-family: var(--font-ui);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  overflow-x: hidden;
 }
 
 #root { width: 100%; }
@@ -296,4 +297,28 @@ html, body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* === Insights grid === */
+.insights-grid { grid-template-columns: 1.4fr 1fr 1fr; }
+.ins-hero { grid-column: span 2; }
+.ins-pipeline { grid-row: span 2; }
+@media (max-width: 1100px) {
+  .insights-grid { grid-template-columns: 1fr 1fr; }
+  .ins-hero { grid-column: span 2; }
+}
+@media (max-width: 900px) {
+  .insights-grid { grid-template-columns: 1fr; }
+  .ins-hero { grid-column: 1; }
+  .ins-pipeline { grid-row: auto; }
+  .ins-globe { display: none; }
+  .ins-hero-row { flex-wrap: wrap; }
+}
+@media (max-width: 480px) {
+  .ins-hero-row { flex-direction: column; gap: 16px; }
+}
+
+/* === Workspace grid === */
+@media (max-width: 900px) {
+  .ws-grid { grid-template-columns: 1fr !important; padding: 24px !important; }
 }

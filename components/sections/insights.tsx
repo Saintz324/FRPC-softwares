@@ -225,7 +225,7 @@ export function InsightsSection() {
   const s = t.sections.insights
 
   return (
-    <div style={{ position: 'relative', background: '#050506', padding: '80px max(40px,7vw) 120px', perspective: '1400px', overflow: 'hidden', color: 'var(--ink)' }}>
+    <div style={{ position: 'relative', background: '#050506', padding: 'clamp(48px,8vw,120px) clamp(16px,5vw,80px)', perspective: '1400px', overflow: 'hidden', color: 'var(--ink)' }}>
       <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 70% 55% at 70% 35%, var(--glow-soft), transparent 60%), radial-gradient(ellipse 55% 40% at 25% 70%, var(--glow-faint), transparent 65%)', filter: 'blur(20px)', opacity: 0.9, pointerEvents: 'none', zIndex: 0 }} />
       <AmbientNetwork />
 
@@ -247,11 +247,11 @@ export function InsightsSection() {
         </p>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr 1fr', gridTemplateRows: 'auto auto', gap: 18, position: 'relative', zIndex: 1, maxWidth: 1240, margin: '0 auto', width: '100%', transformStyle: 'preserve-3d' }} className="insights-grid">
+      <div style={{ display: 'grid', gridTemplateRows: 'auto auto', gap: 18, position: 'relative', zIndex: 1, maxWidth: 1240, margin: '0 auto', width: '100%', transformStyle: 'preserve-3d' }} className="insights-grid">
 
-        <div ref={heroRef} className="card tilt-card" style={{ padding: 32, gridColumn: 'span 2', minHeight: 340, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', opacity: 0, animation: 'insFadeUp 0.9s cubic-bezier(.2,.7,.3,1) 0.25s forwards' }}>
-          <div className="row" style={{ justifyContent: 'space-between', alignItems: 'flex-start', gap: 24 }}>
-            <div style={{ flex: 1 }}>
+        <div ref={heroRef} className="card tilt-card ins-hero" style={{ padding: 32, minHeight: 340, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', opacity: 0, animation: 'insFadeUp 0.9s cubic-bezier(.2,.7,.3,1) 0.25s forwards' }}>
+          <div className="row ins-hero-row" style={{ justifyContent: 'space-between', alignItems: 'flex-start', gap: 24 }}>
+            <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 22 }}>
                 <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--glow)', boxShadow: '0 0 12px var(--glow)' }} />
                 <span style={{ fontSize: 11, color: 'var(--ink-dim)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.16em' }}>{s.globalLabel}</span>
@@ -261,7 +261,9 @@ export function InsightsSection() {
                 {s.globalDesc}
               </div>
             </div>
-            <Globe3D t={clock} />
+            <div className="ins-globe">
+              <Globe3D t={clock} />
+            </div>
           </div>
           <div style={{ borderTop: '1px solid var(--line)', marginTop: 28, paddingTop: 18, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
@@ -273,7 +275,7 @@ export function InsightsSection() {
           </div>
         </div>
 
-        <div className="card tilt-card-mini" style={{ padding: 24, display: 'flex', flexDirection: 'column', minHeight: 340, gridRow: 'span 2', opacity: 0, animation: 'insFadeUp 0.9s cubic-bezier(.2,.7,.3,1) 0.4s forwards' }}>
+        <div className="card tilt-card-mini ins-pipeline" style={{ padding: 24, display: 'flex', flexDirection: 'column', minHeight: 340, opacity: 0, animation: 'insFadeUp 0.9s cubic-bezier(.2,.7,.3,1) 0.4s forwards' }}>
           <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}><BarTower3D t={clock} /></div>
           <div style={{ borderTop: '1px solid var(--line)', paddingTop: 18, marginTop: 12 }}>
             <div style={{ fontSize: 11, color: 'var(--ink-mute)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.16em', marginBottom: 8 }}>{s.pipelineLabel}</div>
@@ -287,10 +289,6 @@ export function InsightsSection() {
 
       </div>
 
-      <style>{`
-        @media (max-width: 1100px) { .insights-grid { grid-template-columns: 1fr 1fr !important; } .insights-grid > .card:first-child { grid-column: span 2 !important; } }
-        @media (max-width: 720px) { .insights-grid { grid-template-columns: 1fr !important; } .insights-grid > .card { grid-column: span 1 !important; grid-row: auto !important; } }
-      `}</style>
     </div>
   )
 }

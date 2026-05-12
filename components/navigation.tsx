@@ -150,7 +150,7 @@ export function Navigation() {
 
   const navItems: NavItem[] = [
     { key: 'about', label: t.nav.about, href: '/#about' },
-    { key: 'projects', label: t.nav.projects, href: '/#projects' },
+    { key: 'projects', label: t.nav.projects, href: '/projetos' },
     { key: 'services', label: t.nav.services, href: '/#services' },
     { key: 'tutorials', label: t.nav.tutorials, href: '/tutoriais', dropdown: tutoriaisDropdown },
   ]
