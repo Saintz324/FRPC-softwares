@@ -1,6 +1,17 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      'spline-viewer': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement> & {
+        url?: string
+        'events-target'?: string
+      }, HTMLElement>
+    }
+  }
+}
 import Ico from '@/components/icons'
 import AmbientNetwork from '@/components/ambient-network'
 import Link from 'next/link'
@@ -54,6 +65,15 @@ function HeroVisual() {
   const wrapRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    if (!document.querySelector('script[src*="spline-viewer"]')) {
+      const s = document.createElement('script')
+      s.type = 'module'
+      s.src = 'https://unpkg.com/@splinetool/viewer@1.12.92/build/spline-viewer.js'
+      document.head.appendChild(s)
+    }
+  }, [])
+
+  useEffect(() => {
     let posY = 24, velY = 0, posX = 0, velX = 0
     let mx = 0.5, my = 0.5, tmx = 0.5, tmy = 0.5
     const SPRING = 0.048, DAMP = 0.80
@@ -77,23 +97,19 @@ function HeroVisual() {
 
   return (
     <div ref={wrapRef} style={{
-      position: 'absolute', right: '-2%', top: '50%', transform: 'translateY(-50%)',
-      width: 'clamp(380px, 50vw, 740px)', height: 'clamp(380px, 50vw, 740px)',
+      position: 'absolute', right: '-4%', top: '50%', transform: 'translateY(-50%)',
+      width: 'clamp(480px, 62vw, 900px)', height: 'clamp(480px, 62vw, 900px)',
       willChange: 'transform', zIndex: 2,
       WebkitMaskImage: 'linear-gradient(to right, transparent 0%, transparent 8%, rgba(0,0,0,0.35) 22%, black 40%)',
       maskImage: 'linear-gradient(to right, transparent 0%, transparent 8%, rgba(0,0,0,0.35) 22%, black 40%)',
     }}>
-      <img
-        src="/lindo.gif"
-        alt=""
-        style={{
-          width: '100%', height: '100%',
-          objectFit: 'cover',
-          borderRadius: '50%',
-          display: 'block',
-          mixBlendMode: 'screen',
-        }}
+      <spline-viewer
+        url="https://prod.spline.design/fLgnJJXFVV9yQ3zN/scene.splinecode"
+        events-target="none"
+        style={{ width: '100%', height: '100%', display: 'block' } as React.CSSProperties}
       />
+      {/* cover Spline watermark */}
+      <div style={{ position: 'absolute', bottom: 0, right: 0, width: 260, height: 60, background: '#050505', zIndex: 10 }} />
     </div>
   )
 }

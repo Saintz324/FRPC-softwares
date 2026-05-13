@@ -9,7 +9,7 @@ import { TextSplit } from '@/components/text-split'
 import { useLanguage } from '@/components/language-provider'
 import { SharedFooter } from '@/components/sections/footer'
 
-const APP_URL = 'https://frpc-calendario-de-ferias-production.up.railway.app/login.html'
+const APP_URL = '/pricing'
 
 const TRANSLATIONS = {
   pt: {
@@ -330,8 +330,7 @@ export default function CalendarioDeFeriasPage() {
               </p>
 
               <div className={`mt-10 flex flex-col sm:flex-row gap-4 transition-all duration-700 delay-700 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-                <a href={APP_URL} target="_blank" rel="noopener noreferrer"
-                  className="group px-8 py-4 bg-white text-black text-sm font-medium rounded-full flex items-center gap-3 hover:bg-white/90 transition-colors w-fit"
+                <a href={APP_URL}                  className="group px-8 py-4 bg-white text-black text-sm font-medium rounded-full flex items-center gap-3 hover:bg-white/90 transition-colors w-fit"
                 >
                   {t.tryBtn}
                   <ExternalLink className="w-4 h-4" />

@@ -129,6 +129,7 @@ export default function PropostasPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    if (!selectedSolution) return
     setSending(true)
     try {
       await fetch('/api/proposta', {
@@ -253,13 +254,11 @@ export default function PropostasPage() {
                     <FormField label={t.labels.telefone} type="tel" value={telefone} onChange={setTelefone} />
                   </div>
 
-                  {/* Solução */}
-                  <SelectField
-                    label={t.labels.solucao}
-                    value={selectedSolution}
-                    onChange={setSelectedSolution}
-                    options={t.solucaoOptions}
-                    required
+                  {/* Solução — visual grid */}
+                  <SolutionGrid
+                    solutions={t.solutions}
+                    selected={selectedSolution}
+                    onSelect={(title) => setSelectedSolution(title)}
                   />
 
                   {/* Utilizadores */}
@@ -329,6 +328,58 @@ export default function PropostasPage() {
 
         <SharedFooter />
       </main>
+    </div>
+  )
+}
+
+// ─── Solution grid for form ───────────────────────────────────────────────────
+
+function SolutionGrid({ solutions, selected, onSelect }: {
+  solutions: { key: string; title: string; accent: string }[]
+  selected: string
+  onSelect: (title: string) => void
+}) {
+  return (
+    <div>
+      <div style={{ fontSize: 10, fontWeight: 600, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 10 }}>
+        Solução pretendida
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 8 }}>
+        {solutions.map(sol => {
+          const isSelected = selected === sol.title
+          return (
+            <button
+              key={sol.key}
+              type="button"
+              onClick={() => onSelect(sol.title)}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 10,
+                padding: '12px 14px',
+                borderRadius: 14,
+                border: `1px solid ${isSelected ? sol.accent + '60' : 'rgba(255,255,255,0.08)'}`,
+                background: isSelected ? sol.accent + '14' : 'rgba(255,255,255,0.03)',
+                cursor: 'pointer',
+                transition: 'all 0.18s',
+                textAlign: 'left',
+              }}
+            >
+              <div style={{
+                width: 30, height: 30, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                background: isSelected ? sol.accent + '22' : 'rgba(255,255,255,0.06)',
+                border: `1px solid ${isSelected ? sol.accent + '40' : 'rgba(255,255,255,0.1)'}`,
+                color: isSelected ? sol.accent : 'rgba(255,255,255,0.4)',
+              }}>
+                {SOLUTION_ICONS[sol.key]}
+              </div>
+              <span style={{ fontSize: 13, fontWeight: 500, color: isSelected ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.5)', lineHeight: 1.3 }}>
+                {sol.title}
+              </span>
+            </button>
+          )
+        })}
+      </div>
     </div>
   )
 }
