@@ -29,10 +29,10 @@ export function CTASection() {
         </div>
 
         <div className="display" style={{ fontSize: 'clamp(56px, 10vw, 156px)', lineHeight: 0.9, letterSpacing: '-0.035em', margin: '0 0 28px' }}>
-          <div style={{ overflow: 'hidden' }}>
+          <div style={{ clipPath: 'inset(0 -9999px 0 -9999px)' }}>
             <span style={{ display: 'block', opacity: vis ? 1 : 0, transform: vis ? 'none' : 'translateY(100%)', transition: 'opacity 0.75s ease 0.1s, transform 0.75s cubic-bezier(.2,.7,.3,1) 0.1s' }}>{s.title1}</span>
           </div>
-          <div style={{ overflow: 'hidden' }}>
+          <div style={{ clipPath: 'inset(0 -9999px -0.4em -9999px)' }}>
             <span style={{ display: 'block', fontStyle: 'italic', color: 'rgba(244,244,241,0.4)', opacity: vis ? 1 : 0, transform: vis ? 'none' : 'translateY(100%)', transition: 'opacity 0.75s ease 0.22s, transform 0.75s cubic-bezier(.2,.7,.3,1) 0.22s' }}>{s.title2}</span>
           </div>
         </div>

@@ -88,7 +88,7 @@ function HeroVisual() {
       velX = (velX + (targetX - posX) * SPRING) * DAMP
       posY += velY; posX += velX
       if (wrapRef.current) wrapRef.current.style.transform =
-        `translate(${posX}px, calc(-50% + ${posY}px))`
+        `translate(${posX}px, calc(-50% + ${posY}px)) scale(1.25)`
       raf = requestAnimationFrame(loop)
     }
     raf = requestAnimationFrame(loop)
@@ -97,19 +97,19 @@ function HeroVisual() {
 
   return (
     <div ref={wrapRef} style={{
-      position: 'absolute', right: '-4%', top: '50%', transform: 'translateY(-50%)',
-      width: 'clamp(480px, 62vw, 900px)', height: 'clamp(480px, 62vw, 900px)',
+      position: 'absolute', right: '-4%', top: '50%', transform: 'translateY(-50%) scale(1.25)',
+      width: 'clamp(700px, 88vw, 1300px)', height: 'clamp(700px, 88vw, 1300px)',
       willChange: 'transform', zIndex: 2,
-      WebkitMaskImage: 'linear-gradient(to right, transparent 0%, transparent 8%, rgba(0,0,0,0.35) 22%, black 40%)',
-      maskImage: 'linear-gradient(to right, transparent 0%, transparent 8%, rgba(0,0,0,0.35) 22%, black 40%)',
+      WebkitMaskImage: 'linear-gradient(to bottom, black 82%, transparent 100%), linear-gradient(to right, transparent 0%, transparent 8%, rgba(0,0,0,0.35) 22%, black 40%)',
+      WebkitMaskComposite: 'source-in',
+      maskImage: 'linear-gradient(to bottom, black 82%, transparent 100%), linear-gradient(to right, transparent 0%, transparent 8%, rgba(0,0,0,0.35) 22%, black 40%)',
+      maskComposite: 'intersect',
     }}>
       <spline-viewer
         url="https://prod.spline.design/fLgnJJXFVV9yQ3zN/scene.splinecode"
         events-target="none"
-        style={{ width: '100%', height: '100%', display: 'block' } as React.CSSProperties}
+        style={{ width: '100%', height: '100%', display: 'block', pointerEvents: 'none' } as React.CSSProperties}
       />
-      {/* cover Spline watermark */}
-      <div style={{ position: 'absolute', bottom: 0, right: 0, width: 260, height: 60, background: '#050505', zIndex: 10 }} />
     </div>
   )
 }
@@ -165,13 +165,13 @@ export function HeroSection() {
           </div>
 
           <h1 className="display" style={{ fontSize: 'clamp(48px, 9vw, 140px)', margin: '0 0 32px', lineHeight: 0.93, letterSpacing: '-0.03em' }}>
-            <div style={{ overflow: 'hidden' }}>
+            <div style={{ clipPath: 'inset(0 -9999px 0 -9999px)' }}>
               <ScrambleText text={t.hero.main1} style={{ display: 'block', animation: 'wordReveal 0.72s cubic-bezier(.2,.7,.3,1) 0.40s both' }} />
             </div>
-            <div style={{ overflow: 'hidden' }}>
+            <div style={{ clipPath: 'inset(0 -9999px 0 -9999px)' }}>
               <ScrambleText text={t.hero.main2} style={{ display: 'block', color: 'rgba(244,244,241,0.48)', animation: 'wordReveal 0.72s cubic-bezier(.2,.7,.3,1) 0.55s both' }} />
             </div>
-            <div style={{ overflow: 'hidden' }}>
+            <div style={{ clipPath: 'inset(0 -9999px 0 -9999px)' }}>
               <ScrambleText text={t.hero.main3} style={{ display: 'block', fontStyle: 'italic', animation: 'wordReveal 0.72s cubic-bezier(.2,.7,.3,1) 0.70s both' }} />
             </div>
           </h1>
