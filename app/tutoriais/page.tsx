@@ -11,6 +11,7 @@ import { MagneticButton } from '@/components/magnetic-button'
 import { useLang } from '@/components/language-provider'
 import { ScrambleText } from '@/components/scramble-text'
 import { SiteNav } from '@/components/site-nav'
+import { SharedFooter } from '@/components/sections/footer'
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 
@@ -31,7 +32,6 @@ const T = {
     ctaAccent: 'começar?',
     ctaDesc: 'Junta-te a centenas de equipas que já usam os produtos FRPC.',
     ctaBtn: 'Começar grátis',
-    ctaBtnSecondary: 'Falar connosco',
     footerRights: 'Todos os direitos reservados.',
     products: [
       {
@@ -135,7 +135,6 @@ const T = {
     ctaAccent: 'get started?',
     ctaDesc: 'Join hundreds of teams already using FRPC products.',
     ctaBtn: 'Start for free',
-    ctaBtnSecondary: 'Talk to us',
     footerRights: 'All rights reserved.',
     products: [
       {
@@ -628,7 +627,7 @@ export default function TutoriaisPage() {
                   <ScrambleText text={tr.ctaAccent} style={{ display: 'block', WebkitTextStroke: '1.5px rgba(255,255,255,0.28)', WebkitTextFillColor: 'transparent' }} />
                 </h2>
                 <ScrambleText as="p" text={tr.ctaDesc} style={{ fontSize: 16, color: 'rgba(255,255,255,0.35)', maxWidth: 360, lineHeight: 1.65, marginBottom: 40, position: 'relative' }} />
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center', position: 'relative' }}>
+                <div style={{ display: 'flex', justifyContent: 'center', position: 'relative' }}>
                   <Link href="/start">
                     <MagneticButton className="group inline-flex items-center gap-3 px-9 py-4 bg-white text-black font-semibold rounded-full hover:bg-white/90 transition-colors duration-200 text-sm">
                       <ScrambleText text={tr.ctaBtn} />
@@ -637,32 +636,14 @@ export default function TutoriaisPage() {
                       </div>
                     </MagneticButton>
                   </Link>
-                  <Link href="/start">
-                    <MagneticButton className="inline-flex items-center gap-2 px-8 py-4 border border-white/15 text-white/50 hover:text-white hover:border-white/35 rounded-full text-sm font-medium transition-all duration-200">
-                      <ScrambleText text={tr.ctaBtnSecondary} />
-                    </MagneticButton>
-                  </Link>
                 </div>
               </div>
             </Reveal>
           </div>
         </section>
 
-        {/* ── FOOTER ───────────────────────────────────────────────────── */}
-        <footer style={{ padding: 'clamp(28px, 4vw, 40px) clamp(24px, 6vw, 80px)', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-          <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
-            <Link href="/" style={{ fontSize: 20, fontFamily: 'var(--font-serif)', fontWeight: 700, color: 'rgba(255,255,255,0.9)', textDecoration: 'none' }}>FRPC</Link>
-            <ScrambleText as="p" text={`© ${new Date().getFullYear()} FRPC. ${tr.footerRights}`} style={{ fontSize: 12, color: 'rgba(255,255,255,0.2)' }} />
-            <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', background: 'none', border: 'none', cursor: 'pointer', transition: 'color 0.2s' }}
-              onMouseEnter={e => ((e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.7)')}
-              onMouseLeave={e => ((e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.25)')}
-            >
-              <ScrambleText text={lang === 'pt' ? 'Voltar ao topo ↑' : 'Back to top ↑'} />
-            </button>
-          </div>
-        </footer>
-
       </main>
+        <SharedFooter />
     </div>
   )
 }

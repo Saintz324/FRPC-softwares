@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-import Ico from '@/components/icons'
+import { ArrowRight } from 'lucide-react'
+import { MagneticButton } from '@/components/magnetic-button'
 import { useLang } from '@/components/language-provider'
 
 export function CTASection() {
@@ -43,26 +44,16 @@ export function CTASection() {
 
         <div style={{ display: 'flex', justifyContent: 'center', opacity: vis ? 1 : 0, transition: 'opacity 0.7s ease 0.5s' }}>
           <Link href="/start">
-            <button className="btn btn-light" style={{ padding: '14px 34px', fontSize: 14 }}>
-              {s.btnPrimary} <Ico.ArrowUpRight size={13} />
-            </button>
+            <MagneticButton className="group inline-flex items-center gap-3 px-9 py-4 bg-white text-black font-semibold rounded-full hover:bg-white/90 transition-colors duration-200 text-sm cursor-pointer">
+              {s.btnPrimary}
+              <div style={{ width: 28, height: 28, borderRadius: '50%', background: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center' }} className="group-hover:rotate-45 transition-transform duration-300">
+                <ArrowRight style={{ width: 13, height: 13, color: '#fff' }} />
+              </div>
+            </MagneticButton>
           </Link>
         </div>
       </div>
 
-      <div style={{ position: 'relative', zIndex: 1, width: '100%', marginTop: 80, borderTop: '1px solid rgba(255,255,255,0.06)', padding: '22px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 11.5, color: 'var(--ink-mute)', fontFamily: 'var(--font-mono)', flexWrap: 'wrap', gap: 16 }}>
-        <span>{s.copyright}</span>
-        <div style={{ display: 'flex', gap: 28 }}>
-          {s.links.map(l => (
-            <a key={l.label} href={l.href} style={{ color: 'var(--ink-mute)', textDecoration: 'none', transition: 'color 0.2s', letterSpacing: '0.06em' }}
-              onMouseEnter={e => (e.currentTarget.style.color = 'var(--ink)')}
-              onMouseLeave={e => (e.currentTarget.style.color = '')}>{l.label}</a>
-          ))}
-        </div>
-        <div style={{ display: 'flex', gap: 14, alignItems: 'center' }}>
-          <Ico.X size={11} /><Ico.Linkedin size={11} />
-        </div>
-      </div>
     </div>
   )
 }

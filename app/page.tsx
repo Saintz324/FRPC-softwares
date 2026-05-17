@@ -11,6 +11,7 @@ import { FeaturesSection } from '@/components/sections/features'
 import { InsightsSection } from '@/components/sections/insights'
 import { WorkspaceSection } from '@/components/sections/workspace'
 import { CTASection } from '@/components/sections/cta'
+import { SharedFooter } from '@/components/sections/footer'
 
 export default function Home() {
   return (
@@ -22,6 +23,7 @@ export default function Home() {
         <InsightsSection />
         <WorkspaceSection />
         <CTASection />
+        <SharedFooter />
       </div>
 
       <ChatWidget />

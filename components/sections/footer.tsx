@@ -4,7 +4,7 @@ import { memo } from 'react'
 import Link from 'next/link'
 import { useLanguage } from '../language-provider'
 
-const LINKEDIN_URL = 'https://www.linkedin.com/company/frpc'
+const LINKEDIN_URL = 'https://www.linkedin.com/company/frpc-tech/about/'
 
 function LinkedInIcon() {
   return (

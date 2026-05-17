@@ -7,8 +7,9 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
 
   return (
     <div style={{
-      transition: 'filter 0.22s ease',
-      filter: isSwitching ? 'blur(1.5px) brightness(0.92)' : 'none',
+      transition: 'opacity 0.28s ease, filter 0.28s ease',
+      opacity: isSwitching ? 0 : 1,
+      filter: isSwitching ? 'blur(6px)' : 'none',
     }}>
       {children}
     </div>

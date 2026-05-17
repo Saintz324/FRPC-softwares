@@ -412,29 +412,29 @@ const translations: Record<Language, Translation> = {
       tutorials: 'Tutorials',
     },
     hero: {
-      intro: 'Vol. 01 — Digital Studio · 2026',
-      main1: 'Automated',
+      intro: 'AUTOMATION · AI · EFFICIENCY',
+      main1: 'We automate',
       main2: 'processes',
       main3: 'with AI',
       subtitle:
-        'A focused studio where design meets technology — built for brands that care about every detail.',
-      work: 'Open Studio',
+        'We create custom software, internal automations and intelligent assistants for companies that want to save time, reduce errors and scale operations.',
+      work: 'Contact',
       talk: 'Discover',
       scroll: 'Scroll to explore',
       rotatingBadge: '• DISCOVER • TRY • SUBSCRIBE • GROW ',
     },
     about: {
       label: '01 — About Us',
-      title: 'We build software',
-      titleAccent: ' that transforms teams and workflows',
+      title: 'We develop software',
+      titleAccent: ' tailored to any need',
       p1:
-        'At FRPC, we turn ideas into digital products that people love to use. We combine thoughtful design, modern technology, and a sharp focus on user experience to build applications that solve real problems.',
+        'At FRPC, we transform ideas into digital products. We combine design, modern technology and a focus on user experience to create applications that solve real problems.',
       p2:
-        'Every product we ship starts with a concrete need. We build intuitive, scalable SaaS tools that are ready for the daily demands of teams and companies that want to work smarter.',
+        'Every product we launch comes from a concrete need. We build intuitive, scalable SaaS tools ready for the day-to-day of teams and companies that want to improve their workflow.',
       quote: 'Software that works for you',
       stats: [
         { value: '3+', label: 'Products Launched' },
-        { value: '2026', label: 'Founded' },
+        { value: '2026', label: 'Year Founded' },
         { value: '100%', label: 'Customer Focus' },
       ],
     },
@@ -536,32 +536,32 @@ const translations: Record<Language, Translation> = {
     },
     sections: {
       features: {
-        label: 'The Studio',
-        title1: 'From concept to product',
-        title2: 'with attention to',
-        title3: 'every detail.',
+        label: 'WHAT WE DO',
+        title1: 'Software',
+        title2: 'Automation',
+        title3: 'Applied AI',
         cards: [
-          { tag: '01 — Design', title: 'Design & UX', body: 'Interfaces, design systems and visual identity built with obsessive attention to detail — from wireframe to final product.', stat: '100%', sub: 'user focused' },
-          { tag: '02 — Product', title: 'Development', body: 'Web apps, SaaS and modern APIs with the right technologies — scalable from day one and ready to grow.', stat: '99.9%', sub: 'guaranteed uptime' },
-          { tag: '03 — Launch', title: 'Concept to Market', body: 'We accompany your project from idea to launch, with a clear, iterative process and no surprises.', stat: '48h', sub: 'guaranteed response' },
+          { tag: '01 — SOFTWARE', title: 'Custom software', body: 'We create platforms, portals and internal systems tailored to how your company works — no generic software, no unnecessary complexity.', stat: '', sub: 'tailored to your process' },
+          { tag: '02 — AUTOMATION', title: 'More efficient processes', body: 'We automate repetitive tasks, emails, documents, folders, approvals and internal workflows to reduce errors and free up team time.', stat: '', sub: 'fewer manual tasks' },
+          { tag: '03 — AI', title: 'Intelligent assistants', body: 'We develop AI assistants that respond based on your company\'s internal data — via chat, voice or integration with existing tools.', stat: '', sub: 'Useful AI, applied to business' },
         ],
       },
       insights: {
         liveLabel: 'Dashboard example',
-        title: 'Measurable',
-        subtitle: 'impact',
-        description: 'We build solutions that make work simpler, more controlled and easier to track — from automated tasks to management dashboards.',
-        globalLabel: 'Efficiency · operations',
-        globalDesc: 'Reduce repetitive tasks, manual emails, scattered documents and inefficient internal processes with tailor-made digital solutions.',
+        title: 'Impact',
+        subtitle: 'measurable',
+        description: 'We create solutions that make work simpler, more controlled and easier to track — from automated tasks to management dashboards.',
+        globalLabel: 'Efficiency · operation',
+        globalDesc: 'Reduce repetitive tasks, manual emails, scattered documents and inefficient internal processes with custom digital solutions.',
         stat1Label: 'Internal processes',
-        stat1Value: 'Organised processes',
-        stat1Sub: 'Requests, approvals, documents and internal tasks centralised in a simple solution to track.',
+        stat1Value: 'Organized processes',
+        stat1Sub: 'Requests, approvals, documents and internal tasks centralized in a simple solution to track.',
         stat2Label: 'Initial analysis',
         stat2Value: 'Clear process',
-        stat2Sub: 'Before building, we analyse the company\'s operations and identify where it makes sense to automate, integrate or apply AI.',
+        stat2Sub: 'Before developing, we analyze the company\'s operations and identify where it makes sense to automate, integrate or apply AI.',
         pipelineLabel: '02 — Process',
         pipelineTitle: 'From process to solution',
-        pipelineDesc: 'We analyse how the company works and create technology tailored to real operations — not generic software. Each solution starts from a concrete process, with the goal of making it simpler, faster and easier to manage.',
+        pipelineDesc: 'We analyze how the company works and create technology tailored to real operations — not generic software. Each solution is born from a concrete process, with the goal of making it simpler, faster and easier to manage.',
         perfLabel: '03 — Dashboard',
         perfTitle: 'Operational efficiency example',
         illustrativeLabel: 'Illustrative example',
@@ -594,20 +594,20 @@ const translations: Record<Language, Translation> = {
         productsCount: '2 active · 1 coming soon',
         products: [
           { label: 'Vacation Calendar', description: 'Simple management of holidays, absences and approvals.', status: 'Active' },
-          { label: 'Project Manager', description: 'Track projects, tasks and teams in one place.', status: 'Active' },
-          { label: 'FRPC Portal', description: 'Centralised access to tools, documents and internal requests.', status: 'Coming soon' },
+          { label: 'Project Manager', description: 'Project, task and team tracking.', status: 'Active' },
+          { label: 'FRPC Portal', description: 'Centralized access to tools, documents and internal requests.', status: 'Coming soon' },
         ],
         chips: ['Made in Portugal', 'Cloud', 'Priority support', 'Microsoft 365', 'Team ready', 'Continuous updates'],
         btnPrimary: 'Explore products',
-        btnSecondary: 'Request a demo',
+        btnSecondary: 'View plans',
         dialUptime: 'Active',
         dialLabel: 'FRPC Ecosystem',
       },
       cta: {
-        label: "Start today — it's free",
+        label: 'READY TO GET STARTED?',
         title1: 'Start your',
-        title2: 'project.',
-        subtitle: 'Your best designs, the right technologies, your best work — all in one calm place.',
+        title2: 'project',
+        subtitle: 'From idea to development, we help you create simple, useful digital solutions ready for your company\'s reality.',
         btnPrimary: 'Request a proposal',
         btnSecondary: 'Talk to us',
         links: [],
@@ -654,11 +654,11 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     if (isSwitching) return
     setIsSwitching(true)
     const nextLang = lang === 'pt' ? 'en' : 'pt'
-    const textTimeout = window.setTimeout(() => { setLang(nextLang) }, 400)
+    const textTimeout = window.setTimeout(() => { setLang(nextLang) }, 320)
     const finishTimeout = window.setTimeout(() => {
       setIsSwitching(false)
       switchTimeoutsRef.current = []
-    }, 800)
+    }, 650)
     switchTimeoutsRef.current = [textTimeout, finishTimeout]
   }
 

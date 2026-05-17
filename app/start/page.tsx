@@ -3,16 +3,16 @@
 import { useState, useEffect } from 'react'
 import { useLang } from '@/components/language-provider'
 import { SiteNav } from '@/components/site-nav'
+import { SharedFooter } from '@/components/sections/footer'
 import { ScrambleText } from '@/components/scramble-text'
 import {
-  Globe, ShoppingCart, LayoutDashboard, Smartphone, Server, Layers, MoreHorizontal,
-  ArrowRight, CheckCircle, Loader2, Sparkles, User, Mail, Phone, ChevronRight
+  Calendar, LayoutGrid, Kanban, Building2,
+  ArrowRight, CheckCircle, Loader2, Sparkles, User, Mail, Phone, ChevronRight, ChevronDown
 } from 'lucide-react'
 
 // ─── Accent colour ────────────────────────────────────────────────────────────
-// Warm amber — echoes the Spline's orange blobs, matches the dark-navy palette
 const A = {
-  solid: 'rgb(251,191,36)',          // amber-400
+  solid: 'rgb(251,191,36)',
   a90:  'rgba(245,158,11,0.9)',
   a80:  'rgba(245,158,11,0.8)',
   a70:  'rgba(245,158,11,0.7)',
@@ -28,34 +28,26 @@ const A = {
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type ProjectType = {
+type Solution = {
   key: string
   labelPt: string
   labelEn: string
   icon: React.ReactNode
-  baseBudget: number
+  accent: string
 }
 
-const PROJECT_TYPES: ProjectType[] = [
-  { key: 'saas',      labelPt: 'Web App / SaaS',          labelEn: 'Web App / SaaS',        icon: <Globe size={22} />,         baseBudget: 3500 },
-  { key: 'ecommerce', labelPt: 'Loja Online',              labelEn: 'E-commerce',             icon: <ShoppingCart size={22} />,  baseBudget: 2200 },
-  { key: 'dashboard', labelPt: 'Dashboard / Analytics',    labelEn: 'Dashboard / Analytics',  icon: <LayoutDashboard size={22} />, baseBudget: 2800 },
-  { key: 'mobile',    labelPt: 'App Mobile',               labelEn: 'Mobile App',             icon: <Smartphone size={22} />,    baseBudget: 4500 },
-  { key: 'api',       labelPt: 'API / Backend',            labelEn: 'API / Backend',          icon: <Server size={22} />,        baseBudget: 2000 },
-  { key: 'landing',   labelPt: 'Página de Apresentação',   labelEn: 'Landing Page',           icon: <Layers size={22} />,        baseBudget: 800  },
-  { key: 'outro',    labelPt: 'Outro',                    labelEn: 'Other',                  icon: <MoreHorizontal size={22} />, baseBudget: 2000 },
+const SOLUTIONS: Solution[] = [
+  { key: 'calendario',    labelPt: 'Calendário de Férias', labelEn: 'Vacation Calendar', icon: <Calendar size={20} />,   accent: '#60a5fa' },
+  { key: 'portal',        labelPt: 'Portal FRPC',           labelEn: 'FRPC Portal',        icon: <LayoutGrid size={20} />, accent: '#a78bfa' },
+  { key: 'processos',     labelPt: 'Gestor de Processos',   labelEn: 'Process Manager',    icon: <Kanban size={20} />,     accent: '#34d399' },
+  { key: 'personalizada', labelPt: 'Solução Personalizada', labelEn: 'Custom Solution',    icon: <Sparkles size={20} />,   accent: '#fb923c' },
 ]
 
 const DEADLINES_PT = ['< 2 semanas', '1 mês', '2-3 meses', '3-6 meses', 'Flexível']
-const DEADLINES_EN = ['< 2 weeks',   '1 month', '2-3 months', '3-6 months', 'Flexible']
+const DEADLINES_EN = ['< 2 weeks', '1 month', '2-3 months', '3-6 months', 'Flexible']
 
-function calcBudget(key: string) {
-  const base = PROJECT_TYPES.find(p => p.key === key)?.baseBudget ?? 2000
-  return {
-    low:  Math.round(base / 100) * 100,
-    high: Math.round((base * 1.35) / 100) * 100,
-  }
-}
+const USERS_PT = ['1–5', '6–15', '16–50', '51–100', 'Mais de 100']
+const USERS_EN = ['1–5', '6–15', '16–50', '51–100', 'More than 100']
 
 // ─── Floating-label input ─────────────────────────────────────────────────────
 
@@ -125,6 +117,70 @@ function FloatingInput({
   )
 }
 
+// ─── Floating-label select ────────────────────────────────────────────────────
+
+function FloatingSelect({
+  id, label, value, onChange, options, required, delay = 0
+}: {
+  id: string; label: string; value: string
+  onChange: (v: string) => void; options: string[]; required?: boolean; delay?: number
+}) {
+  const [focused, setFocused] = useState(false)
+  const active = focused || value.length > 0
+
+  return (
+    <div style={{ animation: `sfadeUp 0.6s cubic-bezier(0.16,1,0.3,1) ${delay}ms both` }}>
+      <div
+        className="relative rounded-2xl transition-all duration-300"
+        style={{
+          background: 'rgba(255,255,255,0.04)',
+          border: `1px solid ${focused ? A.a70 : active ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0.08)'}`,
+          boxShadow: focused ? `0 0 0 3px ${A.a12}` : 'none',
+        }}
+      >
+        <select
+          id={id}
+          value={value}
+          required={required}
+          onChange={e => onChange(e.target.value)}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+          className="w-full bg-transparent text-white outline-none text-base appearance-none"
+          style={{
+            paddingTop: active ? '22px' : '15px',
+            paddingBottom: active ? '8px' : '15px',
+            paddingLeft: '16px',
+            paddingRight: '40px',
+            color: value ? 'rgba(255,255,255,0.9)' : 'transparent',
+          }}
+        >
+          <option value="" disabled style={{ background: '#0a0a14' }} />
+          {options.map(opt => (
+            <option key={opt} value={opt} style={{ background: '#0a0a14', color: 'white' }}>{opt}</option>
+          ))}
+        </select>
+        <label
+          htmlFor={id}
+          className="absolute pointer-events-none transition-all duration-200 font-medium"
+          style={{
+            left: '16px',
+            top: active ? '8px' : '50%',
+            transform: active ? 'none' : 'translateY(-50%)',
+            fontSize: active ? '11px' : '15px',
+            letterSpacing: active ? '0.06em' : '0',
+            textTransform: active ? 'uppercase' : 'none',
+            color: focused ? A.a90 : 'rgba(255,255,255,0.35)',
+          }}
+        >
+          {label}
+        </label>
+        <ChevronDown size={14} className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"
+          style={{ color: 'rgba(255,255,255,0.3)' }} />
+      </div>
+    </div>
+  )
+}
+
 // ─── Floating-label textarea ──────────────────────────────────────────────────
 
 function FloatingTextarea({
@@ -187,36 +243,43 @@ function FloatingTextarea({
   )
 }
 
-// ─── Project-type tile ────────────────────────────────────────────────────────
+// ─── Solution tile ────────────────────────────────────────────────────────────
 
-function TypeTile({ type, selected, onClick, lang, delay }: {
-  type: ProjectType; selected: boolean; onClick: () => void
+function SolutionTile({ solution, selected, onClick, lang, delay }: {
+  solution: Solution; selected: boolean; onClick: () => void
   lang: 'pt' | 'en'; delay: number
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className="relative flex flex-col items-start gap-2 rounded-2xl text-left transition-all duration-300"
+      className="relative flex items-center gap-3 rounded-2xl text-left transition-all duration-300"
       style={{
         animation: `sfadeUp 0.6s cubic-bezier(0.16,1,0.3,1) ${delay}ms both`,
-        padding: '18px 16px',
-        background: selected ? A.a15 : 'rgba(255,255,255,0.04)',
-        border: `1px solid ${selected ? A.a70 : 'rgba(255,255,255,0.08)'}`,
-        boxShadow: selected ? `0 0 0 3px ${A.a12}, 0 8px 24px ${A.a15}` : 'none',
+        padding: '14px 16px',
+        background: selected ? solution.accent + '14' : 'rgba(255,255,255,0.04)',
+        border: `1px solid ${selected ? solution.accent + '60' : 'rgba(255,255,255,0.08)'}`,
+        boxShadow: selected ? `0 0 0 3px ${solution.accent}20, 0 8px 24px ${solution.accent}15` : 'none',
         transform: selected ? 'translateY(-2px)' : undefined,
       }}
     >
-      <span style={{ color: selected ? A.solid : 'rgba(255,255,255,0.35)', transition: 'color 0.2s' }}>
-        {type.icon}
-      </span>
+      <div
+        className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200"
+        style={{
+          background: selected ? solution.accent + '22' : 'rgba(255,255,255,0.06)',
+          border: `1px solid ${selected ? solution.accent + '40' : 'rgba(255,255,255,0.1)'}`,
+          color: selected ? solution.accent : 'rgba(255,255,255,0.4)',
+        }}
+      >
+        {solution.icon}
+      </div>
       <span className="text-sm font-semibold leading-snug"
         style={{ color: selected ? 'white' : 'rgba(255,255,255,0.65)' }}>
-        {lang === 'pt' ? type.labelPt : type.labelEn}
+        {lang === 'pt' ? solution.labelPt : solution.labelEn}
       </span>
       {selected && (
         <span className="absolute top-3 right-3">
-          <CheckCircle size={14} style={{ color: A.solid }} />
+          <CheckCircle size={14} style={{ color: solution.accent }} />
         </span>
       )}
     </button>
@@ -229,12 +292,14 @@ export default function StartPage() {
   const { lang } = useLang()
   const isPt = lang === 'pt'
 
-  const [name,        setName]        = useState('')
-  const [projectType, setProjectType] = useState('')
-  const [description, setDescription] = useState('')
-  const [email,       setEmail]       = useState('')
-  const [phone,       setPhone]       = useState('')
-  const [deadline,    setDeadline]    = useState('')
+  const [name,         setName]         = useState('')
+  const [empresa,      setEmpresa]      = useState('')
+  const [solution,     setSolution]     = useState('')
+  const [utilizadores, setUtilizadores] = useState('')
+  const [description,  setDescription]  = useState('')
+  const [email,        setEmail]        = useState('')
+  const [phone,        setPhone]        = useState('')
+  const [deadline,     setDeadline]     = useState('')
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle')
   const [mounted, setMounted] = useState(false)
 
@@ -243,29 +308,31 @@ export default function StartPage() {
     return () => clearTimeout(tid)
   }, [])
 
-  const deadlines = isPt ? DEADLINES_PT : DEADLINES_EN
-  const canSubmit  = name.trim() && projectType && description.trim() && email.trim()
+  const deadlines    = isPt ? DEADLINES_PT : DEADLINES_EN
+  const usersOptions = isPt ? USERS_PT : USERS_EN
+  const canSubmit    = name.trim() && email.trim() && solution && description.trim()
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
+  async function handleSubmit() {
     if (!canSubmit || status === 'sending') return
     setStatus('sending')
 
-    const sel = PROJECT_TYPES.find(p => p.key === projectType)
+    const sel = SOLUTIONS.find(s => s.key === solution)
     const answers = {
       name:          name.trim(),
-      project_type:  isPt ? sel?.labelPt : sel?.labelEn,
+      empresa:       empresa.trim()     || undefined,
+      solution:      isPt ? sel?.labelPt : sel?.labelEn,
+      utilizadores:  utilizadores       || undefined,
       description:   description.trim(),
       contact_email: email.trim(),
-      contact_phone: phone.trim() || undefined,
-      deadline:      deadline     || undefined,
+      contact_phone: phone.trim()       || undefined,
+      deadline:      deadline           || undefined,
     }
 
     try {
       const res = await fetch('/api/lead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ answers, budget: calcBudget(projectType), lang }),
+        body: JSON.stringify({ answers, lang }),
       })
       if (!res.ok) throw new Error()
       setStatus('success')
@@ -276,7 +343,7 @@ export default function StartPage() {
 
   const stats = [
     { value: '48h',  label: isPt ? 'Resposta garantida' : 'Response guaranteed' },
-    { value: '3+',   label: isPt ? 'Produtos lançados'  : 'Products shipped'    },
+    { value: '3+',   label: isPt ? 'Produtos lançados'  : 'Products launched'   },
     { value: '100%', label: isPt ? 'Foco no cliente'    : 'Customer focus'      },
   ]
 
@@ -354,7 +421,7 @@ export default function StartPage() {
               {status === 'success' ? (
                 <SuccessCard isPt={isPt} />
               ) : (
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={(e) => { e.preventDefault(); void handleSubmit() }}>
                   <div
                     className="rounded-3xl overflow-hidden"
                     style={{
@@ -382,39 +449,52 @@ export default function StartPage() {
                     {/* Body */}
                     <div className="p-8 flex flex-col gap-6">
 
-                      <FloatingInput id="name" label={isPt ? 'O teu nome' : 'Your name'}
-                        value={name} onChange={setName} required icon={<User size={16} />} delay={150} />
+                      {/* Nome + Empresa */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <FloatingInput id="name" label={isPt ? 'O teu nome' : 'Your name'}
+                          value={name} onChange={setName} required icon={<User size={16} />} delay={150} />
+                        <FloatingInput id="empresa" label={isPt ? 'Empresa' : 'Company'}
+                          value={empresa} onChange={setEmpresa} icon={<Building2 size={16} />} delay={200} />
+                      </div>
 
-                      {/* Project type */}
-                      <div style={{ animation: `sfadeUp 0.6s cubic-bezier(0.16,1,0.3,1) 220ms both` }}>
+                      {/* Email + Telefone */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <FloatingInput id="email" label="Email" type="email"
+                          value={email} onChange={setEmail} required icon={<Mail size={16} />} delay={250} />
+                        <FloatingInput id="phone"
+                          label={isPt ? 'Telefone (opcional)' : 'Phone (optional)'} type="tel"
+                          value={phone} onChange={setPhone} icon={<Phone size={16} />} delay={300} />
+                      </div>
+
+                      {/* Solução pretendida */}
+                      <div style={{ animation: `sfadeUp 0.6s cubic-bezier(0.16,1,0.3,1) 350ms both` }}>
                         <ScrambleText
-                          text={isPt ? 'Tipo de projeto' : 'Project type'}
+                          text={isPt ? 'Solução pretendida' : 'Desired solution'}
                           className="text-xs font-bold uppercase tracking-[0.1em] mb-3 block"
                           style={{ color: 'rgba(255,255,255,0.3)' }}
                         />
-                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                          {PROJECT_TYPES.map((pt, i) => (
-                            <TypeTile key={pt.key} type={pt}
-                              selected={projectType === pt.key}
-                              onClick={() => setProjectType(pt.key)}
-                              lang={lang} delay={280 + i * 40} />
+                        <div className="grid grid-cols-2 gap-2">
+                          {SOLUTIONS.map((sol, i) => (
+                            <SolutionTile key={sol.key} solution={sol}
+                              selected={solution === sol.key}
+                              onClick={() => setSolution(sol.key)}
+                              lang={lang} delay={400 + i * 40} />
                           ))}
                         </div>
                       </div>
 
-                      <FloatingTextarea id="desc" label={isPt ? 'Descreve o teu projeto' : 'Describe your project'}
-                        value={description} onChange={setDescription} maxLength={500} delay={560} />
+                      {/* Número de utilizadores */}
+                      <FloatingSelect
+                        id="utilizadores"
+                        label={isPt ? 'Número aproximado de utilizadores' : 'Approximate number of users'}
+                        value={utilizadores}
+                        onChange={setUtilizadores}
+                        options={usersOptions}
+                        delay={560}
+                      />
 
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <FloatingInput id="email" label="Email" type="email"
-                          value={email} onChange={setEmail} required icon={<Mail size={16} />} delay={620} />
-                        <FloatingInput id="phone"
-                          label={isPt ? 'Telefone (opcional)' : 'Phone (optional)'} type="tel"
-                          value={phone} onChange={setPhone} icon={<Phone size={16} />} delay={680} />
-                      </div>
-
-                      {/* Deadline */}
-                      <div style={{ animation: `sfadeUp 0.6s cubic-bezier(0.16,1,0.3,1) 720ms both` }}>
+                      {/* Prazo pretendido */}
+                      <div style={{ animation: `sfadeUp 0.6s cubic-bezier(0.16,1,0.3,1) 600ms both` }}>
                         <ScrambleText
                           text={isPt ? 'Prazo pretendido' : 'Desired timeline'}
                           className="text-xs font-bold uppercase tracking-[0.1em] mb-3 block"
@@ -428,7 +508,7 @@ export default function StartPage() {
                                 onClick={() => setDeadline(sel ? '' : d)}
                                 className="text-sm font-medium rounded-xl px-4 py-2 transition-all duration-200"
                                 style={{
-                                  animation: `sfadeUp 0.5s cubic-bezier(0.16,1,0.3,1) ${760 + i * 40}ms both`,
+                                  animation: `sfadeUp 0.5s cubic-bezier(0.16,1,0.3,1) ${640 + i * 40}ms both`,
                                   background: sel ? A.a20 : 'rgba(255,255,255,0.05)',
                                   border: `1px solid ${sel ? A.a60 : 'rgba(255,255,255,0.08)'}`,
                                   color: sel ? A.solid : 'rgba(255,255,255,0.5)',
@@ -440,31 +520,12 @@ export default function StartPage() {
                         </div>
                       </div>
 
-                      <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }} />
+                      {/* Descrição */}
+                      <FloatingTextarea id="desc"
+                        label={isPt ? 'Descreve o teu projeto' : 'Describe your project'}
+                        value={description} onChange={setDescription} maxLength={500} delay={800} />
 
-                      {/* Budget preview */}
-                      {projectType && (
-                        <div className="rounded-2xl p-5"
-                             style={{
-                               background: A.a08,
-                               border: `1px solid ${A.a20}`,
-                               animation: 'sfadeUp 0.4s cubic-bezier(0.16,1,0.3,1) 0ms both',
-                             }}>
-                          <ScrambleText
-                            text={isPt ? 'Estimativa inicial' : 'Initial estimate'}
-                            className="text-xs font-bold uppercase tracking-[0.1em] mb-2 block"
-                            style={{ color: A.a80 }}
-                          />
-                          <p className="text-2xl font-bold tracking-tight"
-                             style={{ background: A.grad, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-                            €{calcBudget(projectType).low.toLocaleString()} — €{calcBudget(projectType).high.toLocaleString()}
-                          </p>
-                          <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.3)' }}>
-                            {isPt ? 'O valor final pode variar conforme os detalhes do projeto.'
-                                  : 'Final price may vary based on project details.'}
-                          </p>
-                        </div>
-                      )}
+                      <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }} />
 
                       {/* Submit */}
                       <button
@@ -516,6 +577,7 @@ export default function StartPage() {
           to   { opacity: 1; transform: translateY(0);    }
         }
       `}</style>
+      <SharedFooter />
     </div>
   )
 }

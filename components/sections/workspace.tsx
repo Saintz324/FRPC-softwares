@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import Ico from '@/components/icons'
 import AmbientNetwork from '@/components/ambient-network'
 import { useLang } from '@/components/language-provider'
 
@@ -180,11 +179,6 @@ export function WorkspaceSection() {
         {s.chips.map((label, i) => (
           <span key={i} className="chip">{label}</span>
         ))}
-      </div>
-
-      <div style={{ position: 'absolute', right: 28, bottom: 28, display: 'flex', flexDirection: 'column', gap: 6 }}>
-        <button className="btn btn-ghost" style={{ padding: 8, width: 36, height: 36, justifyContent: 'center' }}><Ico.Down size={14} /></button>
-        <button className="btn btn-ghost" style={{ padding: 8, width: 36, height: 36, justifyContent: 'center', transform: 'rotate(180deg)' }}><Ico.Down size={14} /></button>
       </div>
 
     </div>
