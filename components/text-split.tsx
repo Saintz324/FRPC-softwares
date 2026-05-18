@@ -1,11 +1,12 @@
 "use client"
 
-import { useEffect, useRef, useMemo, memo, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useMemo, memo, useState } from 'react'
 import type { CSSProperties } from 'react'
 import { useLanguage } from './language-provider'
 
 const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&'
 const rand = () => CHARS[Math.floor(Math.random() * CHARS.length)]
+const NBSP = ' '
 
 interface TextSplitProps {
   text: string
@@ -21,14 +22,12 @@ function TextSplitComponent({ text, className = '', style, delay = 0, stagger = 
   const [isRevealed, setIsRevealed] = useState(false)
   const { isSwitching } = useLanguage()
 
-  // Track current chars per span — updated via DOM, not state
   const rafRef = useRef<number | null>(null)
   const phaseRef = useRef<'idle' | 'scrambling' | 'resolving'>('idle')
 
-  // Split text into characters only when text changes (memo prevents re-runs)
   const characters = useMemo(() => (
     text.split('').map((char, index) => ({
-      char: char === ' ' ? '\u00A0' : char,
+      char: char === ' ' ? NBSP : char,
       key: `char-${index}`,
       index,
     }))
@@ -38,7 +37,6 @@ function TextSplitComponent({ text, className = '', style, delay = 0, stagger = 
     if (rafRef.current !== null) { cancelAnimationFrame(rafRef.current); rafRef.current = null }
   }
 
-  // Get span elements lazily
   function getSpans(): NodeListOf<HTMLElement> | null {
     return containerRef.current?.querySelectorAll('.char') as NodeListOf<HTMLElement> | null
   }
@@ -67,7 +65,7 @@ function TextSplitComponent({ text, className = '', style, delay = 0, stagger = 
         if (phaseRef.current !== 'scrambling') return
         if (++frame % 3 === 0) {
           getSpans()?.forEach(span => {
-            if (span.textContent !== '\u00A0') span.textContent = rand()
+            if (span.textContent !== NBSP) span.textContent = rand()
           })
         }
         rafRef.current = requestAnimationFrame(go)
@@ -75,52 +73,55 @@ function TextSplitComponent({ text, className = '', style, delay = 0, stagger = 
       cancel()
       rafRef.current = requestAnimationFrame(go)
     } else {
-      cancel()
-      phaseRef.current = 'idle'
-      // Restore current text
+      if (phaseRef.current !== 'resolving') {
+        cancel()
+        phaseRef.current = 'idle'
+      }
       const spans = getSpans()
       if (spans) {
         text.split('').forEach((c, i) => {
-          if (spans[i]) spans[i].textContent = c === ' ' ? '\u00A0' : c
+          if (spans[i]) spans[i].textContent = c === ' ' ? NBSP : c
         })
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSwitching])
 
-  // Phase 2: resolve when text changes — direct DOM
-  useEffect(() => {
+  // Phase 2: resolve when text changes — useLayoutEffect prevents flash of final text before animation
+  useLayoutEffect(() => {
     if (!isSwitching) {
-      // Sync spans to new text directly
       const spans = getSpans()
       if (spans) {
         text.split('').forEach((c, i) => {
-          if (spans[i]) spans[i].textContent = c === ' ' ? '\u00A0' : c
+          if (spans[i]) spans[i].textContent = c === ' ' ? NBSP : c
         })
       }
       return
     }
+    // Immediately scramble before first paint to prevent flash
+    const spans = getSpans()
+    if (spans) spans.forEach(s => { if (s.textContent !== NBSP) s.textContent = rand() })
     cancel()
     phaseRef.current = 'resolving'
-    let it = 0, frame = 0
+    let it = 0
     const chars = text.split('')
     const go = () => {
       if (phaseRef.current !== 'resolving') return
-      it += 0.5
+      it += 1.2
       const resolved = Math.floor(it)
-      const spans = getSpans()
-      if (spans && ++frame % 2 === 0) {
+      const currentSpans = getSpans()
+      if (currentSpans) {
         chars.forEach((c, i) => {
-          if (!spans[i]) return
-          if (c === ' ') { spans[i].textContent = '\u00A0'; return }
-          spans[i].textContent = i < resolved ? c : rand()
+          if (!currentSpans[i]) return
+          if (c === ' ') { currentSpans[i].textContent = NBSP; return }
+          currentSpans[i].textContent = i < resolved ? c : rand()
         })
       }
       if (resolved < chars.length) rafRef.current = requestAnimationFrame(go)
       else {
         const finalSpans = getSpans()
         if (finalSpans) chars.forEach((c, i) => {
-          if (finalSpans[i]) finalSpans[i].textContent = c === ' ' ? '\u00A0' : c
+          if (finalSpans[i]) finalSpans[i].textContent = c === ' ' ? NBSP : c
         })
         phaseRef.current = 'idle'
       }

@@ -2,16 +2,6 @@
 
 import { useEffect, useRef } from 'react'
 
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      'spline-viewer': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement> & {
-        url?: string
-        'events-target'?: string
-      }, HTMLElement>
-    }
-  }
-}
 import Ico from '@/components/icons'
 import AmbientNetwork from '@/components/ambient-network'
 import Link from 'next/link'
@@ -65,15 +55,6 @@ function HeroVisual() {
   const wrapRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (!document.querySelector('script[src*="spline-viewer"]')) {
-      const s = document.createElement('script')
-      s.type = 'module'
-      s.src = 'https://unpkg.com/@splinetool/viewer@1.12.92/build/spline-viewer.js'
-      document.head.appendChild(s)
-    }
-  }, [])
-
-  useEffect(() => {
     let posY = 24, velY = 0, posX = 0, velX = 0
     let mx = 0.5, my = 0.5, tmx = 0.5, tmy = 0.5
     const SPRING = 0.048, DAMP = 0.80
@@ -97,18 +78,19 @@ function HeroVisual() {
 
   return (
     <div ref={wrapRef} style={{
-      position: 'absolute', right: '-4%', top: '50%', transform: 'translateY(-50%) scale(1.25)',
-      width: 'clamp(700px, 88vw, 1300px)', height: 'clamp(700px, 88vw, 1300px)',
+      position: 'absolute', right: '2%', top: '50%', transform: 'translateY(-50%) scale(1.05)',
+      width: 'clamp(380px, 46vw, 700px)', height: 'clamp(380px, 46vw, 700px)',
       willChange: 'transform', zIndex: 2,
-      WebkitMaskImage: 'linear-gradient(to bottom, black 82%, transparent 100%), linear-gradient(to right, transparent 0%, transparent 8%, rgba(0,0,0,0.35) 22%, black 40%)',
+      WebkitMaskImage: 'linear-gradient(to bottom, black 78%, transparent 100%), linear-gradient(to right, transparent 0%, rgba(0,0,0,0.2) 12%, black 38%)',
       WebkitMaskComposite: 'source-in',
-      maskImage: 'linear-gradient(to bottom, black 82%, transparent 100%), linear-gradient(to right, transparent 0%, transparent 8%, rgba(0,0,0,0.35) 22%, black 40%)',
+      maskImage: 'linear-gradient(to bottom, black 78%, transparent 100%), linear-gradient(to right, transparent 0%, rgba(0,0,0,0.2) 12%, black 38%)',
       maskComposite: 'intersect',
     }}>
-      <spline-viewer
-        url="https://prod.spline.design/fLgnJJXFVV9yQ3zN/scene.splinecode"
-        events-target="none"
-        style={{ width: '100%', height: '100%', display: 'block', pointerEvents: 'none' } as React.CSSProperties}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/lindo.gif"
+        alt=""
+        style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', pointerEvents: 'none' }}
       />
     </div>
   )

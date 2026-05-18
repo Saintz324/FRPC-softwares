@@ -654,11 +654,11 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     if (isSwitching) return
     setIsSwitching(true)
     const nextLang = lang === 'pt' ? 'en' : 'pt'
-    const textTimeout = window.setTimeout(() => { setLang(nextLang) }, 320)
+    const textTimeout = window.setTimeout(() => { setLang(nextLang) }, 140)
     const finishTimeout = window.setTimeout(() => {
       setIsSwitching(false)
       switchTimeoutsRef.current = []
-    }, 650)
+    }, 800)
     switchTimeoutsRef.current = [textTimeout, finishTimeout]
   }
 

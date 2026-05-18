@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, ElementType, useCallback } from 'react'
+import { useEffect, useLayoutEffect, useRef, ElementType, useCallback } from 'react'
 import { useLanguage } from './language-provider'
 
 const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&'
@@ -46,28 +46,30 @@ export function ScrambleText({ text, className, as: Tag = 'span', style }: Scram
       cancel()
       rafRef.current = requestAnimationFrame(go)
     } else {
-      cancel()
-      phaseRef.current = 'idle'
+      if (phaseRef.current !== 'resolving') {
+        cancel()
+        phaseRef.current = 'idle'
+      }
       setText(textRef.current)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSwitching])
 
-  // Phase 2: resolve char-by-char when text prop changes
-  useEffect(() => {
+  // Phase 2: resolve char-by-char — useLayoutEffect prevents flash of final text before animation
+  useLayoutEffect(() => {
     textRef.current = text
     if (!isSwitching) { setText(text); return }
+    // Immediately scramble so no correct text flashes before RAF starts
+    const chars = text.split('')
+    setText(chars.map(c => (c === ' ' ? ' ' : rand())).join(''))
     cancel()
     phaseRef.current = 'resolving'
-    let it = 0, frame = 0
-    const chars = text.split('')
+    let it = 0
     const go = () => {
       if (phaseRef.current !== 'resolving') return
-      it += 0.5
+      it += 1.2
       const resolved = Math.floor(it)
-      if (++frame % 2 === 0) {
-        setText(chars.map((c, i) => (c === ' ' ? ' ' : i < resolved ? c : rand())).join(''))
-      }
+      setText(chars.map((c, i) => (c === ' ' ? ' ' : i < resolved ? c : rand())).join(''))
       if (resolved < chars.length) rafRef.current = requestAnimationFrame(go)
       else { setText(text); phaseRef.current = 'idle' }
     }
