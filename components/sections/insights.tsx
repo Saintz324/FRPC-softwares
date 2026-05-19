@@ -64,10 +64,10 @@ function useMouse() {
   return m
 }
 
-function CountedHero() {
+function CountedHero({ line, accent }: { line: string; accent: string }) {
   return (
     <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
-      <span style={{ fontSize: 'clamp(42px, 5vw, 72px)', fontFamily: 'var(--font-display)', lineHeight: 0.95, letterSpacing: '-0.03em' }}>Menos trabalho<br /><em style={{ fontStyle: 'italic', color: 'var(--glow)', textShadow: '0 0 30px var(--glow-soft)' }}>manual</em></span>
+      <span style={{ fontSize: 'clamp(42px, 5vw, 72px)', fontFamily: 'var(--font-display)', lineHeight: 0.95, letterSpacing: '-0.03em' }}>{line}<br /><em style={{ fontStyle: 'italic', color: 'var(--glow)', textShadow: '0 0 30px var(--glow-soft)' }}>{accent}</em></span>
     </div>
   )
 }
@@ -256,7 +256,7 @@ export function InsightsSection() {
                 <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--glow)', boxShadow: '0 0 12px var(--glow)' }} />
                 <span style={{ fontSize: 11, color: 'var(--ink-dim)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.16em' }}>{s.globalLabel}</span>
               </div>
-              <CountedHero />
+              <CountedHero line={s.heroLine} accent={s.heroAccent} />
               <div style={{ fontSize: 14, color: 'var(--ink-dim)', maxWidth: 320, lineHeight: 1.5, marginTop: 12 }}>
                 {s.globalDesc}
               </div>

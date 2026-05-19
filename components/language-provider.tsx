@@ -118,6 +118,8 @@ type Translation = {
       cards: CardItem[]
     }
     insights: {
+      heroLine: string
+      heroAccent: string
       liveLabel: string
       title: string
       subtitle: string
@@ -329,6 +331,8 @@ const translations: Record<Language, Translation> = {
         ],
       },
       insights: {
+        heroLine: 'Menos trabalho',
+        heroAccent: 'manual',
         liveLabel: 'Exemplo de dashboard',
         title: 'Impacto',
         subtitle: 'mensurável',
@@ -547,6 +551,8 @@ const translations: Record<Language, Translation> = {
         ],
       },
       insights: {
+        heroLine: 'Less manual',
+        heroAccent: 'work',
         liveLabel: 'Dashboard example',
         title: 'Impact',
         subtitle: 'measurable',

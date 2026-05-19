@@ -39,15 +39,6 @@ const DATA = {
         accent: '#34d399',
         status: 'Ativo',
       },
-      {
-        key: 'portal',
-        label: 'Portal FRPC',
-        tag: 'Plataforma interna',
-        desc: 'Acesso centralizado a ferramentas, documentos, pedidos e informação da empresa. Tudo num só lugar.',
-        href: '/pricing',
-        accent: '#a78bfa',
-        status: 'Em breve',
-      },
     ],
     ctaTitle: 'Qual é o teu projeto?',
     ctaSubtitle: 'Ajudamos a criar a solução ideal para a tua empresa — desde a análise ao lançamento, adaptada ao teu processo real.',
@@ -76,15 +67,6 @@ const DATA = {
         href: '/produtos/project-manager',
         accent: '#34d399',
         status: 'Active',
-      },
-      {
-        key: 'portal',
-        label: 'FRPC Portal',
-        tag: 'Internal platform',
-        desc: 'Centralised access to tools, documents, requests and company information. Everything in one place.',
-        href: '/pricing',
-        accent: '#a78bfa',
-        status: 'Coming soon',
       },
     ],
     ctaTitle: 'What is your project?',
@@ -198,7 +180,9 @@ export default function ProjetosPage() {
 
                     {/* arrow cta */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12.5, fontWeight: 600, color: p.accent }}>
-                      {isPt ? 'Ver projeto' : 'View project'}
+                      {p.key === 'portal'
+                        ? (isPt ? 'Pedir Orçamento' : 'Request Quote')
+                        : (isPt ? 'Ver projeto' : 'View project')}
                       <ArrowUpRight size={13} />
                     </div>
                   </div>

@@ -3,76 +3,10 @@
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Calendar, Kanban, ChevronDown, ArrowUpRight, X, Menu } from 'lucide-react'
+import { ArrowUpRight, X, Menu } from 'lucide-react'
 import { useLang, useSwitch } from '@/components/language-provider'
 import Ico from '@/components/icons'
 
-type DropItem = { label: string; desc: string; href: string; accent: string; icon: React.ReactNode }
-
-function PillDropdown({ label, items, isActive }: { label: string; items: DropItem[]; isActive?: boolean }) {
-  const [open, setOpen] = useState(false)
-  const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const open_ = () => { if (timer.current) clearTimeout(timer.current); setOpen(true) }
-  const close_ = () => { timer.current = setTimeout(() => setOpen(false), 130) }
-
-  return (
-    <div style={{ position: 'relative' }} onMouseEnter={open_} onMouseLeave={close_}>
-      <button
-        className={isActive ? 'active' : ''}
-        style={{
-          display: 'inline-flex', alignItems: 'center', gap: 5,
-          color: isActive ? 'var(--ink)' : 'var(--ink-dim)',
-          background: isActive ? 'rgba(255,255,255,0.06)' : 'none',
-          border: 'none', fontSize: 13, padding: '8px 12px',
-          borderRadius: 999, cursor: 'pointer', fontFamily: 'inherit',
-          transition: 'color .15s, background .15s',
-        }}
-        onMouseEnter={e => { const b = e.currentTarget; b.style.color = 'var(--ink)'; if (!isActive) b.style.background = 'rgba(255,255,255,0.04)' }}
-        onMouseLeave={e => { const b = e.currentTarget; b.style.color = isActive ? 'var(--ink)' : 'var(--ink-dim)'; if (!isActive) b.style.background = 'none' }}
-      >
-        {label}
-        <ChevronDown size={11} style={{ opacity: 0.5, transition: 'transform 0.2s', transform: open ? 'rotate(180deg)' : 'none' }} />
-      </button>
-
-      <div style={{
-        position: 'absolute', top: 'calc(100% + 10px)', left: '50%',
-        transform: `translateX(-50%) translateY(${open ? 0 : -6}px)`,
-        width: 280,
-        background: 'rgba(8,8,14,0.97)',
-        backdropFilter: 'blur(28px) saturate(180%)',
-        border: '1px solid rgba(255,255,255,0.1)',
-        borderRadius: 16, padding: 6,
-        boxShadow: '0 20px 60px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.04)',
-        opacity: open ? 1 : 0,
-        pointerEvents: open ? 'auto' : 'none',
-        transition: 'opacity 0.2s cubic-bezier(.2,.7,.3,1), transform 0.2s cubic-bezier(.2,.7,.3,1)',
-        zIndex: 200,
-      }}>
-        <div style={{ position: 'absolute', top: -5, left: '50%', transform: 'translateX(-50%)', width: 10, height: 5, overflow: 'hidden' }}>
-          <div style={{ width: 8, height: 8, background: 'rgba(8,8,14,0.97)', border: '1px solid rgba(255,255,255,0.1)', transform: 'rotate(45deg)', marginTop: 2, marginLeft: 1 }} />
-        </div>
-        {items.map((it, i) => (
-          <Link key={i} href={it.href} style={{ textDecoration: 'none', display: 'block' }}>
-            <div
-              style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '9px 10px', borderRadius: 11, transition: 'background 0.15s', cursor: 'pointer' }}
-              onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.06)')}
-              onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
-            >
-              <div style={{ width: 34, height: 34, borderRadius: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', background: it.accent + '1a', border: `1px solid ${it.accent}28`, color: it.accent, flexShrink: 0 }}>
-                {it.icon}
-              </div>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 12.5, fontWeight: 600, color: 'rgba(255,255,255,0.88)', marginBottom: 1 }}>{it.label}</div>
-                <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', lineHeight: 1.3 }}>{it.desc}</div>
-              </div>
-              <ArrowUpRight size={11} style={{ color: 'rgba(255,255,255,0.18)', flexShrink: 0 }} />
-            </div>
-          </Link>
-        ))}
-      </div>
-    </div>
-  )
-}
 
 interface SiteNavProps {
   badgeLabel?: string
@@ -102,13 +36,7 @@ export function SiteNav({ badgeLabel, badgeHref, badgeExternal }: SiteNavProps =
 
   useEffect(() => { setMobileOpen(false) }, [pathname])
 
-  const recursosItems: DropItem[] = [
-    { label: isPt ? 'Calendário de Férias' : 'Vacation Calendar', desc: isPt ? 'Guia passo a passo' : 'Step-by-step guide', href: '/tutoriais?p=calendario', accent: '#60a5fa', icon: <Calendar size={15} /> },
-    { label: 'Project Manager', desc: isPt ? 'Início rápido' : 'Quick start guide', href: '/tutoriais?p=project-manager', accent: '#34d399', icon: <Kanban size={15} /> },
-  ]
-
   const isHome = pathname === '/'
-  const isTutoriais = pathname === '/tutoriais'
   const isProjects = pathname.startsWith('/projetos') || pathname.startsWith('/produtos')
   const isPricing = pathname === '/pricing'
 
@@ -118,7 +46,6 @@ export function SiteNav({ badgeLabel, badgeHref, badgeExternal }: SiteNavProps =
   const mobileLinks = [
     { label: isPt ? 'Início' : 'Home', href: '/', active: isHome },
     { label: isPt ? 'Projetos' : 'Projects', href: '/projetos', active: isProjects },
-    { label: isPt ? 'Recursos' : 'Resources', href: '/tutoriais', active: isTutoriais },
   ]
 
   return (
@@ -136,7 +63,6 @@ export function SiteNav({ badgeLabel, badgeHref, badgeExternal }: SiteNavProps =
         <nav className="nav-pill" aria-label="Primary">
           <Link href="/" className={isHome ? 'active' : ''}>{isPt ? 'Início' : 'Home'}</Link>
           <Link href="/projetos" className={isProjects ? 'active' : ''}>{isPt ? 'Projetos' : 'Projects'}</Link>
-          <PillDropdown label={isPt ? 'Recursos' : 'Resources'} items={recursosItems} isActive={isTutoriais} />
           {badgeExternal ? (
             <a href={ctaHref} target="_blank" rel="noopener noreferrer" className="badge">
               {ctaLabel} <Ico.ArrowUpRight size={11} />
