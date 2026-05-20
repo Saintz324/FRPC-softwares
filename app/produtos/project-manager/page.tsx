@@ -420,7 +420,7 @@ export default function ProjectManagerPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {t.features.map((feature, index) => (
                 <Reveal key={feature.title} delay={index * 100} direction={index % 2 === 0 ? 'left' : 'right'}>
-                  <div className="group relative p-8 md:p-10 rounded-3xl bg-white/5 border border-white/10 hover:bg-white/[0.08] hover:border-white/20 transition-all duration-500">
+                  <div className="group relative p-8 md:p-10 rounded-3xl bg-white/5 border border-white/10 hover:bg-white/[0.08] hover:border-white/20 transition-all duration-500 overflow-hidden">
                     <div className="flex items-start justify-between mb-6">
                       <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center text-white group-hover:bg-white group-hover:text-black transition-all duration-500">
                         {index === 0 ? <Layers className="w-6 h-6" /> : index === 1 ? <Users className="w-6 h-6" /> : index === 2 ? <Clock className="w-6 h-6" /> : <LayoutDashboard className="w-6 h-6" />}
@@ -431,7 +431,7 @@ export default function ProjectManagerPage() {
                       {feature.title}
                     </h3>
                     <p className="text-white/50 leading-relaxed">{feature.description}</p>
-                    <div className="absolute top-6 right-20 text-white/10 text-4xl font-serif font-bold select-none">
+                    <div className="absolute top-4 right-4 md:top-6 md:right-20 text-white/10 text-4xl font-serif font-bold select-none pointer-events-none">
                       {String(index + 1).padStart(2, '0')}
                     </div>
                   </div>

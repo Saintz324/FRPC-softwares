@@ -215,8 +215,8 @@ const CalendarMockup = memo(function CalendarMockup() {
 function StepCard({ number, title, description, delay }: { number: string; title: string; description: string; delay: number }) {
   return (
     <Reveal delay={delay}>
-      <div className="relative p-8 rounded-3xl bg-white/5 border border-white/10 hover:bg-white/[0.08] transition-all duration-500 group">
-        <div className="text-6xl font-serif font-bold text-white/5 absolute top-6 right-8 select-none" style={{ fontFamily: 'var(--font-serif)' }}>
+      <div className="relative p-8 rounded-3xl bg-white/5 border border-white/10 hover:bg-white/[0.08] transition-all duration-500 group overflow-hidden">
+        <div className="text-6xl font-serif font-bold text-white/5 absolute top-4 right-4 md:top-6 md:right-8 select-none pointer-events-none" style={{ fontFamily: 'var(--font-serif)' }}>
           {number}
         </div>
         <div className="w-10 h-10 rounded-xl bg-white text-black flex items-center justify-center mb-6 font-bold text-sm">

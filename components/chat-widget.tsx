@@ -292,13 +292,12 @@ const STAGES: Record<Stage, StageConfig> = {
     next: 'deadline',
   },
 
-  // ── 9. Budget reveal + ask email ─────────────────────────────────────────
+  // ── 9. Ask email ──────────────────────────────────────────────────────────
   deadline: {
-    getBotMsg: (a, lang) => {
-      const { low, high } = calcBudget(a)
+    getBotMsg: (_a, lang) => {
       return lang === 'pt'
-        ? `Perfeito! Com base nas tuas respostas, estimo um orçamento entre:\n\n€${low.toLocaleString()} — €${high.toLocaleString()}\n\nPara te enviarmos uma proposta detalhada, qual é o teu email?`
-        : `Perfect! Based on your answers, I estimate a budget between:\n\n€${low.toLocaleString()} — €${high.toLocaleString()}\n\nTo send you a detailed proposal, what's your email?`
+        ? `Perfeito! Para te enviarmos uma proposta detalhada, qual é o teu email?`
+        : `Perfect! To send you a detailed proposal, what's your email?`
     },
     inputType: 'email',
     answerKey: 'contact_email',
