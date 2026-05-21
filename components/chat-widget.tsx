@@ -481,7 +481,7 @@ const BotBubble = memo(function BotBubble({ text }: { text: string }) {
     <div className="flex items-end gap-2" style={{ animation: 'chatBubbleIn 0.35s cubic-bezier(0.16,1,0.3,1)' }}>
       <BotAvatar />
       <div
-        className="max-w-[84%] px-4 py-3 text-sm leading-relaxed text-white/85 rounded-2xl rounded-bl-sm"
+        className="max-w-[84%] px-4 py-3 text-sm leading-relaxed text-white/85 rounded-2xl rounded-bl-sm break-words"
         style={{
           background: 'rgba(255,255,255,0.06)',
           border: '1px solid rgba(255,255,255,0.08)',
@@ -507,7 +507,7 @@ const UserBubble = memo(function UserBubble({ text }: { text: string }) {
         <User className="w-3 h-3 text-black" />
       </div>
       <div
-        className="max-w-[80%] px-4 py-3 text-sm leading-relaxed font-medium rounded-2xl rounded-br-sm"
+        className="max-w-[80%] px-4 py-3 text-sm leading-relaxed font-medium rounded-2xl rounded-br-sm break-words"
         style={{ background: 'rgba(255,255,255,0.97)', color: '#0a0a0f' }}
       >
         {text}

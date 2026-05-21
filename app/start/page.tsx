@@ -358,7 +358,7 @@ export default function StartPage() {
       <SiteNav />
 
       <main className="relative z-10 min-h-screen">
-        <div className="max-w-7xl mx-auto px-6 md:px-12 pt-32 pb-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 pt-28 sm:pt-32 pb-16 sm:pb-24">
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.1fr] gap-16 lg:gap-24 items-start">
 
             {/* ── Left panel ───────────────────────────────────────────────── */}
@@ -433,7 +433,7 @@ export default function StartPage() {
                     }}
                   >
                     {/* Header */}
-                    <div className="flex items-center gap-3 px-8 py-6"
+                    <div className="flex items-center gap-3 px-4 py-4 sm:px-8 sm:py-6"
                          style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
                       <div className="w-8 h-8 rounded-xl flex items-center justify-center"
                            style={{ background: A.a20, border: `1px solid ${A.a30}` }}>
@@ -447,7 +447,7 @@ export default function StartPage() {
                     </div>
 
                     {/* Body */}
-                    <div className="p-8 flex flex-col gap-6">
+                    <div className="p-4 sm:p-8 flex flex-col gap-6">
 
                       {/* Nome + Empresa */}
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -473,7 +473,7 @@ export default function StartPage() {
                           className="text-xs font-bold uppercase tracking-[0.1em] mb-3 block"
                           style={{ color: 'rgba(255,255,255,0.3)' }}
                         />
-                        <div className="grid grid-cols-2 gap-2">
+                        <div className="grid grid-cols-1 min-[400px]:grid-cols-2 gap-2">
                           {SOLUTIONS.map((sol, i) => (
                             <SolutionTile key={sol.key} solution={sol}
                               selected={solution === sol.key}
@@ -587,7 +587,7 @@ export default function StartPage() {
 function SuccessCard({ isPt }: { isPt: boolean }) {
   return (
     <div
-      className="rounded-3xl flex flex-col items-center text-center py-20 px-12"
+      className="rounded-3xl flex flex-col items-center text-center py-12 px-6 sm:py-20 sm:px-12"
       style={{
         background: 'rgba(255,255,255,0.03)',
         border: '1px solid rgba(255,255,255,0.08)',

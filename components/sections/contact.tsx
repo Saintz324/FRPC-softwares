@@ -36,8 +36,8 @@ export const ContactSection = memo(function ContactSection() {
                   fontFamily: 'var(--font-serif)',
                   WebkitTextStroke: '1px rgba(255,255,255,0.6)',
                   color: 'transparent',
-                  wordBreak: 'keep-all',
-                  overflowWrap: 'normal',
+                  wordBreak: 'break-word',
+                  overflowWrap: 'break-word',
                 }}
               >
                 <ScrambleText text={t.contact.title2} />
@@ -51,7 +51,7 @@ export const ContactSection = memo(function ContactSection() {
             </div>
 
             <Reveal delay={800}>
-              <ScrambleText as="p" text={t.contact.description} className="text-white/60 text-lg leading-relaxed max-w-md mb-12" />
+              <ScrambleText as="p" text={t.contact.description} className="text-white/60 text-lg leading-relaxed max-w-full md:max-w-md mb-12" />
             </Reveal>
 
             <Reveal delay={900}>
