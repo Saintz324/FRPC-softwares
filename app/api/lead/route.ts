@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
 
   //  envio email via Resend 
   const RESEND_API_KEY = process.env.RESEND_API_KEY
-  const TO_EMAIL = process.env.LEAD_EMAIL ?? 'hello@frpc.dev'
+  const TO_EMAIL = process.env.LEAD_EMAIL ?? 'it@frpc.pt'
 
   if (RESEND_API_KEY) {
     const wantsCall = answers.schedule?.toLowerCase().includes('sim') ||

@@ -88,7 +88,7 @@ export const ContactSection = memo(function ContactSection() {
                 <div className="group">
                   <ScrambleText as="span" text={t.contact.phone} className="text-white/40 text-sm tracking-wide uppercase mb-3 block" />
                   <a 
-                    href="tel:+5511999999999"
+                    href="tel:+351929062671"
                     className="text-2xl md:text-3xl font-serif text-white hover:text-white/70 transition-colors"
                     style={{ fontFamily: 'var(--font-serif)' }}
                   >
