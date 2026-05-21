@@ -35,6 +35,10 @@ export async function POST(req: NextRequest) {
   const RESEND_API_KEY = process.env.RESEND_API_KEY
   const TO_EMAIL = process.env.LEAD_EMAIL ?? 'it@frpc.pt'
 
+  if (!RESEND_API_KEY) {
+    console.error('[lead] RESEND_API_KEY not set — email skipped')
+  }
+
   if (RESEND_API_KEY) {
     const wantsCall = answers.schedule?.toLowerCase().includes('sim') ||
       answers.schedule?.toLowerCase().includes('yes')
@@ -106,7 +110,7 @@ export async function POST(req: NextRequest) {
     const subject = `New lead: ${answers.name ?? 'Unknown'} — ${answers.project_type ?? 'project'}`
 
     try {
-      await fetch('https://api.resend.com/emails', {
+      const res = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${RESEND_API_KEY}`,
@@ -120,8 +124,12 @@ export async function POST(req: NextRequest) {
           html: emailHtml,
         }),
       })
-    } catch {
-      // Email failure is non-fatal
+      if (!res.ok) {
+        const err = await res.text()
+        console.error('[lead] Resend error (internal):', res.status, err)
+      }
+    } catch (e) {
+      console.error('[lead] Resend fetch failed (internal):', e)
     }
 
     // Send confirmation to the lead
@@ -162,7 +170,7 @@ export async function POST(req: NextRequest) {
 </div></div></body></html>`
 
       try {
-        await fetch('https://api.resend.com/emails', {
+        const res2 = await fetch('https://api.resend.com/emails', {
           method: 'POST',
           headers: {
             Authorization: `Bearer ${RESEND_API_KEY}`,
@@ -175,8 +183,12 @@ export async function POST(req: NextRequest) {
             html: confirmHtml,
           }),
         })
-      } catch {
-        // Email failure is non-fatal
+        if (!res2.ok) {
+          const err2 = await res2.text()
+          console.error('[lead] Resend error (confirmation):', res2.status, err2)
+        }
+      } catch (e) {
+        console.error('[lead] Resend fetch failed (confirmation):', e)
       }
     }
   }

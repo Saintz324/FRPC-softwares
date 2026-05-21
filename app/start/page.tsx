@@ -253,7 +253,7 @@ function SolutionTile({ solution, selected, onClick, lang, delay }: {
     <button
       type="button"
       onClick={onClick}
-      className="relative flex items-center gap-3 rounded-2xl text-left transition-all duration-300"
+      className="relative flex items-center gap-3 rounded-2xl text-left transition-all duration-300 min-w-0 overflow-hidden"
       style={{
         animation: `sfadeUp 0.6s cubic-bezier(0.16,1,0.3,1) ${delay}ms both`,
         padding: '14px 16px',
@@ -273,8 +273,8 @@ function SolutionTile({ solution, selected, onClick, lang, delay }: {
       >
         {solution.icon}
       </div>
-      <span className="text-sm font-semibold leading-snug"
-        style={{ color: selected ? 'white' : 'rgba(255,255,255,0.65)' }}>
+      <span className="text-sm font-semibold leading-snug min-w-0 flex-1 break-words"
+        style={{ color: selected ? 'white' : 'rgba(255,255,255,0.65)', paddingRight: selected ? '18px' : '0' }}>
         {lang === 'pt' ? solution.labelPt : solution.labelEn}
       </span>
       {selected && (

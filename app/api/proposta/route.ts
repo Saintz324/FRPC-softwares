@@ -22,6 +22,10 @@ export async function POST(req: NextRequest) {
   const RESEND_API_KEY = process.env.RESEND_API_KEY
   const TO_EMAIL = 'it@frpc.pt'
 
+  if (!RESEND_API_KEY) {
+    console.error('[proposta] RESEND_API_KEY not set — email skipped')
+  }
+
   if (RESEND_API_KEY) {
     const emailHtml = `
 <!DOCTYPE html>
@@ -81,7 +85,7 @@ export async function POST(req: NextRequest) {
 </html>`
 
     try {
-      await fetch('https://api.resend.com/emails', {
+      const res = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${RESEND_API_KEY}`,
@@ -95,8 +99,12 @@ export async function POST(req: NextRequest) {
           html: emailHtml,
         }),
       })
-    } catch {
-      // Email failure is non-fatal
+      if (!res.ok) {
+        const err = await res.text()
+        console.error('[proposta] Resend error:', res.status, err)
+      }
+    } catch (e) {
+      console.error('[proposta] Resend fetch failed:', e)
     }
   }
 
