@@ -16,7 +16,7 @@ type Answers = {
 
 type LeadPayload = {
   answers: Answers
-  budget: { low: number; high: number }
+  budget?: { low: number; high: number }
   lang: 'pt' | 'en'
 }
 
@@ -94,10 +94,10 @@ export async function POST(req: NextRequest) {
     </div>
     <div style="margin-bottom:0"><div class="label">Design</div><div class="value">${answers.design ?? '—'}</div></div>
 
-    <div class="budget-box">
+    ${budget ? `<div class="budget-box">
       <div class="budget-amount">€${budget.low.toLocaleString()} — €${budget.high.toLocaleString()}</div>
       <div class="budget-label">Estimated budget range</div>
-    </div>
+    </div>` : ''}
 
     ${wantsCall ? `<div class="call-box">📞 <strong>Wants a call</strong> — schedule ASAP!</div>` : ''}
   </div>
@@ -157,10 +157,10 @@ export async function POST(req: NextRequest) {
   <div class="bdy">
     <div class="title">${isPt ? `Obrigado, ${answers.name}! 🎉` : `Thank you, ${answers.name}! 🎉`}</div>
     <div class="txt">${isPt ? 'Recebemos a tua mensagem e entraremos em contacto em breve.<br><br>Aqui está um resumo da tua estimativa:' : "We've received your message and will be in touch soon.<br><br>Here's a summary of your estimate:"}</div>
-    <div class="budget">
+    ${budget ? `<div class="budget">
       <div class="amount">€${budget.low.toLocaleString()} — €${budget.high.toLocaleString()}</div>
       <div class="blabel">${isPt ? `Orçamento estimado · ${answers.project_type}` : `Estimated budget · ${answers.project_type}`}</div>
-    </div>
+    </div>` : ''}
     <div class="note">${wantsCall
       ? (isPt ? 'Vais receber um link de agendamento em breve. Até já! 👋' : "You'll receive a scheduling link shortly. Talk soon! 👋")
       : (isPt ? 'A nossa equipa entrará em contacto em breve. Até já! 👋' : 'Our team will reach out soon. Talk soon! 👋')

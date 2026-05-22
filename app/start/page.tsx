@@ -320,8 +320,8 @@ export default function StartPage() {
     const answers = {
       name:          name.trim(),
       empresa:       empresa.trim()     || undefined,
-      solution:      isPt ? sel?.labelPt : sel?.labelEn,
-      utilizadores:  utilizadores       || undefined,
+      project_type:  isPt ? sel?.labelPt : sel?.labelEn,
+      users:         utilizadores       || undefined,
       description:   description.trim(),
       contact_email: email.trim(),
       contact_phone: phone.trim()       || undefined,
@@ -332,7 +332,7 @@ export default function StartPage() {
       const res = await fetch('/api/lead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ answers, lang }),
+        body: JSON.stringify({ answers, budget: { low: 0, high: 0 }, lang }),
       })
       if (!res.ok) throw new Error()
       setStatus('success')
