@@ -117,7 +117,7 @@ export async function POST(req: NextRequest) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          from: 'FRPC Lead Assistant <noreply@frpc-tech.pt>',
+          from: 'FRPC Lead Assistant <noreply@frpc.pt>',
           to: [TO_EMAIL],
           reply_to: answers.contact_email ? [answers.contact_email] : undefined,
           subject,
@@ -173,7 +173,7 @@ export async function POST(req: NextRequest) {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            from: 'FRPC <noreply@frpc-tech.pt>',
+            from: 'FRPC <noreply@frpc.pt>',
             to: [answers.contact_email],
             subject: lang === 'pt' ? 'Recebemos a tua mensagem! — FRPC' : 'We received your message! — FRPC',
             html: confirmHtml,

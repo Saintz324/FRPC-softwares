@@ -92,7 +92,7 @@ export async function POST(req: NextRequest) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          from: 'FRPC Propostas <noreply@frpc-tech.pt>',
+          from: 'FRPC Propostas <noreply@frpc.pt>',
           to: [TO_EMAIL],
           reply_to: body.email ? [body.email] : undefined,
           subject: `Nova proposta: ${body.nome ?? 'Desconhecido'} — ${body.solucao ?? 'solução'}`,
