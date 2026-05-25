@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
 
   //  envio email via Resend 
   const RESEND_API_KEY = process.env.RESEND_API_KEY
-  const TO_EMAIL = process.env.LEAD_EMAIL ?? 'it@frpc.pt'
+  const TO_EMAIL = process.env.LEAD_EMAIL ?? 'it@frpc-tech.pt'
 
   if (!RESEND_API_KEY) {
     console.error('[lead] RESEND_API_KEY not set — email skipped')
@@ -117,7 +117,7 @@ export async function POST(req: NextRequest) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          from: 'FRPC Lead Assistant <noreply@frpc.pt>',
+          from: 'FRPC Lead Assistant <noreply@frpc-tech.pt>',
           to: [TO_EMAIL],
           reply_to: answers.contact_email ? [answers.contact_email] : undefined,
           subject,
@@ -157,16 +157,12 @@ export async function POST(req: NextRequest) {
   <div class="bdy">
     <div class="title">${isPt ? `Obrigado, ${answers.name}!` : `Thank you, ${answers.name}! 🎉`}</div>
     <div class="txt">${isPt ? 'Recebemos a tua mensagem e entraremos em contacto em breve.' : "We've received your message and will be in touch soon."}</div>
-    ${budget && budget.low > 0 ? `<div class="budget">
-      <div class="amount">€${budget.low.toLocaleString()} — €${budget.high.toLocaleString()}</div>
-      <div class="blabel">${isPt ? `Orçamento estimado · ${answers.project_type}` : `Estimated budget · ${answers.project_type}`}</div>
-    </div>` : ''}
     <div class="note">${wantsCall
       ? (isPt ? 'Vais receber um link de agendamento em breve. Até já! ' : "You'll receive a scheduling link shortly. Talk soon! 👋")
       : (isPt ? 'A nossa equipa entrará em contacto em breve. Até já! ' : 'Our team will reach out soon. Talk soon! 👋')
     }</div>
   </div>
-  <div class="ftr">FRPC · frpc.pt</div>
+  <div class="ftr">FRPC · frpc-tech.pt</div>
 </div></div></body></html>`
 
       try {
@@ -177,7 +173,7 @@ export async function POST(req: NextRequest) {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            from: 'FRPC <noreply@frpc.pt>',
+            from: 'FRPC <noreply@frpc-tech.pt>',
             to: [answers.contact_email],
             subject: lang === 'pt' ? 'Recebemos a tua mensagem! — FRPC' : 'We received your message! — FRPC',
             html: confirmHtml,

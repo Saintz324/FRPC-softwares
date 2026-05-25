@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
   }
 
   const RESEND_API_KEY = process.env.RESEND_API_KEY
-  const TO_EMAIL = 'it@frpc.pt'
+  const TO_EMAIL = 'it@frpc-tech.pt'
 
   if (!RESEND_API_KEY) {
     console.error('[proposta] RESEND_API_KEY not set — email skipped')
@@ -92,7 +92,7 @@ export async function POST(req: NextRequest) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          from: 'FRPC Propostas <noreply@frpc.pt>',
+          from: 'FRPC Propostas <noreply@frpc-tech.pt>',
           to: [TO_EMAIL],
           reply_to: body.email ? [body.email] : undefined,
           subject: `Nova proposta: ${body.nome ?? 'Desconhecido'} — ${body.solucao ?? 'solução'}`,
