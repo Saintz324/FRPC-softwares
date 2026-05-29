@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
   }
 
   const RESEND_API_KEY = process.env.RESEND_API_KEY
-  const TO_EMAIL = 'it@frpc-tech.pt'
+  const TO_EMAIL = process.env.LEAD_EMAIL ?? 'it@frpc.pt'
 
   if (!RESEND_API_KEY) {
     console.error('[proposta] RESEND_API_KEY not set — email skipped')
